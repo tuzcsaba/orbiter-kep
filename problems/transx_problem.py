@@ -1,13 +1,13 @@
 from PyGMO.problem import base as base_problem
 from PyKEP.core import epoch, DAY2SEC, MU_SUN, lambert_problem, propagate_lagrangian, fb_prop, fb_vel, AU
-from PyKEP.planet import jpl_lp
+from PyKEP.planet import jpl_lp,spice
 from math import sqrt, pi, cos, sin, acos, atan2, log
 from scipy.linalg import norm
 from numpy import *
 
 excludes = []
 
-class my_prob(base_problem):
+class transx_problem(base_problem):
     """
     This class is a PyGMO (http://esa.github.io/pygmo/) problem representing a Multiple Gravity Assist
     trajectory allowing one only impulsive Deep Space Manouvre between each leg.
@@ -42,11 +42,13 @@ class my_prob(base_problem):
         # body gravity as data members
         self.seq = seq
         self.common_mu = seq[0].mu_central_body
+        if self.common_mu == 0:
+          self.common_mu = 1e10
         self.avoid = []
         # First we call the constructor for the base PyGMO problem
         # As our problem is n dimensional, box-bounded (may be multi-objective), we write
         # (dim, integer dim, number of obj, number of con, number of inequality con, tolerance on con violation)
-        super(my_prob, self).__init__(dim, 0, obj_dim, 0, 0, 0)
+        super(transx_problem, self).__init__(dim, 0, obj_dim, 0, 0, 0)
 
 
     def print_time_info(self, planets, times):
@@ -111,7 +113,7 @@ class my_prob(base_problem):
 
     def burn_cost(self, ref, exc, circ = True):
         mu = ref.mu_self
-        r = ref.radius + 300000 
+        r = ref.radius + 200000 
         dv = []
         return sqrt(dot(exc, exc) + 2 * mu / r) - sqrt((1 if circ else 2) * mu / r)
         

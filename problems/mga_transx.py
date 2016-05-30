@@ -1,12 +1,12 @@
 from PyGMO import problem
 from PyKEP import *
 from PyKEP.planet import * 
-from my_prob import my_prob
+from transx_problem import transx_problem
 
 from math import *
 from numpy import *
 
-class my_mga(my_prob):
+class mga_transx(transx_problem):
     """
     MGA problem:
 
@@ -36,7 +36,7 @@ class my_mga(my_prob):
     def __init__(self, seq = [jpl_lp('earth'), jpl_lp('venus'), jpl_lp('mercury')], t0 = [epoch(0), epoch(1000)], tof=[1.0, 5.0], add_vinf_dep = False, add_vinf_arr = True, multi_objective=False, avoid = []):
         dim = len(seq)
         obj_dim = multi_objective + 1
-        super(my_mga, self).__init__(seq, dim, obj_dim, avoid)  # a problem in three variables
+        super(mga_transx, self).__init__(seq, dim, obj_dim, avoid)  # a problem in three variables
 
         self.__add_vinf_dep = add_vinf_dep
         self.__add_vinf_arr = add_vinf_arr

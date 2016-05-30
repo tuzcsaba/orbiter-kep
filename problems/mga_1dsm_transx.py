@@ -4,11 +4,11 @@ from PyKEP.planet import jpl_lp
 from math import sqrt, pi, cos, sin, acos, atan2, log
 from scipy.linalg import norm
 from numpy import *
-from my_prob import my_prob
+from transx_problem import transx_problem
 
 excludes = []
 
-class my_mga_1dsm(my_prob):
+class mga_1dsm_transx(transx_problem):
     """
     This class is a PyGMO (http://esa.github.io/pygmo/) problem representing a Multiple Gravity Assist
     trajectory allowing one only impulsive Deep Space Manouvre between each leg.
@@ -49,7 +49,7 @@ class my_mga_1dsm(my_prob):
         # (dim, integer dim, number of obj, number of con, number of inequality con, tolerance on con violation)
         dim = 7 + (len(seq) - 2) * 4
         obj_dim = multi_objective + 1
-        super(my_mga_1dsm, self).__init__(seq, dim, obj_dim, avoid)
+        super(mga_1dsm_transx, self).__init__(seq, dim, obj_dim, avoid)
 
         self.__add_vinf_dep = add_vinf_dep
         self.__add_vinf_arr = add_vinf_arr

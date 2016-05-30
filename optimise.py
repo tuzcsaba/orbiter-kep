@@ -15,7 +15,7 @@ class optimizer:
     self.nTrial = nTrial
 
     self.mf = 100
-    self.mr = 1
+    self.mr = 2
     self.gen = 1000
 
   def run_once(self):
