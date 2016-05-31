@@ -9,7 +9,7 @@
 #include <pagmo/types.h>
 #include <pagmo/problem/base.h>
 
-#import "transx_problem.h"
+#include "transx_problem.h"
 
 
 namespace pagmo { namespace problem {

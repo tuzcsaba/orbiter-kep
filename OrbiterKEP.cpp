@@ -6,6 +6,7 @@
 #include <tclap/CmdLine.h>
 
 #include "src/problems/mga_transx.h"
+#include "src/problems/mga_1dsm_transx.h"
 #include "src/optimise.h"
 
 int main(int argc, char **argv) {
@@ -18,8 +19,8 @@ int main(int argc, char **argv) {
     TCLAP::ValueArg<double>      tofMaxArg ("", "tof-max",  "minimum time of flight", false, 0.5, "max_tof");
     TCLAP::ValueArg<double>      vinfMaxArg   ("", "vinf-max", "maximum allowed initial Hyperbolic Excess Velocity in km/s (check Launcher performance)", false, 5, "max_vinf");
 
-    TCLAP::ValueArg<int>         nMGAArg   ("", "n-mga",      "the number of independent MGA optimisations", false, 1, "n");
-    TCLAP::ValueArg<int>         nMGA1DSMArg  ("", "n-mga-1dsm", "the number of independent MGA-1DSM optimisations", false, 1, "n");
+    TCLAP::ValueArg<int>         nMGAArg   ("", "n-mga",      "the number of independent MGA optimisations", false, 0, "n");
+    TCLAP::ValueArg<int>         nMGA1DSMArg  ("", "n-mga-1dsm", "the number of independent MGA-1DSM optimisations", false, 0, "n");
 
     TCLAP::ValueArg<double>      depAltArg ("", "dep-altitude", "the ejection altitude in kms", false, 300.0, "f");
     TCLAP::ValueArg<double>      arrAltArg ("", "arr-altitude", "the target altitude at the target body in kms", false, 300.0, "f");
@@ -76,23 +77,54 @@ int main(int argc, char **argv) {
     int n_trial_mga = nMGAArg.getValue();
     int n_trial_mga_1dsm = nMGA1DSMArg.getValue();
 
+    if (n_trial_mga > 0) {
 
-    pagmo::problem::mga_transx mga(seq, 
-        dep_altitude, arr_altitude, circularize,
-        t0_l, t0_u, tof_l, tof_u, 
-        vinf_l, vinf_u,
-        add_dep_vinf, add_arr_vinf,
-        false);
+      pagmo::problem::mga_transx mga(seq, 
+          dep_altitude, arr_altitude, circularize,
+          t0_l, t0_u, tof_l, tof_u, 
+          vinf_l, vinf_u,
+          add_dep_vinf, add_arr_vinf,
+          false);
 
-    // pagmo::problem::mga_transx mga_multi(seq, arr_altitude, arr_altitude, circularize,
-    //     t0_l, t0_u, vinf_l, vinf_u, 
-    //     add_dep_vinf, add_arr_vinf,
-    //     true);
+      pagmo::problem::mga_transx mga_multi(seq,
+          arr_altitude, arr_altitude, circularize,
+           t0_l, t0_u, tof_l, tof_u,
+           vinf_l, vinf_u, 
+           add_dep_vinf, add_arr_vinf,
+           true);
 
-    orbiterkep::optimiser op(mga, n_trial_mga, 5000, 100, 1);
-    pagmo::decision_vector sol_mga = op.run_once(0);
-    mga.pretty(sol_mga);
+      orbiterkep::optimiser op(mga, n_trial_mga, 10000, 100, 1);
+      pagmo::decision_vector sol_mga = op.run_once(0);
+      mga.pretty(sol_mga);
 
+      if (multi_obj) {
+        orbiterkep::optimiser op_multi(mga_multi, n_trial_mga, 10000, 100, 1);
+        op_multi.run_once(&sol_mga);
+      }
+    }
+    if (n_trial_mga_1dsm > 0) {
+
+      pagmo::problem::mga_1dsm_transx mga_1dsm(seq,
+          dep_altitude, arr_altitude, circularize,
+          t0_l, t0_u, tof_l, tof_u,
+          vinf_l, vinf_u,
+          add_dep_vinf, add_arr_vinf,
+          false);
+
+      std::cout << mga_1dsm.get_dimension() << std::endl;
+
+      pagmo::problem::mga_1dsm_transx mga_1dsm_multi(seq,
+          dep_altitude, arr_altitude, circularize,
+          t0_l, t0_u, tof_l, tof_u,
+          vinf_l, vinf_u,
+          add_dep_vinf, add_arr_vinf,
+          true);
+
+      orbiterkep::optimiser op2(mga_1dsm, n_trial_mga_1dsm, 10000, 100, 1);
+      pagmo::decision_vector sol_mga_1dsm = op2.run_once(0);
+      mga_1dsm.pretty(sol_mga_1dsm);
+
+    }
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
   }

@@ -4,7 +4,7 @@
 namespace orbiterkep {
 
 optimiser::optimiser(pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
-  m_problem(prob), m_n_isl(8), m_population(40), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
+  m_problem(prob), m_n_isl(8), m_population(60), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
 }
 
 pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_obj_result, const bool print_fronts) {
@@ -36,8 +36,11 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
         ++i;
       }
     }
+
+
     while (i < m_n_isl) {
-      archi.push_back(pagmo::island(*algo, m_problem, m_population, selection, replacement));
+      pagmo::island isl(*algo, m_problem, m_population, selection, replacement);
+      archi.push_back(isl);
       ++i;
     }
 
