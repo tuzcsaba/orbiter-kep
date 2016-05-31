@@ -1,0 +1,6 @@
+[submodule "third_party/pagmo"]
+	path = third_party/pagmo
+	url = git@github.com:esa/pagmo.git
+[submodule "third_party/pykep"]
+	path = third_party/pykep
+	url = git@github.com:esa/pykep.git
