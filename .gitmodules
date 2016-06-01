@@ -4,3 +4,6 @@
 [submodule "third_party/pykep"]
 	path = third_party/pykep
 	url = git@github.com:esa/pykep.git
+[submodule "third_party/gnuplot-iostream"]
+	path = third_party/gnuplot-iostream
+	url = https://github.com/dstahlke/gnuplot-iostream.git

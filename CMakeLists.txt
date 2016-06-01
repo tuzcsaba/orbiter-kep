@@ -7,6 +7,7 @@ project (OrbiterKEP C CXX)
 include_directories(/usr/local/include)
 include_directories(src)
 include_directories(src/problems)
+include_directories(third_party/gnuplot-iostream)
 
 add_subdirectory(src)
 
@@ -19,6 +20,7 @@ set (OrbiterKEP_VERSION_MINOR 1)
 set (BOOST_LIBRARIES
   boost_system
   boost_serialization
+  boost_iostreams
 )
 
 target_link_libraries(OrbiterKEP pagmo keplerian_toolbox orbiterkep_static ${BOOST_LIBRARIES})

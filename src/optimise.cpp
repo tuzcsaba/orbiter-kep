@@ -1,6 +1,8 @@
 
 #include "optimise.h"
 
+#include "plot/pareto.h"
+
 namespace orbiterkep {
 
 optimiser::optimiser(pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
@@ -70,7 +72,20 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
 
         prev = val;
       }
+
     }
+    if (m_problem.get_f_dimension() == 2) {
+      pagmo::population sum_pop(m_problem);
+      for (int i = 0; i < archi.get_size(); ++i) {
+        pagmo::base_island_ptr isl = archi.get_island(i);
+        for (int j = 0; j < isl->get_population().size(); ++j) {
+          sum_pop.push_back(isl->get_population().get_individual(j).cur_x);
+        }
+      }
+
+      population_plot_pareto_fronts(sum_pop);
+    }
+    
   }
 
   return best_x;
