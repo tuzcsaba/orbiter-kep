@@ -9,7 +9,7 @@ optimiser::optimiser(pagmo::problem::base &prob, const int n_trial, const int ge
   m_problem(prob), m_n_isl(8), m_population(60), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
 }
 
-pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_obj_result, const bool print_fronts) {
+pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV) {
   pagmo::algorithm::jde jde(m_mf, 2, 1, 1e-01, 1e-02, true);
   pagmo::algorithm::nsga2 nsga2(m_mf);
 
@@ -83,7 +83,7 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
         }
       }
 
-      population_plot_pareto_fronts(sum_pop);
+      population_plot_pareto_fronts(sum_pop, maxDeltaV);
     }
     
   }

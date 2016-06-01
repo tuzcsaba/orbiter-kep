@@ -1,6 +1,6 @@
 #include "pareto.h"
 
-void population_plot_pareto_fronts(const pagmo::population &pop) {
+void population_plot_pareto_fronts(const pagmo::population &pop, double maxDeltaV) {
   
   int p_dim = pop.problem().get_f_dimension();
   std::vector<std::vector<pagmo::population::size_type> > p_list = pop.compute_pareto_fronts();
@@ -17,6 +17,8 @@ void population_plot_pareto_fronts(const pagmo::population &pop) {
       double x = pop.get_individual(f[j]).cur_f[0];
       double y = pop.get_individual(f[j]).cur_f[1];
       d.push_back(boost::make_tuple(x, y));
+
+      if (x > maxDeltaV) continue;
 
       if (x < min_x) min_x = x;
       if (x > max_x) max_x = x;

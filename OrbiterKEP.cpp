@@ -30,6 +30,9 @@ int main(int argc, char **argv) {
     
     TCLAP::SwitchArg             omitDepVInfArg("", "omit-dep-vinf", "if on, the fuel calculations omit the final capture burn", false);
     TCLAP::SwitchArg             omitArrVInfArg("", "omit-arr-vinf", "if on, the fuel calculations won't include the initial Vinf", false);
+    TCLAP::ValueArg<double>      maxDeltaVArg("", "max-delta-v", "Delta-V budget", false, 20000, "m/s");
+    
+    TCLAP::ValueArg<int>      optGenArg("", "opt-gen", "the number of generations to run each trial for", false, 10000, "n");
 
     cmd.add( planetsArg );
     cmd.add( launchArg );
@@ -43,8 +46,11 @@ int main(int argc, char **argv) {
 
     cmd.add( multiObjArg );
     cmd.add( captureOnlyArg );
+    cmd.add( maxDeltaVArg );
 
     cmd.add(omitDepVInfArg); cmd.add(omitArrVInfArg);
+
+    cmd.add(optGenArg);
 
     cmd.parse(argc, argv);
     std::vector<std::string> planets;
@@ -73,14 +79,18 @@ int main(int argc, char **argv) {
     const bool add_dep_vinf = !omitDepVInfArg.getValue();
 
     bool multi_obj = multiObjArg.getValue();
+
+    double maxDeltaV = maxDeltaVArg.getValue();
     
     int n_trial_mga = nMGAArg.getValue();
     int n_trial_mga_1dsm = nMGA1DSMArg.getValue();
 
+    int n_gen = optGenArg.getValue();
+
     if (n_trial_mga > 0) {
 
       pagmo::problem::mga_transx mga(seq, 
-          dep_altitude, arr_altitude, circularize,
+          dep_altitude, arr_altitude, circularize, 
           t0_l, t0_u, tof_l, tof_u, 
           vinf_l, vinf_u,
           add_dep_vinf, add_arr_vinf,
@@ -93,13 +103,13 @@ int main(int argc, char **argv) {
            add_dep_vinf, add_arr_vinf,
            true);
 
-      orbiterkep::optimiser op(mga, n_trial_mga, 10000, 100, 1);
-      pagmo::decision_vector sol_mga = op.run_once(0);
+      orbiterkep::optimiser op(mga, n_trial_mga, n_gen, 100, 1);
+      pagmo::decision_vector sol_mga = op.run_once(0, maxDeltaV);
       mga.pretty(sol_mga);
 
       if (multi_obj) {
-        orbiterkep::optimiser op_multi(mga_multi, n_trial_mga, 10000, 100, 1);
-        op_multi.run_once(&sol_mga);
+        orbiterkep::optimiser op_multi(mga_multi, n_trial_mga, n_gen, 100, 1);
+        op_multi.run_once(&sol_mga, maxDeltaV);
       }
     }
     if (n_trial_mga_1dsm > 0) {
@@ -120,10 +130,14 @@ int main(int argc, char **argv) {
           add_dep_vinf, add_arr_vinf,
           true);
 
-      orbiterkep::optimiser op2(mga_1dsm, n_trial_mga_1dsm, 10000, 100, 1);
-      pagmo::decision_vector sol_mga_1dsm = op2.run_once(0);
+      orbiterkep::optimiser op2(mga_1dsm, n_trial_mga_1dsm, n_gen, 100, 1);
+      pagmo::decision_vector sol_mga_1dsm = op2.run_once(0, maxDeltaV);
       mga_1dsm.pretty(sol_mga_1dsm);
 
+      if (multi_obj) {
+        orbiterkep::optimiser op2_multi(mga_1dsm_multi, n_trial_mga, n_gen, 100, 1);
+        op2_multi.run_once(&sol_mga_1dsm, maxDeltaV);
+      }
     }
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

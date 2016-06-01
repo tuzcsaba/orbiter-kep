@@ -6,6 +6,6 @@
 #include <pagmo/population.h>
 #include <gnuplot-iostream.h>
 
-void population_plot_pareto_fronts(const pagmo::population &pop);
+void population_plot_pareto_fronts(const pagmo::population &pop, double maxDeltaV);
 
 #endif
