@@ -20,13 +20,14 @@ public:
                     const double tof_l = 1.0, const double tof_u = 5.0,
                     const double vinf_l = 0.1, const double vinf_u = 8.0,
                     const bool add_vinf_dep = false, const bool add_vinf_arr = true,
-                    const bool multi_objective = false);
+                    const bool multi_objective = false, const bool dsm_allowed = false);
     mga_1dsm_transx(const mga_1dsm_transx&);
     base_ptr clone() const;
 
     bool get_multi_obj() const { return m_multi_obj; }
     bool get_add_vinf_dep() const { return m_add_vinf_dep; }
     bool get_add_vinf_arr() const { return m_add_vinf_dep; }
+    bool get_dsm_allowed() const { return m_dsm_allowed; }
 
 protected:
     
@@ -41,11 +42,13 @@ private:
       ar & m_multi_obj;
       ar & m_add_vinf_dep;
       ar & m_add_vinf_arr;
+      ar & m_dsm_allowed;
     }
 
     bool m_multi_obj;
     bool m_add_vinf_dep;
     bool m_add_vinf_arr;
+    bool m_dsm_allowed;
 };
 
 }} // namespaces;w

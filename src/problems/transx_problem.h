@@ -12,6 +12,87 @@
 
 namespace pagmo { namespace problem {
 
+struct transx_escape {
+  std::string planet;
+  double mjd;
+
+  double prograde;
+  double outward;
+  double plane;
+
+  double v_inf;
+
+  double burn;
+
+  std::string string() const;
+};
+
+struct transx_dsm {
+  double mjd;
+
+  double prograde;
+  double outward;
+  double plane;
+
+  double v_inf;
+
+  double burn;
+
+  std::string string() const;
+};
+
+struct transx_flyby {
+  std::string planet;
+
+  double mjd;
+
+  double approach_vel;
+  double departure_vel;
+
+  double outward_angle;
+  double inclination;
+  double turning_angle;
+
+  double periapsis_altitude;
+
+  double burn;
+
+  std::string string() const;
+};
+
+struct transx_arrival {
+  std::string planet;
+
+  double mjd;
+
+  double v_inf;
+
+  double burn;
+
+  std::string string() const;
+};
+
+struct transx_times {
+  std::vector<std::string> planets;
+
+  std::vector<kep_toolbox::epoch> times;
+
+  std::string string() const;
+};
+
+struct transx_solution {
+  transx_times times;
+
+  transx_escape escape;
+  std::vector<transx_dsm> dsms;
+  std::vector<transx_flyby> flybyes;
+  transx_arrival arrival;
+
+  double fuel_cost;
+
+  std::string string() const;
+};
+
 class __PAGMO_VISIBLE transx_problem : public base
 {
   public:
@@ -35,12 +116,12 @@ class __PAGMO_VISIBLE transx_problem : public base
     double get_arr_altitude() const { return m_arr_altitude; }
 
   protected:
-    void print_time_info(std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> times) const;
-    void print_escape(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, 
+    transx_times transx_time_info(std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> times) const;
+    transx_escape transx_escape(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, 
         kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, double eject_T) const;
-    void print_dsm(kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T) const;
-    void print_flyby(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D Vin, kep_toolbox::array3D Vout, double enc_T) const;
-    void print_arrival(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_exc, double enc_T) const;
+    transx_dsm transx_dsm(kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T) const;
+    transx_flyby transx_flyby(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D Vin, kep_toolbox::array3D Vout, double enc_T) const;
+    transx_arrival transx_arrival(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_exc, double enc_T) const;
 
     double burn_cost(kep_toolbox::planet::planet_ptr ref, const kep_toolbox::array3D &exc, bool arr, bool circ) const;
     kep_toolbox::array3D velocity_to_transx(kep_toolbox::array3D v_ref, kep_toolbox::array3D v_rad, kep_toolbox::array3D v) const;

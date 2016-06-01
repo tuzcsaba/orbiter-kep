@@ -37,3 +37,5 @@ set (BOOST_LIBRARIES
 target_link_libraries(OrbiterKEP pagmo keplerian_toolbox orbiterkep_static ${BOOST_LIBRARIES})
 ENDIF(BUILD_STATIC)
 
+INSTALL(TARGETS OrbiterKEP RUNTIME DESTINATION bin)
+

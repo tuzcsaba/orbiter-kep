@@ -50,17 +50,15 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
       }
     }
 
-
     while (i < m_n_isl) {
       pagmo::island isl(*algo, m_problem, m_population, *sel, *rep);
       archi.push_back(isl);
       ++i;
     }
 
-
     double prev;
-
     for (int i = 0; i < m_gen / m_mf; ++i) {
+
       std::cout << "." << std::flush;
       archi.evolve(1);
       archi.join();
@@ -86,6 +84,7 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
       }
 
     }
+
     if (m_problem.get_f_dimension() == 2 && print_fronts) {
       pagmo::population sum_pop(m_problem);
       for (int i = 0; i < archi.get_size(); ++i) {

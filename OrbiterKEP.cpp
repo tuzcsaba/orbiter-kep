@@ -68,7 +68,7 @@ parameters parse_parameters(int argc, char ** argv) {
     TCLAP::ValueArg<std::string> launchArg ("", "launch",   "the bounds for the time of flight", false, "20000101T000000,20140101T000000", "min_tof,max_tof");
     TCLAP::ValueArg<double>      tofMinArg ("", "tof-min",  "minimum time of flight", false, 0.5, "min_tof");
     TCLAP::ValueArg<double>      tofMaxArg ("", "tof-max",  "minimum time of flight", false, 0.5, "max_tof");
-    TCLAP::ValueArg<double>      vinfMaxArg   ("", "vinf-max", "maximum allowed initial Hyperbolic Excess Velocity in km/s (check Launcher performance)", false, 5, "max_vinf");
+    TCLAP::ValueArg<double>      vinfMaxArg   ("", "vinf-max", "maximum allowed initial Hyperbolic Excess Velocity in km/s (check Launcher performance)", false, 10, "max_vinf");
 
     TCLAP::ValueArg<int>         nMGAArg   ("", "n-mga",      "the number of independent MGA optimisations", false, 0, "n");
     TCLAP::ValueArg<int>         nMGA1DSMArg  ("", "n-mga-1dsm", "the number of independent MGA-1DSM optimisations", false, 0, "n");
@@ -202,7 +202,7 @@ int main(int argc, char **argv) {
           param.t0[0], param.t0[1], param.tof[0], param.tof[1], 
           param.vinf[0], param.vinf[1],
           param.add_dep_vinf, param.add_arr_vinf,
-          false);
+          false, true);
 
 
       pagmo::problem::mga_1dsm_transx mga_1dsm_multi(param.planets,
@@ -210,7 +210,7 @@ int main(int argc, char **argv) {
           param.t0[0], param.t0[1], param.tof[0], param.tof[1], 
           param.vinf[0], param.vinf[1],
           param.add_dep_vinf, param.add_arr_vinf,
-          true);
+          true, true);
 
       std::cout << "- Running single-objective optimisation" << std::flush;
       orbiterkep::optimiser op2(mga_1dsm, param.n_mga_1dsm, param.n_gen, 100, 1);
