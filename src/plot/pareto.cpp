@@ -18,7 +18,7 @@ void population_plot_pareto_fronts(const pagmo::population &pop, double maxDelta
       double y = pop.get_individual(f[j]).cur_f[1];
       d.push_back(boost::make_tuple(x, y));
 
-      if (x > maxDeltaV) continue;
+      if (maxDeltaV != -1 && x > maxDeltaV) continue;
 
       if (x < min_x) min_x = x;
       if (x > max_x) max_x = x;
@@ -28,7 +28,7 @@ void population_plot_pareto_fronts(const pagmo::population &pop, double maxDelta
     }
   }
 
-  gp << "set xrange [" << min_x << ":" << max_x << "]\nset yrange [" << min_y << ":" << max_y << "]\n"; 
+  gp << "set xrange [" << (min_x * 0.9) << ":" << max_x * 1.1 << "]\nset yrange [" << min_y * 0.9 << ":" << max_y * 1.1 << "]\n"; 
   gp << "plot '-' with points ps 1 title 'Pareto Fronts'\n";
   gp.send1d(d);
 

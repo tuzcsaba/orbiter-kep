@@ -21,6 +21,7 @@ set (OrbiterKEP_VERSION_MINOR 1)
 
 if(BUILD_STATIC)
 set (BOOST_LIBRARIES
+  libboost_filesystem.a
   libboost_system.a
   libboost_serialization.a
   libboost_iostreams.a
@@ -28,6 +29,7 @@ set (BOOST_LIBRARIES
 target_link_libraries(OrbiterKEP libpagmo.a libkeplerian_toolbox.a orbiterkep_static ${BOOST_LIBRARIES})
 ELSE(BUILD_STATIC)
 set (BOOST_LIBRARIES
+  boost_filesystem
   boost_system
   boost_serialization
   boost_iostreams

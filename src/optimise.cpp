@@ -13,13 +13,24 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
   pagmo::algorithm::jde jde(m_mf, 2, 1, 1e-01, 1e-02, true);
   pagmo::algorithm::nsga2 nsga2(m_mf);
 
+
+  pagmo::migration::best_s_policy sel_single(2, pagmo::migration::rate_type::absolute);
+  pagmo::migration::fair_r_policy rep_single(2, pagmo::migration::rate_type::absolute);
+
+  pagmo::migration::best_s_policy sel_multi(0.1, pagmo::migration::rate_type::fractional);
+  pagmo::migration::fair_r_policy rep_multi(0.1, pagmo::migration::rate_type::fractional);
+
   pagmo::algorithm::base *algo = (pagmo::algorithm::base *)&jde;
+
+  pagmo::migration::base_s_policy * sel = &sel_single;
+  pagmo::migration::base_r_policy * rep = &rep_single;
+
   if (m_problem.get_f_dimension() == 2) {
     algo = (pagmo::algorithm::base *)&nsga2;
-  }
 
-  const pagmo::migration::base_s_policy &selection = pagmo::migration::best_s_policy(2, pagmo::migration::rate_type::absolute);
-  const pagmo::migration::base_r_policy &replacement = pagmo::migration::fair_r_policy(2, pagmo::migration::rate_type::absolute);
+    sel = &sel_multi;
+    rep = &rep_multi;
+  }
 
   const pagmo::topology::fully_connected &topology = pagmo::topology::fully_connected();
 
@@ -33,7 +44,7 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
       if (single_obj_result != 0) {
         pagmo::population pop(m_problem, m_population - 1);
         pop.push_back(*single_obj_result);
-        pagmo::island isl(*algo, pop, selection, replacement);
+        pagmo::island isl(*algo, pop, *sel, *rep);
         archi.push_back(isl);
         ++i;
       }
@@ -41,7 +52,7 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
 
 
     while (i < m_n_isl) {
-      pagmo::island isl(*algo, m_problem, m_population, selection, replacement);
+      pagmo::island isl(*algo, m_problem, m_population, *sel, *rep);
       archi.push_back(isl);
       ++i;
     }
@@ -50,6 +61,7 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
     double prev;
 
     for (int i = 0; i < m_gen / m_mf; ++i) {
+      std::cout << "." << std::flush;
       archi.evolve(1);
       archi.join();
 
@@ -67,14 +79,14 @@ pagmo::decision_vector optimiser::run_once(const pagmo::decision_vector *single_
         if (best_f > val) {
           best_f = val;
           best_x = isl->get_population().champion().x;
-          std::cout << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
+          std::cerr << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
         }
 
         prev = val;
       }
 
     }
-    if (m_problem.get_f_dimension() == 2) {
+    if (m_problem.get_f_dimension() == 2 && print_fronts) {
       pagmo::population sum_pop(m_problem);
       for (int i = 0; i < archi.get_size(); ++i) {
         pagmo::base_island_ptr isl = archi.get_island(i);

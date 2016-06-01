@@ -58,8 +58,6 @@ void mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, boo
     T[i] /= alpha_sum;
   }
 
-
-
   std::vector<kep_toolbox::epoch>   t_P(get_seq().size());
   std::vector<kep_toolbox::array3D> r_P(get_seq().size());
   std::vector<kep_toolbox::array3D> v_P(get_seq().size());
