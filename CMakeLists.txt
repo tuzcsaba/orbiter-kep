@@ -18,9 +18,9 @@ set (OrbiterKEP_VERSION_MAJOR 0)
 set (OrbiterKEP_VERSION_MINOR 1)
 
 set (BOOST_LIBRARIES
-  boost_system
-  boost_serialization
-  boost_iostreams
+  libboost_system.a
+  libboost_serialization.a
+  libboost_iostreams.a
 )
 
-target_link_libraries(OrbiterKEP pagmo keplerian_toolbox orbiterkep_static ${BOOST_LIBRARIES})
+target_link_libraries(OrbiterKEP libpagmo.a libkeplerian_toolbox.a orbiterkep_static ${BOOST_LIBRARIES})
