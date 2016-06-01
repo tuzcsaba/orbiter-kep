@@ -4,7 +4,7 @@ namespace orbiterkep {
 
 class optimiser {
    public:
-     optimiser(pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr);
+     optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr);
 
      pagmo::decision_vector run_once(const pagmo::decision_vector *single_obj_result, const bool print_fronts = false, double maxDeltaV = 20000);
 

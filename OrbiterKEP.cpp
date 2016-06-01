@@ -154,6 +154,25 @@ parameters parse_parameters(int argc, char ** argv) {
 };
 
 } // namespaces
+
+void run_problem(const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
+      std::cout << "- Running single-objective optimisation";
+      orbiterkep::optimiser op(single_obj, trials, gen, 100, 1);
+      pagmo::decision_vector sol_mga = op.run_once(0, false, max_deltav);
+      std::cout << " Done" << std::endl;
+
+      if (run_multi_obj) {
+        std::cout << "- Running multi-objective optimisation";
+        orbiterkep::optimiser op_multi(multi_obj, trials, gen, 100, 1);
+        op_multi.run_once(&sol_mga, true, max_deltav);
+        std::cout << "Done" << std::endl;
+      }
+
+      single_obj.pretty(sol_mga);
+
+
+}
+
 int main(int argc, char **argv) {
   try {
 
@@ -179,19 +198,7 @@ int main(int argc, char **argv) {
           param.add_dep_vinf, param.add_arr_vinf,
            true);
 
-      std::cout << "- Running single-objective optimisation";
-      orbiterkep::optimiser op(mga, param.n_mga, param.n_gen, 100, 1);
-      pagmo::decision_vector sol_mga = op.run_once(0, false, param.max_deltaV);
-      std::cout << " Done" << std::endl;
-
-      if (param.multi_obj) {
-        std::cout << "- Running multi-objective optimisation";
-        orbiterkep::optimiser op_multi(mga_multi, param.n_mga, param.n_gen, 100, 1);
-        op_multi.run_once(&sol_mga, true, param.max_deltaV);
-        std::cout << "Done" << std::endl;
-      }
-
-      mga.pretty(sol_mga);
+      run_problem(mga, mga_multi, param.n_mga, param.n_gen, param.max_deltaV, param.multi_obj);
 
     }
     if (param.n_mga_1dsm > 0) {
@@ -212,19 +219,8 @@ int main(int argc, char **argv) {
           param.add_dep_vinf, param.add_arr_vinf,
           true, true);
 
-      std::cout << "- Running single-objective optimisation" << std::flush;
-      orbiterkep::optimiser op2(mga_1dsm, param.n_mga_1dsm, param.n_gen, 100, 1);
-      pagmo::decision_vector sol_mga_1dsm = op2.run_once(0, false, param.max_deltaV);
-      std::cout << "Done" << std::endl;
+      run_problem(mga_1dsm, mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, param.max_deltaV, param.multi_obj);
 
-      if (param.multi_obj) {
-        std::cout << "- Running multi-objective optimisation" << std::flush;
-        orbiterkep::optimiser op2_multi(mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, 100, 1);
-        op2_multi.run_once(&sol_mga_1dsm, true, param.max_deltaV);
-        std::cout << "Done" << std::endl;
-      }
-
-      mga_1dsm.pretty(sol_mga_1dsm);
     }
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

@@ -5,7 +5,7 @@
 
 namespace orbiterkep {
 
-optimiser::optimiser(pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
+optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
   m_problem(prob), m_n_isl(8), m_population(60), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
 }
 
