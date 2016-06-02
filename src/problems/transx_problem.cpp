@@ -274,21 +274,25 @@ double transx_problem::burn_cost(kep_toolbox::planet::planet_ptr ref, const kep_
   return sqrt(norm_sqr + 2 * mu / r) - sqrt((circ ? 1 : 2) * mu / r);
 }
 
-void transx_problem::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+transx_solution transx_problem::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+  transx_solution solution;
   f[0] = 0;
   if (get_f_dimension() == 2) {
     f[1] = 0;
   }
+  return solution;
 }
 
 void transx_problem::objfun_impl(fitness_vector &f, const decision_vector &x) const {
   calc_objective(f, x);
 }
 
-std::string transx_problem::pretty(const decision_vector &x, bool extended_output) const {
+transx_solution transx_problem::get_solution(const decision_vector &x, bool extended_output) const {
   fitness_vector f(get_f_dimension());
-  calc_objective(f, x, true);
-  return "";
+  auto solution = calc_objective(f, x, true);
+  solution.x = x;
+  solution.problem = get_name();
+  return solution;
 }
 
 std::string transx_problem::get_name() const {

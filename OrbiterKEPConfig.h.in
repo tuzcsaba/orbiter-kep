@@ -1,0 +1,4 @@
+#define OrbiterKEP_VERSION_MAJOR @OrbiterKEP_VERSION_MAJOR@
+#define OrbiterKEP_VERSION_MINOR @OrbiterKEP_VERSION_MINOR@
+
+#cmakedefine BUILD_MONGODB

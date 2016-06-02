@@ -39,7 +39,7 @@ mga_1dsm_transx::mga_1dsm_transx(const std::vector<kep_toolbox::planet::planet_p
         lb[j] = -2 * M_PI; ub[j] = 2 * M_PI;
         lb[j + 1] = 1.1;   ub[j + 1] = 100.0;
         lb[j + 2] = 1e-5;  ub[j + 2] = 1 - 1e-5;
-        lb[j + 3] = 1e-5;  ub[j + 3] = 1-1e-5;
+        lb[j + 3] = 1e-5;  ub[j + 3] = 1 - 1e-5;
       }
 
       for (int i = 1; i < get_n_legs() - 1; ++i) {
@@ -71,6 +71,8 @@ mga_1dsm_transx::mga_1dsm_transx(const std::vector<kep_toolbox::planet::planet_p
     }
 
     set_bounds(lb, ub);
+    
+    std::cout << m_add_vinf_arr << std::endl;
 }
 
 mga_1dsm_transx::mga_1dsm_transx(const mga_1dsm_transx &p) : transx_problem(p.get_seq(), p.get_dep_altitude(), p.get_arr_altitude(), p.get_circularize(), p.get_dimension(), p.get_f_dimension()), m_dsm_allowed(p.get_dsm_allowed()), m_add_vinf_arr(p.get_add_vinf_arr()), m_add_vinf_dep(p.get_add_vinf_dep()), m_multi_obj(p.get_multi_obj()) {
@@ -81,7 +83,7 @@ base_ptr mga_1dsm_transx::clone() const {
   return base_ptr(new mga_1dsm_transx(*this));
 }
 
-void mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
 
   transx_solution solution;
 
@@ -123,9 +125,9 @@ void mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x
 
   if (m_add_vinf_dep) {
     DV[0] += burn_cost(get_seq()[0], Vinf, false, true); 
-    if (should_print) {
-      solution.escape = transx_escape(get_seq()[0], v_P[0], r_P[0], Vinf, t_P[0].mjd());
-    }
+  }
+  if (should_print) {
+    solution.escape = transx_escape(get_seq()[0], v_P[0], r_P[0], Vinf, t_P[0].mjd());
   }
 
   kep_toolbox::array3D v0;
@@ -168,8 +170,8 @@ void mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x
 
     dt = (1 - (m_dsm_allowed ? x[9 + (i - 1) * 4] : 0)) * T[i] * ASTRO_DAY2SEC;
     kep_toolbox::lambert_problem l2(r, r_P[i + 1], dt, get_common_mu());
-    v_end_l = l2.get_v2()[0];
     v_beg_l = l2.get_v1()[0];
+    v_end_l = l2.get_v2()[0];
 
     kep_toolbox::diff(deltaV, v_beg_l, v);
     DV[i] = kep_toolbox::norm(deltaV);
@@ -179,13 +181,13 @@ void mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x
     }
   }
 
+  kep_toolbox::array3D Vexc_arr(v_end_l);
+  kep_toolbox::diff(Vexc_arr, v_end_l, v_P[v_P.size() - 1]);
   if (m_add_vinf_arr) {
-    kep_toolbox::array3D Vexc_arr(v_end_l);
-    kep_toolbox::diff(Vexc_arr, v_end_l, v_P[v_P.size() - 1]);
     DV[DV.size() - 1] = burn_cost(get_seq()[get_seq().size() - 1], Vexc_arr, true, get_circularize());
-    if (should_print) {
-      solution.arrival = transx_arrival(get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
-    }
+  }
+  if (should_print) {
+    solution.arrival = transx_arrival(get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
   }
   
   double sumDeltaV = std::accumulate(DV.begin(), DV.end(), 0.0);
@@ -201,6 +203,12 @@ void mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x
   if (get_f_dimension() == 2) {
     f[1] = sumT;
   }
+
+  return solution;
+}
+
+std::string mga_1dsm_transx::get_name() const {
+  return "MGA-1DSM";
 }
 
 }} // namespaces
