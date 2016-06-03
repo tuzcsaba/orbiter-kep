@@ -25,7 +25,7 @@ namespace orbiterkep {
 
 } // namespaces
 
-pagmo::problem::transx_solution run_problem(const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
+pagmo::problem::TransXSolution run_problem(const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
       int mf = 150;
 
       pagmo::decision_vector sol_mga;
@@ -42,8 +42,7 @@ pagmo::problem::transx_solution run_problem(const pagmo::problem::transx_problem
         std::cout << "Done" << std::endl;
       }
 
-      pagmo::problem::transx_solution solution = single_obj.get_solution(sol_mga);
-
+      auto solution = single_obj.get_solution(sol_mga);
 
       return solution;
 }
@@ -73,7 +72,7 @@ int main(int argc, char **argv) {
           param.add_dep_vinf, param.add_arr_vinf,
            true);
 
-      pagmo::problem::transx_solution solution;
+      pagmo::problem::TransXSolution solution;
       if (param.use_db) {
         solution = mga.get_solution(orbiterkep::db.get_stored_solution(param, "MGA"));
       } else {
@@ -82,7 +81,7 @@ int main(int argc, char **argv) {
         orbiterkep::db.store_solution(param, solution, "MGA");
       }
 
-      std::cout << solution.string() << std::endl;
+      std::cout << solution << std::endl;
 
     }
     if (param.n_mga_1dsm > 0) {
@@ -104,7 +103,7 @@ int main(int argc, char **argv) {
           true, true);
 
 
-      pagmo::problem::transx_solution solution;
+      pagmo::problem::TransXSolution solution;
       if (param.use_db) {
         solution = mga_1dsm.get_solution(orbiterkep::db.get_stored_solution(param, "MGA-1DSM"));
       } else {
@@ -113,7 +112,7 @@ int main(int argc, char **argv) {
         orbiterkep::db.store_solution(param, solution, "MGA-1DSM");
       }
 
-      std::cout << solution.string() << std::endl;
+      std::cout << solution << std::endl;
     }
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

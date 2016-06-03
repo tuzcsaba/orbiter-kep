@@ -18,7 +18,7 @@ class orbiterkep_db {
   public:
     orbiterkep_db();
 
-    void store_solution(const parameters &params, const pagmo::problem::transx_solution &solution, const std::string &problem);
+    void store_solution(const parameters &params, const pagmo::problem::TransXSolution &solution, const std::string &problem);
 
     pagmo::decision_vector get_stored_solution(const parameters &params, const std::string &problem);
 

@@ -5,11 +5,11 @@ set (CMAKE_CXX_STANDARD 11)
 project (OrbiterKEP C CXX)
 
 configure_file(
-  ${PROJECT_SOURCE_DIR}/OrbiterKEPConfig.h.in
-  ${PROJECT_BINARY_DIR}/OrbiterKEPConfig.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/OrbiterKEPConfig.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/OrbiterKEPConfig.h
 )
 
-include_directories("${PROJECT_BINARY_DIR}")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories(/usr/local/include)
 include_directories(/usr/local/include/mongocxx/v_noabi)
 include_directories(/usr/local/include/bsoncxx/v_noabi)
@@ -38,9 +38,17 @@ set (BOOST_LIBRARIES
   libboost_iostreams.a
 )
 
+set (PROTOBUF_IMPORT_DIRS
+  proto
+  )
+
 set (ESA_LIBRARIES  
   libpagmo.a
   libkeplerian_toolbox.a
+)
+
+set (VARIOUS_LIBRARIES
+  libproto.a
 )
 
 if (BUILD_MONGODB)
@@ -63,6 +71,10 @@ set (ESA_LIBRARIES
   keplerian_toolbox
 )
 
+set (VARIOUS_LIBRARIES
+  proto
+)
+
 if (BUILD_MONGODB)
   set (MONGO_LIBRARIES
     mongocxx
@@ -72,7 +84,8 @@ endif(BUILD_MONGODB)
 
 ENDIF(BUILD_STATIC)
 
-target_link_libraries(OrbiterKEP orbiterkep_static ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${BOOST_LIBRARIES})
+ADD_SUBDIRECTORY(proto)
+target_link_libraries(OrbiterKEP proto orbiterkep_static ${PROTOBUF_LIBRARY} ${VARIOUS_LIBRARIES} ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${BOOST_LIBRARIES})
 
 INSTALL(TARGETS OrbiterKEP RUNTIME DESTINATION bin)
 

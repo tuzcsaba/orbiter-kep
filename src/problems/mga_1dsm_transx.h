@@ -31,7 +31,7 @@ public:
 
     virtual std::string get_name() const;
 
-    virtual transx_solution calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
+    virtual TransXSolution calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
 
 private:
 

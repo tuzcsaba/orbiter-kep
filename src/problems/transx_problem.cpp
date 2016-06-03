@@ -45,207 +45,185 @@ base_ptr transx_problem::clone() const {
   return base_ptr(new transx_problem(*this));
 }
 
-std::string transx_times::string() const {
-  std::stringstream ss;
+std::ostream& operator<<(std::ostream& ss, const TransXTimes &tim) {
   ss << std::fixed;
 
   std::vector<std::string> encounters;
   std::vector<std::pair<std::string, std::string> > transfers;
-  for (int i = 0; i < planets.size() - 1; ++i) {
-    ss << "Transfer time from " << planets[i] << " to " << planets[i + 1] << ":";
-    ss << (times[i + 1].mjd() - times[i].mjd()) << std::setprecision(2) << " days" << std::endl;
+  for (int i = 0; i < tim.planets().size() - 1; ++i) {
+    ss << "Transfer time from " << tim.planets().Get(i) << " to " << tim.planets().Get(i+1) << ":";
+    ss << (tim.times().Get(i + 1) - tim.times().Get(i)) << std::setprecision(2) << " days" << std::endl;
   }
 
-  for (int i = 0; i < planets.size(); ++i) {
-    ss << "Date of " << planets[i] << " encounter: ";
-    ss << times[i] << std::endl;
+  for (int i = 0; i < tim.planets().size(); ++i) {
+    ss << "Date of " << tim.planets().Get(i) << " encounter: ";
+    ss << tim.times().Get(i) << std::endl;
   }
 
-  ss << "Total mission duration: " << (times[times.size() - 1].mjd() - times[0].mjd()) << std::setprecision(2) << " days" << std::endl << std::endl << std::endl;
+  ss << "Total mission duration: " << (tim.times().Get(tim.times().size() - 1) - tim.times().Get(0)) << std::setprecision(2) << " days" << std::endl << std::endl << std::endl;
 
-  return ss.str();
+  return ss;
 }
 
-transx_times transx_problem::transx_time_info(std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> time_list) const {
-  std::vector<std::string> p;
+void transx_problem::transx_time_info(TransXTimes *times, std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> time_list) const {
   for (int i = 0; i < planets.size(); ++i) {
-    p.push_back(planets[i]->get_name());
+    times->add_planets(planets[i]->get_name());
+    times->add_times(time_list[i].mjd());
   }
-  transx_times times;
-  times.planets = p;
-  times.times = time_list;
-  return times;
 }
 
-std::string transx_escape::string() const {
-  std::stringstream ss;
-
+std::ostream& operator<<(std::ostream& ss, const TransXEscape &esc) {
   ss << std::fixed;
-  ss << "Escape - " << planet << std::endl;
+  ss << "Escape - " << esc.planet() << std::endl;
   ss << "--------------------------------------" << std::endl;
-  ss << "MJD:                     " << mjd << std::setprecision(4) << std::endl;
-  ss << "Prograde:                " << prograde << std::setprecision(3) << std::endl;
-  ss << "Outward:                 " << outward << std::setprecision(3) << std::endl;
-  ss << "Plane:                   " << plane << std::setprecision(3) << std::endl;
-  ss << "Hyp. excess velocity:    " << v_inf << std::setprecision(3) <<  " m/s" << std::endl;
-  ss << "Earth escape burn:       " << burn << std::setprecision(3) << std::endl;
+  ss << "MJD:                     " << esc.mjd() << std::setprecision(4) << std::endl;
+  ss << "Prograde:                " << esc.prograde() << std::setprecision(3) << std::endl;
+  ss << "Outward:                 " << esc.outward() << std::setprecision(3) << std::endl;
+  ss << "Plane:                   " << esc.plane() << std::setprecision(3) << std::endl;
+  ss << "Hyp. excess velocity:    " << esc.vinf() << std::setprecision(3) <<  " m/s" << std::endl;
+  ss << "Earth escape burn:       " << esc.burn() << std::setprecision(3) << std::endl;
   ss << std::endl << std::endl;
 
-  return ss.str();
+  return ss;
 };
 
-transx_escape transx_problem::transx_escape(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, double eject_T) const {
-  struct transx_escape escape;
+void transx_problem::transx_escape(TransXEscape *escape, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, double eject_T) const {
+
   kep_toolbox::array3D dVTransX = velocity_to_transx(V_ref, R_ref, deltaV);
   double dv = kep_toolbox::norm(deltaV);
 
-  escape.planet = ref->get_name();
-  escape.mjd = eject_T;
+  escape->set_planet(ref->get_name());
+  escape->set_mjd(eject_T);
   
-  escape.prograde = dVTransX[0];
-  escape.outward = dVTransX[1];
-  escape.plane = dVTransX[2];
+  escape->set_prograde(dVTransX[0]);
+  escape->set_outward(dVTransX[1]);
+  escape->set_plane(dVTransX[2]);
 
-  escape.v_inf = dv;
+  escape->set_vinf(dv);
 
-  escape.burn = burn_cost(ref, deltaV, false, true);
-
-  return escape;
+  escape->set_burn(burn_cost(ref, deltaV, false, true));
 }
 
-std::string transx_dsm::string() const {
-  std::stringstream ss;
+std::ostream& operator<<(std::ostream& ss, const TransXDSM &dsm) {
 
   ss << std::fixed;
   ss << "Deep Space Maneuver - " << std::endl;
   ss << "--------------------------------------" << std::endl;
-  ss << "MJD:                     " << mjd << std::setprecision(4) << std::endl;
-  ss << "Prograde:                " << prograde << std::setprecision(3) << std::endl;
-  ss << "Outward:                 " << outward << std::setprecision(3) << std::endl;
-  ss << "Plane:                   " << plane << std::setprecision(3) << std::endl;
-  ss << "Hyp. excess velocity:    " << v_inf << std::setprecision(3) <<  "m/s" << std::endl;
-  ss << "DSM burn:                " << burn << std::setprecision(3) << std::endl;
+  ss << "MJD:                     " << dsm.mjd() << std::setprecision(4) << std::endl;
+  ss << "Prograde:                " << dsm.prograde() << std::setprecision(3) << std::endl;
+  ss << "Outward:                 " << dsm.outward() << std::setprecision(3) << std::endl;
+  ss << "Plane:                   " << dsm.plane() << std::setprecision(3) << std::endl;
+  ss << "Hyp. excess velocity:    " << dsm.vinf() << std::setprecision(3) <<  "m/s" << std::endl;
+  ss << "DSM burn:                " << dsm.burn() << std::setprecision(3) << std::endl;
   
   ss << std::endl << std::endl;
 
-  return ss.str();
+  return ss;
 }
 
-transx_dsm transx_problem::transx_dsm(kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T) const {
+void transx_problem::transx_dsm(TransXDSM * dsm, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T) const {
   kep_toolbox::array3D dVTransX = velocity_to_transx(V_ref, R_ref, deltaV);
   double dv = kep_toolbox::norm(deltaV);
 
-  struct transx_dsm dsm;
-  dsm.mjd = dsm_T;
+  dsm->set_mjd(dsm_T);
 
-  dsm.prograde = dVTransX[0];
-  dsm.outward =  dVTransX[1];
-  dsm.plane   =  dVTransX[2];
+  dsm->set_prograde(dVTransX[0]);
+  dsm->set_outward(dVTransX[1]);
+  dsm->set_plane(dVTransX[2]);
 
-  dsm.v_inf = kep_toolbox::norm(v);
+  dsm->set_vinf(kep_toolbox::norm(v));
 
-  dsm.burn = dv;
-
-  return dsm;
+  dsm->set_burn(dv);
 }
 
-std::string transx_flyby::string() const {
-  std::stringstream ss; 
-
+std::ostream& operator<<(std::ostream& ss, const TransXFlyBy &f) {
   ss << std::fixed;
-  ss << planet << " encounter" << std::endl;
+  ss << f.planet() << " encounter" << std::endl;
   ss << "--------------------------------------" << std::endl;
-  ss << "MJD:                   " << mjd << std::setprecision(4) << std::endl;
-  ss << "Approach velocity:     " << approach_vel << std::setprecision(3) << std::endl;
-  ss << "Departure velocity:    " << departure_vel << std::setprecision(3) << std::endl;  
+  ss << "MJD:                   " << f.mjd() << std::setprecision(4) << std::endl;
+  ss << "Approach velocity:     " << f.approach_vel() << std::setprecision(3) << std::endl;
+  ss << "Departure velocity:    " << f.departure_vel() << std::setprecision(3) << std::endl;  
 
-  ss << "Outward angle:         " << outward_angle << std::endl;
-  ss << "Inclination:           " << inclination << std::setprecision(3) << " deg" << std::endl;
-  ss << "Turning angle:         " << turning_angle << std::setprecision(3) << " deg" << std::endl;
-  ss << "Periapsis altitude:    " << periapsis_altitude << std::setprecision(3) << " km" << std::endl;
-  ss << "dV needed:             " << burn << std::setprecision(3) << " m/s" << std::endl;
+  ss << "Outward angle:         " << f.outward_angle() << std::endl;
+  ss << "Inclination:           " << f.inclination() << std::setprecision(3) << " deg" << std::endl;
+  ss << "Turning angle:         " << f.turning_angle() << std::setprecision(3) << " deg" << std::endl;
+  ss << "Periapsis altitude:    " << f.periapsis_altitude() << std::setprecision(3) << " km" << std::endl;
+  ss << "dV needed:             " << f.burn() << std::setprecision(3) << " m/s" << std::endl;
   ss << std::endl << std::endl;
 
-  return ss.str();
+  return ss;
 }
 
-transx_flyby transx_problem::transx_flyby(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D Vin, kep_toolbox::array3D Vout, double enc_T) const {
+void transx_problem::transx_flyby(TransXFlyBy *flyby, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D Vin, kep_toolbox::array3D Vout, double enc_T) const {
   kep_toolbox::array3D VoutTransX = velocity_to_transx(V_ref, R_ref, Vout);
   double vx = VoutTransX[0];
   double vy = VoutTransX[1];
   double vz = VoutTransX[2];
 
-  struct transx_flyby flyby;
-  flyby.planet = ref->get_name();
-  flyby.mjd = enc_T;
+  flyby->set_planet( ref->get_name() );
+  flyby->set_mjd( enc_T );
 
-  flyby.approach_vel = sqrt(kep_toolbox::dot(Vin, Vin));
-  flyby.departure_vel = sqrt(kep_toolbox::dot(Vout, Vout));
+  flyby->set_approach_vel( sqrt(kep_toolbox::dot(Vin, Vin)) );
+  flyby->set_departure_vel( sqrt(kep_toolbox::dot(Vout, Vout)) );
   
-  flyby.outward_angle = 180 * atan2(vy, vx) / M_PI;
-  flyby.inclination = 180 * atan2(vz, sqrt(vx * vx + vy * vy)) / M_PI;
+  flyby->set_outward_angle( 180 * atan2(vy, vx) / M_PI );
+  flyby->set_inclination( 180 * atan2(vz, sqrt(vx * vx + vy * vy)) / M_PI );
 
   double ta  = acos(kep_toolbox::dot(Vin, Vout)/sqrt(kep_toolbox::dot(Vin,Vin))/sqrt(kep_toolbox::dot(Vout,Vout)));
-  flyby.turning_angle = ta * 180.0 / M_PI;
+  flyby->set_turning_angle( ta * 180.0 / M_PI );
 
   double alt = (ref->get_mu_self() / kep_toolbox::dot(Vin,Vin)*(1/sin(ta/2)-1) - ref->get_radius())/1000;
-  flyby.periapsis_altitude = alt;
+  flyby->set_periapsis_altitude( alt );
 
   double enc_vel = 0.0;
   kep_toolbox::fb_vel(enc_vel, Vin, Vout, *ref);
-  flyby.burn = enc_vel;
-  return flyby;
+  flyby->set_burn(enc_vel);
 }
 
-std::string transx_arrival::string() const {
-  std::stringstream ss;
-
+std::ostream& operator<<(std::ostream& ss, const TransXArrival &arriv) {
   ss << std::fixed;
-  ss << planet << " arrival" << std::endl;
+  ss << arriv.planet() << " arrival" << std::endl;
   ss << "--------------------------------------" << std::endl;
-  ss << "MJD:                     " << mjd << std::setprecision(4) << "   " << std::endl;
-  ss << "Hyp. excess velocity:    " << v_inf << std::setprecision(3) <<  "m/s" << std::endl;
-  ss << "Orbit insertion burn:    " << burn << std::setprecision(3) << " m/s" << std::endl;
+  ss << "MJD:                     " << arriv.mjd() << std::setprecision(4) << "   " << std::endl;
+  ss << "Hyp. excess velocity:    " << arriv.vinf() << std::setprecision(3) <<  "m/s" << std::endl;
+  ss << "Orbit insertion burn:    " << arriv.burn() << std::setprecision(3) << " m/s" << std::endl;
   ss << std::endl << std::endl;
 
-  return ss.str();
+  return ss;
 }
 
-transx_arrival transx_problem::transx_arrival(kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_exc, double enc_T) const {
-  struct transx_arrival arrival;
+void transx_problem::transx_arrival(TransXArrival *arrival, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_exc, double enc_T) const {
 
-  arrival.planet = ref->get_name();
-  arrival.mjd = enc_T;
-  arrival.v_inf = kep_toolbox::norm(V_exc);
-  arrival.burn = burn_cost(ref, V_exc, true, m_circularize);
-
-  return arrival;
+  arrival->set_planet(ref->get_name());
+  arrival->set_mjd(enc_T);
+  arrival->set_vinf(kep_toolbox::norm(V_exc));
+  arrival->set_burn(burn_cost(ref, V_exc, true, m_circularize));
 }
 
-std::string transx_solution::string() const
+std::ostream& operator<<(std::ostream& ss, const TransXSolution &sol)
 {
-  std::stringstream ss;
+  ss << sol.times();
 
-  ss << times.string();
-
-  ss << escape.string();
+  ss << sol.escape();
 
   int i = 0; 
   int j = 0;
+  auto dsms = sol.dsms();
+  auto flybyes = sol.flybyes();
   while (i < dsms.size() || j < flybyes.size()) {
     if (i < dsms.size()) {
-      ss << dsms[i++].string();
+      ss << dsms.Get(i++);
     }
     if (j < flybyes.size()) {
-      ss << flybyes[j++].string();
+      ss << flybyes.Get(j++);
     }
   }
 
-  ss << arrival.string();
+  ss << sol.arrival();
 
-  ss << "Total delta-V:           " << fuel_cost << std::setprecision(3) << " m/s" << std::endl;
+  ss << "Total delta-V:           " << sol.fuel_cost() << std::setprecision(3) << " m/s" << std::endl;
 
-  return ss.str();
+  return ss;
 }
 
 kep_toolbox::array3D transx_problem::velocity_to_transx(kep_toolbox::array3D v_ref, kep_toolbox::array3D v_rad, kep_toolbox::array3D v) const {
@@ -274,8 +252,8 @@ double transx_problem::burn_cost(kep_toolbox::planet::planet_ptr ref, const kep_
   return sqrt(norm_sqr + 2 * mu / r) - sqrt((circ ? 1 : 2) * mu / r);
 }
 
-transx_solution transx_problem::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
-  transx_solution solution;
+TransXSolution transx_problem::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+  TransXSolution solution;
   f[0] = 0;
   if (get_f_dimension() == 2) {
     f[1] = 0;
@@ -287,11 +265,13 @@ void transx_problem::objfun_impl(fitness_vector &f, const decision_vector &x) co
   calc_objective(f, x);
 }
 
-transx_solution transx_problem::get_solution(const decision_vector &x, bool extended_output) const {
+TransXSolution transx_problem::get_solution(const decision_vector &x, bool extended_output) const {
   fitness_vector f(get_f_dimension());
   auto solution = calc_objective(f, x, true);
-  solution.x = x;
-  solution.problem = get_name();
+  for (int i =0; i < x.size(); ++i) {
+    solution.add_x(x[i]);
+  }
+  solution.set_problem(get_name());
   return solution;
 }
 

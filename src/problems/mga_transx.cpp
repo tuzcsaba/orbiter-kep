@@ -41,9 +41,9 @@ base_ptr mga_transx::clone() const {
   return base_ptr(new mga_transx(*this));
 }
 
-transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
 
-  transx_solution solution;
+  TransXSolution solution;
 
   int n = get_n_legs();
 
@@ -74,7 +74,7 @@ transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vec
   kep_toolbox::array3D v_end_l;
   kep_toolbox::array3D v_beg_l;
 
-  solution.times = transx_time_info(get_seq(), t_P);
+  transx_time_info(solution.mutable_times(), get_seq(), t_P);
 
   kep_toolbox::array3D vout, vin;
   for (int i = 0; i < get_n_legs(); ++i) {
@@ -94,7 +94,7 @@ transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vec
         DV[0] = burn_cost(get_seq()[0], vout_rel, false, true);
       }
       if (should_print) {
-        solution.escape = transx_escape(get_seq()[0], v_P[0], r_P[0], vout_rel, t_P[0].mjd());
+        transx_escape(solution.mutable_escape(), get_seq()[0], v_P[0], r_P[0], vout_rel, t_P[0].mjd());
       }
     } else {
       kep_toolbox::array3D v_rel_in(vin), v_rel_out(vout);
@@ -104,7 +104,7 @@ transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vec
       kep_toolbox::fb_vel(DV[i], v_rel_in, v_rel_out, *planet);
 
       if (should_print) {
-        solution.flybyes.push_back(transx_flyby(planet, v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd()));
+        transx_flyby(solution.add_flybyes(), planet, v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd());
       }
     }
 
@@ -118,14 +118,13 @@ transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vec
   }
 
   if (should_print)
-    solution.arrival = transx_arrival(get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
+    transx_arrival(solution.mutable_arrival(), get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
 
   double fuelCost = std::accumulate(DV.begin(), DV.end(), 0.0);
   double totalTime = std::accumulate(T.begin(), T.end(), 0.0);
 
   if (should_print) {
-    solution.fuel_cost = fuelCost;
-    std::cout << solution.string();
+    solution.set_fuel_cost(fuelCost);
   }
 
   f[0] = fuelCost;
@@ -133,11 +132,6 @@ transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vec
     f[1] = totalTime;
   }
 
-  if (should_print) {
-    std::cout << solution.string();
-
-    std::cout << "Total fuel cost:     " << fuelCost << std::setprecision(3) << " m/s" << std::endl;
-  }
   return solution;
 }
 

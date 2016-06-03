@@ -89,9 +89,9 @@ base_ptr mga_1dsm_transx::clone() const {
   return base_ptr(new mga_1dsm_transx(*this));
 }
 
-transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+TransXSolution mga_1dsm_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
 
-  transx_solution solution;
+  TransXSolution solution;
 
   std::vector<double> T(get_n_legs());
   double alpha_sum = 0;
@@ -126,14 +126,14 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
   }
 
   if (should_print) {
-    solution.times = transx_time_info(get_seq(), t_P);
+    transx_time_info(solution.mutable_times(), get_seq(), t_P);
   }
 
   if (m_add_vinf_dep) {
     DV[0] += burn_cost(get_seq()[0], Vinf, false, true); 
   }
   if (should_print) {
-    solution.escape = transx_escape(get_seq()[0], v_P[0], r_P[0], Vinf, t_P[0].mjd());
+    transx_escape(solution.mutable_escape(), get_seq()[0], v_P[0], r_P[0], Vinf, t_P[0].mjd());
   }
 
   kep_toolbox::array3D v0;
@@ -153,7 +153,7 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
   DV[0] += kep_toolbox::norm(deltaV);
 
   if (should_print) {
-    solution.dsms.push_back(transx_dsm(v, r, deltaV, v_beg_l, t_P[0].mjd() + dt / ASTRO_DAY2SEC));
+    transx_dsm(solution.add_dsms(), v, r, deltaV, v_beg_l, t_P[0].mjd() + dt / ASTRO_DAY2SEC);
   }
 
   for (int i = 1; i < n - 1; ++i) {
@@ -166,7 +166,7 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
       kep_toolbox::array3D v_rel_in, v_rel_out;
       kep_toolbox::diff(v_rel_in, v_end_l, v_P[i]);
       kep_toolbox::diff(v_rel_out, v_out, v_P[i]);
-      solution.flybyes.push_back(transx_flyby(get_seq()[i], v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd()));
+      transx_flyby(solution.add_flybyes(), get_seq()[i], v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd());
     }
 
     r = r_P[i]; v = v_out;
@@ -183,7 +183,7 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
     DV[i] = kep_toolbox::norm(deltaV);
     
     if (should_print) {
-      solution.dsms.push_back(transx_dsm(v, r, deltaV, v_beg_l, t_P[i].mjd() + dt / ASTRO_DAY2SEC));
+      transx_dsm(solution.add_dsms(), v, r, deltaV, v_beg_l, t_P[i].mjd() + dt / ASTRO_DAY2SEC);
     }
   }
 
@@ -193,16 +193,14 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
     DV[DV.size() - 1] += burn_cost(get_seq()[get_seq().size() - 1], Vexc_arr, true, get_circularize());
   }
   if (should_print) {
-    solution.arrival = transx_arrival(get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
+    transx_arrival(solution.mutable_arrival(), get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
   }
   
   double sumDeltaV = std::accumulate(DV.begin(), DV.end(), 0.0);
   double sumT = std::accumulate(T.begin(), T.end(), 0.0);
 
   if (should_print) {
-    solution.fuel_cost = sumDeltaV;
-
-    std::cout << solution.string();
+    solution.set_fuel_cost(sumDeltaV);
   }
 
   f[0] = sumDeltaV;

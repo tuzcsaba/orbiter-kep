@@ -49,7 +49,7 @@ pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &para
   return res;
 }
 
-void orbiterkep_db::store_solution(const parameters &params, const pagmo::problem::transx_solution &solution, const std::string &problem) {
+void orbiterkep_db::store_solution(const parameters &params, const pagmo::problem::TransXSolution &solution, const std::string &problem) {
   using builder::stream::open_array;
   using builder::stream::close_array;
   using builder::stream::open_document;
@@ -76,7 +76,7 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
     if (i <= 0) break;
     auto id = doc["_id"].get_value();
     auto deltaV = doc["delta-v"].get_value().get_double();
-    if (deltaV < solution.fuel_cost) {
+    if (deltaV < solution.fuel_cost()) {
       return;
     }
     collection.delete_one(document{} << "_id" << id << finalize);
@@ -94,18 +94,19 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
   }
   planetsArr << close_array;
 
-  auto launch = solution.times.times[0].mjd();
-  document << "problem" << solution.problem;
+  auto launch = solution.times().times(0);
+  document << "problem" << solution.problem();
   document << "launch_mjd" << launch;
   document << "eject_altitude" << params.dep_altitude;
   document << "target_altitude" << params.arr_altitude;
-  document << "delta-v" << solution.fuel_cost;
+  document << "delta-v" << solution.fuel_cost();
 
-  document << "transx_plan" << solution.string();
+  std::stringstream ss; ss << solution;
+  document << "transx_plan" << ss.str();
 
   auto decisionVec = document << "decision_vector" << open_array;
-  for (int i = 0; i < solution.x.size(); ++i) {
-    decisionVec << solution.x[i];
+  for (int i = 0; i < solution.x().size(); ++i) {
+    decisionVec << solution.x(i);
   }
   decisionVec << close_array;
 
