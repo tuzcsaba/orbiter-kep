@@ -75,11 +75,11 @@ int main(int argc, char **argv) {
 
       pagmo::problem::transx_solution solution;
       if (param.use_db) {
-        solution = mga.get_solution(orbiterkep::db.get_stored_solution(param));
+        solution = mga.get_solution(orbiterkep::db.get_stored_solution(param, "MGA"));
       } else {
         solution = run_problem(mga, mga_multi, param.n_mga, param.n_gen, param.max_deltaV, param.multi_obj);
 
-        orbiterkep::db.store_solution(param, solution);
+        orbiterkep::db.store_solution(param, solution, "MGA");
       }
 
       std::cout << solution.string() << std::endl;
@@ -106,11 +106,11 @@ int main(int argc, char **argv) {
 
       pagmo::problem::transx_solution solution;
       if (param.use_db) {
-        solution = mga_1dsm.get_solution(orbiterkep::db.get_stored_solution(param));
+        solution = mga_1dsm.get_solution(orbiterkep::db.get_stored_solution(param, "MGA-1DSM"));
       } else {
         solution = run_problem(mga_1dsm, mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, param.max_deltaV, param.multi_obj);
 
-        orbiterkep::db.store_solution(param, solution);
+        orbiterkep::db.store_solution(param, solution, "MGA-1DSM");
       }
 
       std::cout << solution.string() << std::endl;

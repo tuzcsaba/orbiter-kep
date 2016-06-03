@@ -35,9 +35,17 @@ mga_1dsm_transx::mga_1dsm_transx(const std::vector<kep_toolbox::planet::planet_p
       lb[6] = 1e-5; ub[6] = 1 - 1e-5;
 
       for (int i = 0; i < get_n_legs() - 1; ++i) {
+        auto planet = seq[i + 1];
+      
+        double a = planet->compute_elements()[0];
+        double soi = a * pow((planet->get_mu_self() / planet->get_mu_central_body()), 2/5);
+        double soiRad = soi / planet->get_radius();
+
+        double safeDistanceRatio = planet->get_safe_radius() / planet->get_radius();
+
         int j = 7 + 4 * i;
-        lb[j] = -2 * M_PI; ub[j] = 2 * M_PI;
-        lb[j + 1] = 1.1;   ub[j + 1] = 100.0;
+        lb[j] = -2 * boost::math::constants::pi<double>(); ub[j] = 2 * boost::math::constants::pi<double>();
+        lb[j + 1] = safeDistanceRatio;   ub[j + 1] = soiRad;
         lb[j + 2] = 1e-5;  ub[j + 2] = 1 - 1e-5;
         lb[j + 3] = 1e-5;  ub[j + 3] = 1 - 1e-5;
       }

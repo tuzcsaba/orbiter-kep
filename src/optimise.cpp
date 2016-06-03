@@ -6,7 +6,7 @@
 namespace orbiterkep {
 
 optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
-  m_problem(prob), m_n_isl(8), m_population(50), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
+  m_problem(prob), m_n_isl(8), m_population(64), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
 }
 
 pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV, std::vector<std::string> algo_list) {
@@ -109,6 +109,8 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
         if (best_f > val) {
           best_f = val;
           best_x = isl->get_population().champion().x;
+    
+          std::cerr << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
         }
 
         prev = val;
@@ -116,7 +118,6 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
 
     }
 
-    std::cerr << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
 
     if (m_problem.get_f_dimension() == 2 && print_fronts) {
       pagmo::population sum_pop(m_problem);

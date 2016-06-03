@@ -2,6 +2,8 @@
 
 #ifdef BUILD_MONGODB
 
+#include <boost/algorithm/string.hpp>
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
@@ -18,7 +20,7 @@ const int max_count_per_problem = 100;
 orbiterkep_db::orbiterkep_db():m_inst(mongocxx::instance{}),m_client(mongocxx::client{mongocxx::uri{}}) {
 }
 
-pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &params) {
+pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &params, const std::string &problem) {
   using builder::stream::open_array;
   using builder::stream::close_array;
   using builder::stream::open_document;
@@ -28,14 +30,15 @@ pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &para
 
   auto collection = m_client["orbiter_kep"]["solutions"];
   
-  int param_hash = boost::hash_value(params);
+  std::size_t param_hash = boost::hash_value(params);
+  boost::hash_combine(param_hash, problem);
 
   mongocxx::options::find opts;
   opts.sort(document{} << "delta-v" << 1 << finalize);
   opts.limit(1);
 
   pagmo::decision_vector res;
-  auto cursor = collection.find(document{} << "param_hash" << param_hash << finalize);
+  auto cursor = collection.find(document{} << "param_hash" << (int64_t)param_hash << finalize);
   for (auto &&doc : cursor) {
     auto vec = doc["decision_vector"].get_value().get_array().value;
     for (auto item : vec) {
@@ -46,8 +49,7 @@ pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &para
   return res;
 }
 
-void orbiterkep_db::store_solution(const parameters &params, const pagmo::problem::transx_solution &solution) {
-
+void orbiterkep_db::store_solution(const parameters &params, const pagmo::problem::transx_solution &solution, const std::string &problem) {
   using builder::stream::open_array;
   using builder::stream::close_array;
   using builder::stream::open_document;
@@ -58,13 +60,14 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
 
   auto collection = m_client["orbiter_kep"]["solutions"];
 
-  int param_hash = boost::hash_value(params);
+  std::size_t param_hash = boost::hash_value(params);
+  boost::hash_combine(param_hash, problem);
 
   mongocxx::options::find opts;
   opts.sort(document{} << "delta-v" << -1 << finalize);
 
   document query{};
-  query << "param_hash" << param_hash;
+  query << "param_hash" << (int64_t)param_hash;
   
   int count = collection.count(query << finalize);
   auto cursor = collection.find(query << finalize, opts);
@@ -82,7 +85,7 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
 
   builder::stream::document document{};
 
-  document << "param_hash" << param_hash;
+  document << "param_hash" << (int64_t)param_hash;
   
   auto planetsArr = document << "planets" << open_array; 
   for (int i = 0; i < params.planets.size(); ++i) {
