@@ -26,21 +26,24 @@ namespace orbiterkep {
 } // namespaces
 
 pagmo::problem::transx_solution run_problem(const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
+      int mf = 100;
+
+      pagmo::decision_vector sol_mga;
+
       std::cout << "- Running single-objective optimisation";
-      orbiterkep::optimiser op(single_obj, trials, gen, 100, 1);
-      pagmo::decision_vector sol_mga = op.run_once(0, false, max_deltav);
+      orbiterkep::optimiser op(single_obj, trials, gen, mf, 1);
+      sol_mga = op.run_once(0, false, max_deltav);
       std::cout << " Done" << std::endl;
 
       if (run_multi_obj) {
         std::cout << "- Running multi-objective optimisation";
-        orbiterkep::optimiser op_multi(multi_obj, trials, gen, 100, 1);
+        orbiterkep::optimiser op_multi(multi_obj, trials, gen, mf, 1);
         op_multi.run_once(&sol_mga, true, max_deltav);
         std::cout << "Done" << std::endl;
       }
 
       pagmo::problem::transx_solution solution = single_obj.get_solution(sol_mga);
 
-      std::cout << solution.string() << std::endl;
 
       return solution;
 }
@@ -70,9 +73,17 @@ int main(int argc, char **argv) {
           param.add_dep_vinf, param.add_arr_vinf,
            true);
 
-      auto solution = run_problem(mga, mga_multi, param.n_mga, param.n_gen, param.max_deltaV, param.multi_obj);
+      pagmo::problem::transx_solution solution;
+      if (param.use_db) {
+        solution = mga.get_solution(orbiterkep::db.get_stored_solution(param));
+      } else {
+        solution = run_problem(mga, mga_multi, param.n_mga, param.n_gen, param.max_deltaV, param.multi_obj);
 
-      orbiterkep::db.store_solution(param, solution);
+        orbiterkep::db.store_solution(param, solution);
+      }
+
+      std::cout << solution.string() << std::endl;
+
     }
     if (param.n_mga_1dsm > 0) {
       std::cout << "Executing MGA-1DSM trials" << std::endl;
@@ -92,9 +103,17 @@ int main(int argc, char **argv) {
           param.add_dep_vinf, param.add_arr_vinf,
           true, true);
 
-      auto solution = run_problem(mga_1dsm, mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, param.max_deltaV, param.multi_obj);
-      
-      orbiterkep::db.store_solution(param, solution);
+
+      pagmo::problem::transx_solution solution;
+      if (param.use_db) {
+        solution = mga_1dsm.get_solution(orbiterkep::db.get_stored_solution(param));
+      } else {
+        solution = run_problem(mga_1dsm, mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, param.max_deltaV, param.multi_obj);
+
+        orbiterkep::db.store_solution(param, solution);
+      }
+
+      std::cout << solution.string() << std::endl;
     }
   } catch (TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

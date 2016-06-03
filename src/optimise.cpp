@@ -6,7 +6,7 @@
 namespace orbiterkep {
 
 optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
-  m_problem(prob), m_n_isl(8), m_population(40), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
+  m_problem(prob), m_n_isl(8), m_population(50), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
 }
 
 pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV, std::vector<std::string> algo_list) {
@@ -15,6 +15,10 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
 
   // Single-obj
   algos_map["jde"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::jde(m_mf, 2, 1, 1e-1, 1e-2, true));
+  algos_map["jde_11"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::jde(m_mf, 11, 2, 1e-1, 1e-2, true));
+  algos_map["jde_13"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::jde(m_mf, 13, 2, 1e-1, 1e-2, true));
+  algos_map["jde_15"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::jde(m_mf, 15, 2, 1e-1, 1e-2, true));
+  algos_map["jde_17"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::jde(m_mf, 17, 2, 1e-1, 1e-2, true));
   algos_map["de_1220"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::de_1220(m_mf));
   algos_map["mde_pbx"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::mde_pbx(m_mf));
   algos_map["pso"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::pso(m_mf));
@@ -33,6 +37,7 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
  
   // Meta-algorithm
   algos_map["mbh_cs"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::mbh(*algos_map["cs"]));
+  algos_map["ms_jde"] = std::unique_ptr<pagmo::algorithm::base>(new pagmo::algorithm::ms(*algos_map["jde"], m_mf));
 
   pagmo::migration::best_s_policy sel_single(0.1, pagmo::migration::rate_type::fractional);
   pagmo::migration::fair_r_policy rep_single(0.1, pagmo::migration::rate_type::fractional);
@@ -104,13 +109,14 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
         if (best_f > val) {
           best_f = val;
           best_x = isl->get_population().champion().x;
-          std::cerr << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
         }
 
         prev = val;
       }
 
     }
+
+    std::cerr << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
 
     if (m_problem.get_f_dimension() == 2 && print_fronts) {
       pagmo::population sum_pop(m_problem);

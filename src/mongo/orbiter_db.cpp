@@ -13,7 +13,37 @@ using namespace bsoncxx;
 
 namespace orbiterkep {
 
+const int max_count_per_problem = 100;
+
 orbiterkep_db::orbiterkep_db():m_inst(mongocxx::instance{}),m_client(mongocxx::client{mongocxx::uri{}}) {
+}
+
+pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &params) {
+  using builder::stream::open_array;
+  using builder::stream::close_array;
+  using builder::stream::open_document;
+  using builder::stream::close_document;
+  using builder::stream::document;
+  using builder::stream::finalize;
+
+  auto collection = m_client["orbiter_kep"]["solutions"];
+  
+  int param_hash = boost::hash_value(params);
+
+  mongocxx::options::find opts;
+  opts.sort(document{} << "delta-v" << 1 << finalize);
+  opts.limit(1);
+
+  pagmo::decision_vector res;
+  auto cursor = collection.find(document{} << "param_hash" << param_hash << finalize);
+  for (auto &&doc : cursor) {
+    auto vec = doc["decision_vector"].get_value().get_array().value;
+    for (auto item : vec) {
+      res.push_back(item.get_double().value);
+    }
+  }
+
+  return res;
 }
 
 void orbiterkep_db::store_solution(const parameters &params, const pagmo::problem::transx_solution &solution) {
@@ -38,7 +68,7 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
   
   int count = collection.count(query << finalize);
   auto cursor = collection.find(query << finalize, opts);
-  int i = count - 10;
+  int i = count - max_count_per_problem;
   for (auto&& doc : cursor) {
     if (i <= 0) break;
     auto id = doc["_id"].get_value();

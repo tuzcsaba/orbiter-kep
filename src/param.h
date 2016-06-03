@@ -38,6 +38,8 @@ struct parameters {
   bool circularize;
 
   bool multi_obj;
+
+  bool use_db;
 };
 
 void load_spice_kernels();

@@ -23,6 +23,7 @@ parameters parse_parameters(int argc, char ** argv) {
     
     TCLAP::SwitchArg             omitDepVInfArg("", "omit-dep-vinf", "if on, the fuel calculations omit the final capture burn", false);
     TCLAP::SwitchArg             omitArrVInfArg("", "omit-arr-vinf", "if on, the fuel calculations won't include the initial Vinf", false);
+    TCLAP::SwitchArg             useDBArg("", "use-db", "if on, the fuel calculations won't include the initial Vinf", false);
     TCLAP::SwitchArg             spiceArg("", "spice", "use JPL SPICE toolkit for getting ephimerides", false);
     TCLAP::ValueArg<double>      maxDeltaVArg("", "max-delta-v", "Delta-V budget", false, 20000, "m/s");
     
@@ -46,6 +47,8 @@ parameters parse_parameters(int argc, char ** argv) {
 
     cmd.add( algoSingleArg );
     cmd.add( algoMultiArg );
+
+    cmd.add( useDBArg );
 
     cmd.parse(argc, argv);
 
@@ -105,6 +108,8 @@ parameters parse_parameters(int argc, char ** argv) {
     std::vector<std::string> algos_multi;
     boost::split(algos_multi, algoMultiArg.getValue(), boost::is_any_of(","));
     param.multi_object_algos = algos_multi;
+
+    param.use_db = useDBArg.getValue();
 
     return param;
 };

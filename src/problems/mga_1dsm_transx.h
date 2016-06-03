@@ -26,7 +26,7 @@ public:
 
     bool get_multi_obj() const { return m_multi_obj; }
     bool get_add_vinf_dep() const { return m_add_vinf_dep; }
-    bool get_add_vinf_arr() const { return m_add_vinf_dep; }
+    bool get_add_vinf_arr() const { return m_add_vinf_arr; }
     bool get_dsm_allowed() const { return m_dsm_allowed; }
 
     virtual std::string get_name() const;

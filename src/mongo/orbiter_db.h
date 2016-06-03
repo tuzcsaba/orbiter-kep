@@ -20,6 +20,8 @@ class orbiterkep_db {
 
     void store_solution(const parameters &params, const pagmo::problem::transx_solution &solution);
 
+    pagmo::decision_vector get_stored_solution(const parameters &params);
+
   protected:
 
   private:

@@ -71,8 +71,6 @@ mga_1dsm_transx::mga_1dsm_transx(const std::vector<kep_toolbox::planet::planet_p
     }
 
     set_bounds(lb, ub);
-    
-    std::cout << m_add_vinf_arr << std::endl;
 }
 
 mga_1dsm_transx::mga_1dsm_transx(const mga_1dsm_transx &p) : transx_problem(p.get_seq(), p.get_dep_altitude(), p.get_arr_altitude(), p.get_circularize(), p.get_dimension(), p.get_f_dimension()), m_dsm_allowed(p.get_dsm_allowed()), m_add_vinf_arr(p.get_add_vinf_arr()), m_add_vinf_dep(p.get_add_vinf_dep()), m_multi_obj(p.get_multi_obj()) {
@@ -111,7 +109,7 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
   std::vector<kep_toolbox::epoch> t_P(n);
   std::vector<kep_toolbox::array3D> r_P(n);
   std::vector<kep_toolbox::array3D> v_P(n);
-  std::vector<double> DV(n, 0.0);
+  std::vector<double> DV(n + 1, 0.0);
 
   for (int i = 0; i < n; ++i) {
     kep_toolbox::planet::planet_ptr planet = get_seq()[i];
@@ -184,7 +182,7 @@ transx_solution mga_1dsm_transx::calc_objective(fitness_vector &f, const decisio
   kep_toolbox::array3D Vexc_arr(v_end_l);
   kep_toolbox::diff(Vexc_arr, v_end_l, v_P[v_P.size() - 1]);
   if (m_add_vinf_arr) {
-    DV[DV.size() - 1] = burn_cost(get_seq()[get_seq().size() - 1], Vexc_arr, true, get_circularize());
+    DV[DV.size() - 1] += burn_cost(get_seq()[get_seq().size() - 1], Vexc_arr, true, get_circularize());
   }
   if (should_print) {
     solution.arrival = transx_arrival(get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
