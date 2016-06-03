@@ -81,6 +81,9 @@ struct transx_times {
 };
 
 struct transx_solution {
+  decision_vector x;
+  std::string problem;
+
   transx_times times;
 
   transx_escape escape;
@@ -104,8 +107,8 @@ class __PAGMO_VISIBLE transx_problem : public base
 
 
 
-    std::string get_name() const;
-    std::string pretty(const decision_vector &x, bool extended_output = false) const;
+    virtual std::string get_name() const;
+    transx_solution get_solution(const decision_vector &x, bool extended_output = false) const;
 
 
     std::vector<kep_toolbox::planet::planet_ptr> get_seq() const { return m_seq; }
@@ -114,6 +117,8 @@ class __PAGMO_VISIBLE transx_problem : public base
     double get_common_mu() const    { return m_common_mu; }
     double get_dep_altitude() const { return m_dep_altitude; }
     double get_arr_altitude() const { return m_arr_altitude; }
+
+    virtual transx_solution calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
 
   protected:
     transx_times transx_time_info(std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> times) const;
@@ -125,8 +130,6 @@ class __PAGMO_VISIBLE transx_problem : public base
 
     double burn_cost(kep_toolbox::planet::planet_ptr ref, const kep_toolbox::array3D &exc, bool arr, bool circ) const;
     kep_toolbox::array3D velocity_to_transx(kep_toolbox::array3D v_ref, kep_toolbox::array3D v_rad, kep_toolbox::array3D v) const;
-
-    virtual void calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
 
 
     void objfun_impl(fitness_vector &, const decision_vector &) const;

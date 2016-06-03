@@ -41,7 +41,7 @@ base_ptr mga_transx::clone() const {
   return base_ptr(new mga_transx(*this));
 }
 
-void mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
+transx_solution mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
 
   transx_solution solution;
 
@@ -138,6 +138,11 @@ void mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, boo
 
     std::cout << "Total fuel cost:     " << fuelCost << std::setprecision(3) << " m/s" << std::endl;
   }
+  return solution;
+}
+
+std::string mga_transx::get_name() const {
+  return "MGA";
 }
 
 }} // namespaces

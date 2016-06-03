@@ -31,8 +31,9 @@ public:
   bool get_add_vinf_dep() const { return m_add_vinf_dep; }
   bool get_add_vinf_arr() const { return m_add_vinf_arr; }
 
-protected:
-  virtual void calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
+  virtual std::string get_name() const;
+  virtual transx_solution calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
+  
 private:
   friend class boost::serialization::access;
   template <class Archive>

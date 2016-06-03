@@ -1,9 +1,18 @@
 [submodule "third_party/pagmo"]
 	path = third_party/pagmo
-	url = git@github.com:esa/pagmo.git
+	url = https://github.com/tuzcsaba/pagmo.git
 [submodule "third_party/pykep"]
 	path = third_party/pykep
-	url = git@github.com:esa/pykep.git
+	url = https://github.com/tuzcsaba/pykep.git
 [submodule "third_party/gnuplot-iostream"]
 	path = third_party/gnuplot-iostream
 	url = https://github.com/dstahlke/gnuplot-iostream.git
+[submodule "third_party/mongo-cxx-driver"]
+	path = third_party/mongo-cxx-driver
+	url = https://github.com/mongodb/mongo-cxx-driver
+[submodule "third_party/libbson"]
+	path = third_party/libbson
+	url = https://github.com/mongodb/libbson.git
+[submodule "third_party/mongo-c-drive"]
+	path = third_party/mongo-c-drive
+	url = https://github.com/mongodb/mongo-c-driver.git
