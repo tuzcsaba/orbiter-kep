@@ -26,7 +26,7 @@ namespace orbiterkep {
 } // namespaces
 
 pagmo::problem::transx_solution run_problem(const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
-      int mf = 100;
+      int mf = 150;
 
       pagmo::decision_vector sol_mga;
 
