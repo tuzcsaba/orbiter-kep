@@ -14,6 +14,9 @@ include_directories(/usr/local/include)
 include_directories(/usr/local/include/mongocxx/v_noabi)
 include_directories(/usr/local/include/bsoncxx/v_noabi)
 
+link_directories(/usr/local/lib)
+link_directories(/usr/lib)
+
 include_directories(src)
 include_directories(src/problems)
 include_directories(third_party/gnuplot-iostream)
@@ -24,7 +27,13 @@ OPTION(BUILD_MONGODB "Build support for MongoDB to persist solutons" ON)
 
 add_subdirectory(src)
 
-add_executable(OrbiterKEP OrbiterKEP.cpp)
+file(GLOB ORBITERKEP_SRC_LIST 
+  "src/**/*.cpp"
+  "src/*.cpp"
+  "OrbiterKEP.cpp"
+)
+
+add_executable(OrbiterKEP ${ORBITERKEP_SRC_LIST})
 
 # The version number
 set (OrbiterKEP_VERSION_MAJOR 0)
@@ -47,10 +56,6 @@ set (ESA_LIBRARIES
   libkeplerian_toolbox.a
 )
 
-set (VARIOUS_LIBRARIES
-  libproto.a
-)
-
 if (BUILD_MONGODB)
   set (MONGO_LIBRARIES
     libmongocxx.a
@@ -71,10 +76,6 @@ set (ESA_LIBRARIES
   keplerian_toolbox
 )
 
-set (VARIOUS_LIBRARIES
-  proto
-)
-
 if (BUILD_MONGODB)
   set (MONGO_LIBRARIES
     mongocxx
@@ -85,7 +86,7 @@ endif(BUILD_MONGODB)
 ENDIF(BUILD_STATIC)
 
 ADD_SUBDIRECTORY(proto)
-target_link_libraries(OrbiterKEP proto orbiterkep_static ${PROTOBUF_LIBRARY} ${VARIOUS_LIBRARIES} ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${BOOST_LIBRARIES})
+target_link_libraries(OrbiterKEP proto ${PROTOBUF_LIBRARY} ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${BOOST_LIBRARIES})
 
 INSTALL(TARGETS OrbiterKEP RUNTIME DESTINATION bin)
 

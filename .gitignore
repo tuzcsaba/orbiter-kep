@@ -1,3 +1,14 @@
+#CMake
+CMakeFiles
+CMakeScripts
+
+**/*.build
+xcuserdata
+.cmake
+
+Debug
+Release
+
 # SPICE datafiles
 spice/
 *.swp

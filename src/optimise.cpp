@@ -6,7 +6,7 @@
 namespace orbiterkep {
 
 optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
-  m_problem(prob), m_n_isl(8), m_population(64), m_n_trial(n_trial), m_gen(gen), m_mf(mf), m_mr(mr) {
+  m_problem(prob), m_n_isl(8), m_population(64), m_n_trial(n_trial), m_mf(mf), m_gen(gen), m_mr(mr) {
 }
 
 pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV, std::vector<std::string> algo_list) {
