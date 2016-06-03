@@ -6,7 +6,7 @@ OrbiterKEP \
     --vinf-max 10.5 \
     --algos-multi-obj nsge2 \
     --algos-single-obj sa_corana,sa_corana,sga_gray \
-    --opt-gen 100000 \
+    --opt-gen 200000 \
     $@
 if [ ]; then
     --algos-single-obj mbh_cs,pso,bee_colony,ms_jde,jde_13 \
@@ -22,5 +22,6 @@ if [ ]; then
      --algos-single-obj pso \
      --algos-single-obj bee_colony \
      --algos-single-obj sga_gray \
+
 fi
 

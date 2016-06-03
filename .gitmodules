@@ -1,9 +1,9 @@
 [submodule "third_party/pagmo"]
 	path = third_party/pagmo
-	url = git@github.com:esa/pagmo.git
+	url = https://github.com/tuzcsaba/pagmo.git
 [submodule "third_party/pykep"]
 	path = third_party/pykep
-	url = git@github.com:esa/pykep.git
+	url = https://github.com/tuzcsaba/pykep.git
 [submodule "third_party/gnuplot-iostream"]
 	path = third_party/gnuplot-iostream
 	url = https://github.com/dstahlke/gnuplot-iostream.git
