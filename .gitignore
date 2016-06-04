@@ -1,5 +1,6 @@
 #CMake
 CMakeFiles
+CMakeCache
 CMakeScripts
 
 **/*.build

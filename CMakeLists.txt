@@ -1,6 +1,8 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1)
 
 set (CMAKE_CXX_STANDARD 11)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 project (OrbiterKEP C CXX)
 
@@ -9,12 +11,13 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/OrbiterKEPConfig.h
 )
 
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-include_directories(/usr/local/include)
-include_directories(/usr/local/include/mongocxx/v_noabi)
-include_directories(/usr/local/include/bsoncxx/v_noabi)
+SET(CMAKE_INCLUDE_PATH ${CMAKE_INSTALL_PREFIX}/include)
+SET(CMAKE_LIBRARY_PATH ${CMAKE_INSTALL_PREFIX}/lib)
 
-link_directories(/usr/local/lib)
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+include_directories(${CMAKE_INSTALL_PREFIX}/include)
+
+link_directories(${CMAKE_INSTALL_PREFIX}/lib)
 link_directories(/usr/lib)
 
 include_directories(src)
@@ -25,6 +28,8 @@ OPTION(BUILD_STATIC "Build the executable with static linkage" OFF)
 
 OPTION(BUILD_MONGODB "Build support for MongoDB to persist solutons" ON)
 
+SET(CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX})
+
 add_subdirectory(src)
 
 file(GLOB ORBITERKEP_SRC_LIST 
@@ -33,60 +38,59 @@ file(GLOB ORBITERKEP_SRC_LIST
   "OrbiterKEP.cpp"
 )
 
+
 add_executable(OrbiterKEP ${ORBITERKEP_SRC_LIST})
 
 # The version number
 set (OrbiterKEP_VERSION_MAJOR 0)
 set (OrbiterKEP_VERSION_MINOR 1)
 
-if(BUILD_STATIC)
-set (BOOST_LIBRARIES
-  libboost_filesystem.a
-  libboost_system.a
-  libboost_serialization.a
-  libboost_iostreams.a
-)
+SET(Boost_USE_STATIC_LIBS ${BUILD_STATIC})
+set(Boost_USE_MULTITHREADED ON)
+SET(Boost_USE_STATIC_RUNTIME ${BUILD_STATIC})
+find_Package(Boost COMPONENTS filesystem system serialization iostreams)
 
-set (PROTOBUF_IMPORT_DIRS
-  proto
-  )
+if (Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
+if (BUILD_MONGODB)
+
+  set(LIBMONGOCXX_USE_STATIC_LIBS ${BUILD_STATIC})
+  set(LIBBSONCXX_USE_STATIC_LIBS ${BUILD_STATIC})
+
+  find_package(LIBMONGOCXX REQUIRED)
+  find_package(LIBBSONCXX REQUIRED)
+ 
+  include_directories(${LIBMONGOCXX_INCLUDE_DIRS})
+  include_directories(${LIBBSONCXX_INCLUDE_DIRS})
+
+  link_directories(${LIBMONGOCXX_LIBRARY_DIRS})
+  link_directories(${LIBBSONCXX_LIBRARY_DIRS})
+
+  target_link_libraries(OrbiterKEP ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARY})
+
+endif(BUILD_MONGODB)
+
+
+if(BUILD_STATIC)
 
 set (ESA_LIBRARIES  
   libpagmo.a
   libkeplerian_toolbox.a
 )
 
-if (BUILD_MONGODB)
-  set (MONGO_LIBRARIES
-    libmongocxx.a
-    libbsoncxx.a
-  )
-endif(BUILD_MONGODB)
-
 ELSE(BUILD_STATIC)
-set (BOOST_LIBRARIES
-  boost_filesystem
-  boost_system
-  boost_serialization
-  boost_iostreams
-)
 
 set (ESA_LIBRARIES  
   pagmo
   keplerian_toolbox
 )
 
-if (BUILD_MONGODB)
-  set (MONGO_LIBRARIES
-    mongocxx
-    bsoncxx
-  )
-endif(BUILD_MONGODB)
-
 ENDIF(BUILD_STATIC)
 
 ADD_SUBDIRECTORY(proto)
-target_link_libraries(OrbiterKEP proto ${PROTOBUF_LIBRARY} ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${BOOST_LIBRARIES})
+target_link_libraries(OrbiterKEP proto ${PROTOBUF_LIBRARY} ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${Boost_LIBRARIES})
 
 INSTALL(TARGETS OrbiterKEP RUNTIME DESTINATION bin)
 
