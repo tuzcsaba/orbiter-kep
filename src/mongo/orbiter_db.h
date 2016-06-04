@@ -9,14 +9,14 @@
 #include "../param.h"
 #include "../problems/transx_problem.h"
 
-#include <mongocxx/client.hpp>
-#include <mongocxx/instance.hpp>
+#include <mongoc.h>
 
 namespace orbiterkep {
 
 class orbiterkep_db {
   public:
     orbiterkep_db();
+    ~orbiterkep_db();
 
     void store_solution(const parameters &params, const pagmo::problem::TransXSolution &solution, const std::string &problem);
 
@@ -25,8 +25,7 @@ class orbiterkep_db {
   protected:
 
   private:
-      mongocxx::instance m_inst;
-      mongocxx::client m_client;
+      mongoc_client_t *m_client;
 
 };
 

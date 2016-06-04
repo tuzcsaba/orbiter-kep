@@ -2,47 +2,57 @@
 
 #ifdef BUILD_MONGODB
 
-#include <boost/algorithm/string.hpp>
+#include <bcon.h>
+#include <mongoc.h>
 
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/array.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/types.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <keplerian_toolbox/planet/jpl_low_precision.h>
 
-using namespace bsoncxx;
 
 namespace orbiterkep {
 
 const int max_count_per_problem = 100;
 
-orbiterkep_db::orbiterkep_db():m_inst(mongocxx::instance{}),m_client(mongocxx::client{mongocxx::uri{}}) {
+orbiterkep_db::orbiterkep_db():m_client(mongoc_client_new("mongodb://127.0.0.1:27017")) {
+}
+
+orbiterkep_db::~orbiterkep_db() {
+  mongoc_client_destroy(m_client); m_client = 0;
 }
 
 pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &params, const std::string &problem) {
-  using builder::stream::open_array;
-  using builder::stream::close_array;
-  using builder::stream::open_document;
-  using builder::stream::close_document;
-  using builder::stream::document;
-  using builder::stream::finalize;
 
-  auto collection = m_client["orbiter_kep"]["solutions"];
+  auto collection = mongoc_client_get_collection(m_client, "orbiter_kep", "solutions");
   
   std::size_t param_hash = boost::hash_value(params);
   boost::hash_combine(param_hash, problem);
 
-  mongocxx::options::find opts;
-  opts.sort(document{} << "delta-v" << 1 << finalize);
-  opts.limit(1);
+
+  auto query = BCON_NEW("$query", "{", "param_hash", BCON_INT64(param_hash), "}",
+                        "sort", "{", "delta-v", BCON_INT32 (-1), "}");
 
   pagmo::decision_vector res;
-  auto cursor = collection.find(document{} << "param_hash" << (int64_t)param_hash << finalize);
-  for (auto &&doc : cursor) {
-    auto vec = doc["decision_vector"].get_value().get_array().value;
-    for (auto item : vec) {
-      res.push_back(item.get_double().value);
+  auto cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, query, NULL, NULL);
+
+  const bson_t * doc;
+  while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &doc)) {
+    bson_iter_t iter;
+    bson_iter_t decision_vec;
+
+    if (bson_iter_init(&iter, doc) && bson_iter_find_descendant(&iter, "decision_vector", &decision_vec) && BSON_ITER_HOLDS_ARRAY(&decision_vec)) {
+      uint32_t vec_dim;
+      const uint8_t *vec;
+      bson_t vecItems; 
+      bson_iter_t item_iter;
+      bson_iter_array(&decision_vec, &vec_dim, &vec);
+      if (bson_init_static(&vecItems, vec, vec_dim)) {
+        if (bson_iter_init(&item_iter, &vecItems)) {
+          while (bson_iter_next(&item_iter)) {
+            res.push_back(bson_iter_double(&item_iter));
+          }
+        }
+      }
     }
   }
 
@@ -50,67 +60,95 @@ pagmo::decision_vector orbiterkep_db::get_stored_solution(const parameters &para
 }
 
 void orbiterkep_db::store_solution(const parameters &params, const pagmo::problem::TransXSolution &solution, const std::string &problem) {
-  using builder::stream::open_array;
-  using builder::stream::close_array;
-  using builder::stream::open_document;
-  using builder::stream::close_document;
-  using builder::stream::document;
-  using builder::stream::finalize;
 
+  bson_error_t error;
 
-  auto collection = m_client["orbiter_kep"]["solutions"];
+  auto collection = mongoc_client_get_collection(m_client, "orbiter_kep", "solutions");
 
   std::size_t param_hash = boost::hash_value(params);
   boost::hash_combine(param_hash, problem);
 
-  mongocxx::options::find opts;
-  opts.sort(document{} << "delta-v" << -1 << finalize);
-
-  document query{};
-  query << "param_hash" << (int64_t)param_hash;
+  auto query = BCON_NEW("$query", "{", "param_hash", param_hash, "}",
+                        "$sort", "{", "delta-v", BCON_INT32(-1), "}");
   
-  int count = collection.count(query << finalize);
-  auto cursor = collection.find(query << finalize, opts);
+  
+  int count = mongoc_collection_count(collection, MONGOC_QUERY_NONE, query, 0, 0, NULL, &error);
+
+  auto cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, query, NULL, NULL);
   int i = count - max_count_per_problem;
-  for (auto&& doc : cursor) {
+
+  const bson_t * doc;
+  while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &doc)) {
     if (i <= 0) break;
-    auto id = doc["_id"].get_value();
-    auto deltaV = doc["delta-v"].get_value().get_double();
+
+    bson_iter_t iter;
+
+    if (!bson_iter_init(&iter, doc)) return;
+    
+    bson_iter_t id_iter;
+    bson_iter_t deltav_iter;
+
+    bson_iter_find_descendant(&iter, "_id", &id_iter);
+    auto id = bson_iter_oid(&id_iter);
+    bson_iter_find_descendant(&iter, "delta-v", &deltav_iter); 
+    auto deltaV = bson_iter_double(&deltav_iter);
+
     if (deltaV < solution.fuel_cost()) {
       return;
     }
-    collection.delete_one(document{} << "_id" << id << finalize);
+    
+    bson_t * toDel = bson_new();
+    BSON_APPEND_OID(toDel, "_id", id);
+
+    mongoc_collection_remove(collection, MONGOC_REMOVE_SINGLE_REMOVE, toDel, NULL, &error);
+
+    bson_destroy(toDel);
+
     --i;
   }
 
-  builder::stream::document document{};
+  bson_oid_t oid;
+  bson_oid_init(&oid, NULL);
 
-  document << "param_hash" << (int64_t)param_hash;
+    j
+    bson_t * decisionVec = bson_new();
+  auto launch = solution.times().times(0);
+
+  auto document = bson_new();
+  bson_append_oid(document, &oid);
+  bson_append_int64(document, "param_hash", param_hash);
   
-  auto planetsArr = document << "planets" << open_array; 
+  bson_t child;
+  bson_append_array_begin(document, "planets", -1, &child);
   for (int i = 0; i < params.planets.size(); ++i) {
     auto planet = params.planets[i];
-    planetsArr << planet->get_name();
-  }
-  planetsArr << close_array;
+    char key[15];
+    sprintf(str, "%d", i);
+    bson_append_utf8(&child, str, -1, planet->get_name().c_str(), -1);
+  } 
+  bson_append_array_end(document, &child);
 
-  auto launch = solution.times().times(0);
-  document << "problem" << solution.problem();
-  document << "launch_mjd" << launch;
-  document << "eject_altitude" << params.dep_altitude;
-  document << "target_altitude" << params.arr_altitude;
-  document << "delta-v" << solution.fuel_cost();
+  bson_append_utf8(document, "problem", -1, solution.problem().c_str(), -1);
+  bson_append_double(document, "launch_mjd", launch);
+  bson_append_double(document, "eject_altitude", params.dep_altitude);
+  bson_append_double(document, "target_altitude", params.arr_altitude);
+  bson_append_double(document, "delta-v", solution.fuel_cost());
 
   std::stringstream ss; ss << solution;
-  document << "transx_plan" << ss.str();
+  bson_append_utf8(document, "transx_plan", -1, ss.str().c_str(), -1);
 
-  auto decisionVec = document << "decision_vector" << open_array;
+  bson_append_array_begin(document, "decision_vector", -1, &child);
   for (int i = 0; i < solution.x().size(); ++i) {
-    decisionVec << solution.x(i);
+    auto value = solution.x(i);
+    char key[15];
+    sprintf(str, "%d", i);
+    bson_append_double(document, str, value);
   }
-  decisionVec << close_array;
+  bson_append_array_end(document, &child);
 
-  collection.insert_one(document.view());
+  if (!mongoc_collection_insert(collection, MONGOC_INSERT_NONE, document, NULL, &error)) {
+    std::cout << error.message << std::endl;
+  }
 };
 
 } // namespaces

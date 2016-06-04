@@ -56,19 +56,19 @@ endif()
 
 if (BUILD_MONGODB)
 
-  set(LIBMONGOCXX_USE_STATIC_LIBS ${BUILD_STATIC})
-  set(LIBBSONCXX_USE_STATIC_LIBS ${BUILD_STATIC})
+  set(LIBMONGOC_USE_STATIC_LIBS ${BUILD_STATIC})
+  set(LIBBSON_USE_STATIC_LIBS ${BUILD_STATIC})
 
-  find_package(LIBMONGOCXX REQUIRED)
-  find_package(LIBBSONCXX REQUIRED)
+  find_package(LIBMONGOC REQUIRED)
+  find_package(LIBBSON REQUIRED)
  
-  include_directories(${LIBMONGOCXX_INCLUDE_DIRS})
-  include_directories(${LIBBSONCXX_INCLUDE_DIRS})
+  include_directories(${LIBMONGOC_INCLUDE_DIRS})
+  include_directories(${LIBBSON_INCLUDE_DIRS})
 
-  link_directories(${LIBMONGOCXX_LIBRARY_DIRS})
-  link_directories(${LIBBSONCXX_LIBRARY_DIRS})
+  link_directories(${LIBMONGOC_LIBRARY_DIRS})
+  link_directories(${LIBBSON_LIBRARY_DIRS})
 
-  target_link_libraries(OrbiterKEP ${LIBMONGOCXX_LIBRARIES} ${LIBBSONCXX_LIBRARY})
+  target_link_libraries(OrbiterKEP ${LIBMONGOC_LIBRARIES} ${LIBBSON_LIBRARY})
 
 endif(BUILD_MONGODB)
 

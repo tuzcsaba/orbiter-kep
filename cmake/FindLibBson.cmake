@@ -15,7 +15,7 @@
 # Find libmongo-c, either via pkg-config, find-package in config mode,
 # or other less admirable jiggery-pokery
 
-SET(LIBMONGOCXX_DIR "" CACHE STRING "Manual search path for libmongoc")
+SET(LIBBSON_DIR "" CACHE STRING "Manual search path for LIBBSON")
 
 include(FindPackageHandleStandardArgs)
 
@@ -23,16 +23,16 @@ include(FindPackageHandleStandardArgs)
 find_package(PkgConfig QUIET)
 
 if (PKG_CONFIG_FOUND)
-  pkg_check_modules(LIBMONGOCXX REQUIRED libmongocxx )
+  pkg_check_modules(LIBBSON REQUIRED libbson-1.0 )
   # We don't reiterate the version information here because we assume that
   # pkg_check_modules has honored our request.
-  find_package_handle_standard_args(LIBMONGOCXX DEFAULT_MSG LIBMONGOCXX_FOUND)
-elseif(LIBMONGOCXX_DIR)
-  # The best we can do until libMONGOC starts installing a libmongoc-config.cmake file
-  set(LIBMONGOCXX_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
-  set(LIBMONGOCXX_LIBRARY_DIRS ${LIBMONGOCXX_DIR}/lib CACHE INTERNAL "")
-  set(LIBMONGOCXX_INCLUDE_DIRS ${LIBMONGOCXX}/include/libmongoc-1.0 CACHE INTERNAL "")
-  find_package_handle_standard_args(LIBMONGOCXX DEFAULT_MSG LIBMONGOC_LIBRARIES LIBMONGOCXX_LIBRARY_DIRS LIBMONGOCXX_INCLUDE_DIRS)
+  find_package_handle_standard_args(LIBBSON DEFAULT_MSG LIBBSON_FOUND)
+elseif(LIBBSON_DIR)
+  # The best we can do until libBSONC starts installing a libmongoc-config.cmake file
+  set(LIBBSON_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
+  set(LIBBSON_LIBRARY_DIRS ${LIBBSON_DIR}/lib CACHE INTERNAL "")
+  set(LIBBSON_INCLUDE_DIRS ${LIBBSON}/include/libmongoc-1.0 CACHE INTERNAL "")
+  find_package_handle_standard_args(LIBBSON DEFAULT_MSG LIBBSON_LIBRARIES LIBBSON_LIBRARY_DIRS LIBBSON_INCLUDE_DIRS)
 else()
-    message(FATAL_ERROR "Don't know how to find libmongoc; please set LIBMONGOCXX_DIR to the prefix directory with which libbson was configured.")
+    message(FATAL_ERROR "Don't know how to find LIBBSON; please set LIBBSON_DIR to the prefix directory with which libbson was configured.")
 endif()
