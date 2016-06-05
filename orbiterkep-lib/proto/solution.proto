@@ -1,0 +1,80 @@
+package orbiterkep;
+
+message TransXTimes {
+    
+  repeated string planets = 1;
+  repeated double times = 2;
+
+}
+  message TransXEscape {
+
+    required double mjd = 1;
+    required double vinf = 2;
+    required double burn = 3;
+
+    required double prograde = 4;
+    required double outward  = 5;
+    required double plane    = 6;
+    
+    required string planet   = 20;
+  }
+ 
+ 
+  message TransXDSM {
+
+    required double mjd = 1;
+    required double vinf = 2;
+    required double burn = 3;
+
+    required double prograde = 4;
+    required double outward  = 5;
+    required double plane    = 6;
+  }
+
+message TransXFlyBy {
+
+    required double mjd = 1;
+    required double burn = 3;
+
+    required double prograde = 4;
+    required double outward  = 5;
+    required double plane    = 6;
+
+    required double approach_vel = 7;
+    required double departure_vel = 8;
+
+    required double outward_angle = 9;
+    required double inclination = 10;
+    required double turning_angle = 11;
+
+    required double periapsis_altitude = 12;
+
+    required string planet = 20;
+  }
+
+  message TransXArrival {
+
+    required double mjd = 1;
+    required double vinf = 2;
+    required double burn = 3;
+
+    required string planet = 20;
+
+  }
+ 
+
+message TransXSolution {
+  repeated double x = 1; 
+  required string problem = 2;
+  required double fuel_cost = 3;
+  required TransXTimes times = 4;
+
+ required TransXEscape escape = 5;
+
+  repeated TransXDSM dsms = 6;
+
+  
+  repeated TransXFlyBy flybyes = 7;
+ required TransXArrival arrival = 8;
+
+}

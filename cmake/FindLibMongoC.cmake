@@ -21,7 +21,7 @@ unset(libmongoc_INCLUDE_DIR CACHE)
 unset(libmongoc_LIBNAME)
 
 
-SET(libmongoc_ROOT ${CMAKE_INSTALL_PREFIX} STRING "Manual search path for libmongoc")
+SET(LIBMONGOC_DIR ${CMAKE_INSTALL_PREFIX} CACHE STRING "Manual search path for libmongoc")
 
 set(_libmongoc_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
@@ -44,13 +44,13 @@ else()
 endif()
 
 find_path(libmongoc_INCLUDE_DIR NAMES mongoc.h
-  HINTS ${libmongoc_ROOT}/include
-  PATH_SUFFIXES libmongoc-1.0)
+  HINTS ${LIBMONGOC_DIR}
+  PATH_SUFFIXES libmongoc-1.0 src/mongoc)
 
 include(FindPackageHandleStandardArgs)
 
 find_library(libmongoc_LIBRARY ${libmongoc_LIBNAME}
-  PATHS ${libmongoc_ROOT}
+  PATHS ${LIBMONGOC_DIR}
   PATH_SUFFIXES lib
   NO_DEFAULT_PATH)
 

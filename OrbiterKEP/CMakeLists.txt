@@ -1,0 +1,23 @@
+cmake_minimum_required (VERSION 3.1)
+
+project(OrbiterKEP C CXX)
+
+SET(CMAKE_CXX_STANDARD_C11)
+
+SET(${PROJECT_NAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+SET(${PROJECT_NAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+file(GLOB ${PROJECT_NAME}_SRCS
+  "${${PROJECT_NAME}_SOURCE_DIR}/**/*.cpp"
+  "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp"
+  "${${PROJECT_NAME}_SOURCE_DIR}/**/*.cc"
+  "${${PROJECT_NAME}_SOURCE_DIR}/*.cc"
+  "${${PROJECT_NAME}_SOURCE_DIR}/**/*.c"
+  "${${PROJECT_NAME}_SOURCE_DIR}/*.c"
+)
+
+INCLUDE_DIRECTORIES(${orbiterkep-lib_INCLUDES})
+
+add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
+
+target_link_libraries(${PROJECT_NAME} orbiterkep-lib)

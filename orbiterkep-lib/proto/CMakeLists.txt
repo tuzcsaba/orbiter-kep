@@ -1,0 +1,31 @@
+INCLUDE(FindProtobuf)
+FIND_PACKAGE(Protobuf REQUIRED)
+INCLUDE_DIRECTORIES(${PROTOBUF_INCLUDE_DIR})
+
+PROTOBUF_GENERATE_CPP(PROTO_SRC PROTO_HEADER solution.proto parameters.proto)
+
+SET(PROTO_SRC ${PROTO_SRC} solution.pb-c.c parameters.pb-c.c)
+SET(PROTO_HEADER ${PROTO_HEADER} solution.pb-c.h parameters.pb-c.h)
+
+IF(BUILD_STATIC)
+  UNSET(PROTOBUF_LIBRARY CACHE)
+
+  find_library(PROTO_STATIC NAMES libprotobuf.a
+    PATHS ${CMAKE_INSTALL_PREFIX}
+    PATH_SUFFIXES lib
+    NO_DEFAULT_PATHS
+    )
+
+  SET(PROTOBUF_LIBRARY ${PROTO_STATIC})
+ENDIF()
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/..)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+ADD_LIBRARY(orbiterkep-proto ${PROTO_HEADER} ${PROTO_SRC} ext.cpp)
+TARGET_LINK_LIBRARIES(orbiterkep-proto ${PROTOBUF_LIBRARY})
+
+SET(orbiterkep-proto_INCLUDES ${PROTO_HEADER} 
+                              ${CMAKE_CURRENT_SOURCE_DIR}/..
+                              CACHE INTERNAL "orbiterkep-proto: Headers" FORCE)
+

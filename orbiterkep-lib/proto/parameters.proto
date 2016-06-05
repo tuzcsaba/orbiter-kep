@@ -1,0 +1,38 @@
+package orbiterkep;
+
+message ParamMinMax {
+
+  optional double min = 1;
+  optional double max = 2;
+
+}
+
+message Parameters {
+
+  repeated string planets = 1;
+  repeated string single_objective_algos = 2;
+  repeated string multi_objective_algos = 3;
+
+  optional ParamMinMax t0 = 4;
+  optional ParamMinMax tof = 5;
+  optional ParamMinMax vinf = 6;
+
+  optional string problem = 7;
+  optional int32 n_trials = 8;
+  optional int32 n_gen = 9;
+
+  optional double dep_altitude = 10;
+  optional double arr_altitude = 11;
+
+  optional double max_deltav = 12;
+
+  optional bool add_dep_vinf = 13;
+  optional bool add_arr_vinf = 14;
+
+  optional bool use_spice = 15;
+  optional bool circularize = 16;
+
+  optional bool multi_objective = 17;
+
+  optional bool use_db = 18;
+}

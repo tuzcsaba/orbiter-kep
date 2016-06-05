@@ -21,7 +21,7 @@ unset(libbson_INCLUDE_DIR CACHE)
 unset(libbson_LIBNAME)
 
 
-SET(libbson_ROOT ${CMAKE_INSTALL_PREFIX} STRING "Manual search path for libbson")
+SET(LIBBSON_DIR "${CMAKE_INSTALL_PREFIX}" CACHE STRING "Manual search path for libbson")
 
 set(_libbson_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
@@ -44,13 +44,13 @@ else()
 endif()
 
 find_path(libbson_INCLUDE_DIR NAMES bson.h
-  HINTS ${libbson_ROOT}/include
+  HINTS ${LIBBSON_DIR}/include
   PATH_SUFFIXES libbson-1.0)
 
 include(FindPackageHandleStandardArgs)
 
 find_library(libbson_LIBRARY ${libbson_LIBNAME}
-  PATHS ${libbson_ROOT}
+  PATHS ${LIBBSON_DIR}
   PATH_SUFFIXES lib
   NO_DEFAULT_PATH)
 
