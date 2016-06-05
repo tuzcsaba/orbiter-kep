@@ -35,9 +35,6 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
       execute_process(COMMAND /usr/bin/install_name_tool
         -delete_rpath "/usr/local/lib"
         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      if(CMAKE_INSTALL_DO_STRIP)
-        execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      endif()
     endif()
   elseif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
     file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/csabatuz/PyKEP/orbiter-kep/Release/OrbiterKEP")
@@ -46,9 +43,6 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
       execute_process(COMMAND /usr/bin/install_name_tool
         -delete_rpath "/usr/local/lib"
         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      if(CMAKE_INSTALL_DO_STRIP)
-        execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      endif()
     endif()
   elseif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
     file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/csabatuz/PyKEP/orbiter-kep/MinSizeRel/OrbiterKEP")
@@ -57,9 +51,6 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
       execute_process(COMMAND /usr/bin/install_name_tool
         -delete_rpath "/usr/local/lib"
         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      if(CMAKE_INSTALL_DO_STRIP)
-        execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      endif()
     endif()
   elseif("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
     file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/csabatuz/PyKEP/orbiter-kep/RelWithDebInfo/OrbiterKEP")
@@ -68,9 +59,6 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
       execute_process(COMMAND /usr/bin/install_name_tool
         -delete_rpath "/usr/local/lib"
         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      if(CMAKE_INSTALL_DO_STRIP)
-        execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/OrbiterKEP")
-      endif()
     endif()
   endif()
 endif()

@@ -7,39 +7,39 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		87A6133F2116472C8CC6FB5E /* install */ = {
+		1026FA1F02954A528493CF62 /* install */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 8613454595E448EB97F77EF5 /* Build configuration list for PBXAggregateTarget "install" */;
+			buildConfigurationList = A4BF377FF63141FF9C9E0D3B /* Build configuration list for PBXAggregateTarget "install" */;
 			buildPhases = (
-				B4F95E7F9DEB4550AD0F442C /* CMake PostBuild Rules */,
+				8B5C6A99FDFA444EA257CB94 /* CMake PostBuild Rules */,
 			);
 			dependencies = (
-				4603F89C576F45228F9C4C89 /* PBXTargetDependency */,
+				693E49C1781549F98CCEA82A /* PBXTargetDependency */,
 			);
 			name = install;
 			productName = install;
 		};
-		94A0F36D1F3A474CAA7AF486 /* ZERO_CHECK */ = {
+		966C5F6B879E49A29432EEDD /* ZERO_CHECK */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = EDCB54A41B8F48FFAD990991 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildConfigurationList = 6696773F42CB402BA8B29632 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
 			buildPhases = (
-				6F56A4D06806452D8D0E4F18 /* CMake Rules */,
+				CA68554B73DB47E790C45BE1 /* CMake Rules */,
 			);
 			dependencies = (
 			);
 			name = ZERO_CHECK;
 			productName = ZERO_CHECK;
 		};
-		A39B70B88FFF4CF59949C371 /* ALL_BUILD */ = {
+		D192359A0B784A19ACC4A87E /* ALL_BUILD */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = D6F84E08735D482CBF74DF70 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildConfigurationList = 615D6FE6B37E4D9E8341BE35 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
 			buildPhases = (
-				EDD8CDF69A5B4A6CA503F9EA /* CMake Rules */,
+				4BEC1B9DF50449A8BAEA94D0 /* CMake Rules */,
 			);
 			dependencies = (
-				9D597774FB364C95A0B68349 /* PBXTargetDependency */,
-				1CE192A3B2054BDE88A5AAE5 /* PBXTargetDependency */,
-				3FC2FBCCDFF54D8DA37C8EB7 /* PBXTargetDependency */,
+				D3D8F7930BB94DEF9B94A9BF /* PBXTargetDependency */,
+				C7257CA43B3D433F9F5A9E47 /* PBXTargetDependency */,
+				A225DA92F8DE4BF0BED545A9 /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
 			productName = ALL_BUILD;
@@ -47,48 +47,48 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		036BCBE1E1B042588E423DFF /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = E4EBFBB43A3740B38E8A19FC /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */; settings = {COMPILER_FLAGS = ""; }; };
-		0DC34BC3C5654174909FAFBE /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */ = {isa = PBXBuildFile; fileRef = 01FE4A5316624738940270D7 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		24CF14C255534AE8BCB3943C /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */ = {isa = PBXBuildFile; fileRef = 7C09F1DD6801454B98563378 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		30B10ADE2B0041A792F02D1A /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */ = {isa = PBXBuildFile; fileRef = 7D4C62D517D94C1CA57EF7DC /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */; settings = {COMPILER_FLAGS = ""; }; };
-		3F6765659A324212A1552350 /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */ = {isa = PBXBuildFile; fileRef = 78E0D697E1914F7EBEBF66CA /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		411209AAEC0A4C67A93E7823 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = FB910AA202BF4B109B8B7A1F /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */; settings = {COMPILER_FLAGS = ""; }; };
-		5F090B099FAE42A2893D32C2 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */ = {isa = PBXBuildFile; fileRef = F960C3ECC808433196860519 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		695AE20B01ED43999003A0A8 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */ = {isa = PBXBuildFile; fileRef = 2FBC662E826F488EA707C26D /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */; settings = {COMPILER_FLAGS = ""; }; };
-		6F3E1A74D6BB4FF4A6A4064F /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */ = {isa = PBXBuildFile; fileRef = 1DCBE3DAF0EB46BBB040F5B4 /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		82CF03C73A9E473CAC82653F /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */ = {isa = PBXBuildFile; fileRef = 1E1195ACBE6F48FB9DDDB6A6 /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		84CA4BAB7AB44201819A016F /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */ = {isa = PBXBuildFile; fileRef = 0FD88F6F49FE4F23B544BEBF /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		A50E87933C20425AAF6AF473 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */ = {isa = PBXBuildFile; fileRef = D0B0379FD42D4B2DBE634D27 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */; settings = {COMPILER_FLAGS = ""; }; };
-		AD7F6CDE90E14AA989BBDD2A /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */ = {isa = PBXBuildFile; fileRef = A16B2271CA85490E941F2B8A /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */; settings = {COMPILER_FLAGS = ""; }; };
-		E054B73E6E3C4C299929E90A /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */ = {isa = PBXBuildFile; fileRef = 490B3DEEEB58498FB20478E4 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		1EF6EE00AEC641F99AB754D5 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */ = {isa = PBXBuildFile; fileRef = 89C1F50ECB2848258592A0D4 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */; settings = {COMPILER_FLAGS = ""; }; };
+		29E801C1EBD34460928799CB /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */ = {isa = PBXBuildFile; fileRef = 63A6669B78BC40EEA38D0E74 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */; settings = {COMPILER_FLAGS = ""; }; };
+		2DBFB64DC0BF435CABAD0993 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */ = {isa = PBXBuildFile; fileRef = D5C4885C8FF449F89DBA09B4 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		2ECC69A9A54F4D0E9E526924 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */ = {isa = PBXBuildFile; fileRef = 7DAB91FB52F048BE9297B1A5 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		30CF7A19028C4C7AAEEAAA8E /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */ = {isa = PBXBuildFile; fileRef = 077D725811B54C669D51E02F /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		34D51C373C9D4E79B61B962F /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 2849F9BEE116479C82D909B8 /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */; settings = {COMPILER_FLAGS = ""; }; };
+		538EAC77D7B84A9EA227DDD9 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */ = {isa = PBXBuildFile; fileRef = F4EC4BEF78E1483FBA20997A /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		5485B9253B3C4ADFBD4D7530 /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */ = {isa = PBXBuildFile; fileRef = 35A3BAAB38B2403E94B405BA /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		6C188F0B1C0F46CC85DDBE8D /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = CC0B0A07949541509A0CF3EC /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */; settings = {COMPILER_FLAGS = ""; }; };
+		7B0F02060CEE4177A871F939 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */ = {isa = PBXBuildFile; fileRef = 39F0E9381E734CBE9762E4B3 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */; settings = {COMPILER_FLAGS = ""; }; };
+		8686D830321F401E8908FCE3 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */ = {isa = PBXBuildFile; fileRef = 9BD306A837AF4C219DF5E8D0 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		9F971FC39B954078A489FEA1 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */ = {isa = PBXBuildFile; fileRef = 56BC3EF65D8345AC8534817E /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		C8F758CC3B144D0595F44EBE /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */ = {isa = PBXBuildFile; fileRef = A3ECC442BA8C42CF9BE71E6B /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		EE73536D7125402BA42F4FC3 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */ = {isa = PBXBuildFile; fileRef = AB61737161434BD9862DA443 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */; settings = {COMPILER_FLAGS = ""; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
-		27242005917A479484954524 = {
-			isa = PBXBuildStyle;
-		};
-		9B5CC327C54A47C58B9FF995 /* Release */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Release;
-		};
-		9BC1AA6572AC422CAD6F5A12 /* RelWithDebInfo */ = {
+		98139E76A85A43288E8B3DD0 /* RelWithDebInfo */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 			};
 			name = RelWithDebInfo;
 		};
-		C032A08B18F74F9997892AF6 /* MinSizeRel */ = {
+		9A036AEB07E54D02BDF84C7B /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		D2F17C58491E46EA9C76521F /* MinSizeRel */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 			};
 			name = MinSizeRel;
 		};
-		C60775C7333945558AA65AC7 /* Debug */ = {
+		F5490B05FFC242BFA81B9921 = {
+			isa = PBXBuildStyle;
+		};
+		FBA19A2C6FD748D4A7725A2A /* Debug */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -98,279 +98,279 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
-		152FF089C56B4626BB763CF5 /* PBXContainerItemProxy */ = {
+		0C8F1DEC2F3F4F109CCA8935 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 82760782C3D64CD0A57F003E;
-			remoteInfo = proto;
-		};
-		5F42D865AFB24F6D84855F18 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A39B70B88FFF4CF59949C371;
-			remoteInfo = ALL_BUILD;
-		};
-		84A2E9E639F4479DB0790DC0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 82760782C3D64CD0A57F003E;
-			remoteInfo = proto;
-		};
-		AC52A109A3654F42BE5B8B7C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 94A0F36D1F3A474CAA7AF486;
-			remoteInfo = ZERO_CHECK;
-		};
-		AFCEE47EECD44F5B839C693A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 94A0F36D1F3A474CAA7AF486;
-			remoteInfo = ZERO_CHECK;
-		};
-		CACA36EF165540EEBCD4486F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 84E2BDAD64784348BBFD4E60;
+			remoteGlobalIDString = 9F311627D709465CB8B09B5F;
 			remoteInfo = OrbiterKEP;
 		};
-		CE48A712807949C0AE18F2C2 /* PBXContainerItemProxy */ = {
+		1BE4D53B10054A30921F3FDE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = BAB85BA621494A1183E78ABC /* Project object */;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 94A0F36D1F3A474CAA7AF486;
+			remoteGlobalIDString = 966C5F6B879E49A29432EEDD;
+			remoteInfo = ZERO_CHECK;
+		};
+		2B006E3EF4DA48D0A6CC80DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 966C5F6B879E49A29432EEDD;
+			remoteInfo = ZERO_CHECK;
+		};
+		50BFBD3B679D4F4A888BADFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE27377B36964293A4E2E164;
+			remoteInfo = proto;
+		};
+		8D32B74D364E47A491F89D9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D192359A0B784A19ACC4A87E;
+			remoteInfo = ALL_BUILD;
+		};
+		A945E9E42C0445AAABF58C86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE27377B36964293A4E2E164;
+			remoteInfo = proto;
+		};
+		C2B535A0C1A44C61963F14C7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E99BE6F27DD74ABBAD441AC2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 966C5F6B879E49A29432EEDD;
 			remoteInfo = ZERO_CHECK;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		01FE4A5316624738940270D7 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mga_transx.cpp; path = src/problems/mga_transx.cpp; sourceTree = SOURCE_ROOT; };
-		0FD88F6F49FE4F23B544BEBF /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mga_1dsm_transx.cpp; path = src/problems/mga_1dsm_transx.cpp; sourceTree = SOURCE_ROOT; };
-		1DCBE3DAF0EB46BBB040F5B4 /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = param.cpp; path = src/param.cpp; sourceTree = SOURCE_ROOT; };
-		1E1195ACBE6F48FB9DDDB6A6 /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = renderer.cpp; path = src/ps/renderer.cpp; sourceTree = SOURCE_ROOT; };
-		2FBC662E826F488EA707C26D /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = solution.pb.cc; path = proto/solution.pb.cc; sourceTree = SOURCE_ROOT; };
-		490B3DEEEB58498FB20478E4 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = OrbiterKEP.cpp; path = OrbiterKEP.cpp; sourceTree = SOURCE_ROOT; };
-		764EB4C571A14F5BB43ACA0E /* OrbiterKEP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = OrbiterKEP; refType = 0; sourceTree = BUILT_PRODUCTS_DIR; };
-		771A682F74FE490093A1768A /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		78E0D697E1914F7EBEBF66CA /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = optimise.cpp; path = src/optimise.cpp; sourceTree = SOURCE_ROOT; };
-		790C4844C9C446BCB451E40A /* proto */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libproto.a; refType = 0; sourceTree = BUILT_PRODUCTS_DIR; };
-		7C09F1DD6801454B98563378 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = transx_problem.cpp; path = src/problems/transx_problem.cpp; sourceTree = SOURCE_ROOT; };
-		7D4C62D517D94C1CA57EF7DC /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = solution.pb.h; path = proto/solution.pb.h; sourceTree = SOURCE_ROOT; };
-		A16B2271CA85490E941F2B8A /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = solution.pb.cc.rule; path = proto/solution.pb.cc.rule; sourceTree = SOURCE_ROOT; };
-		D0B0379FD42D4B2DBE634D27 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = pareto.cpp; path = src/plot/pareto.cpp; sourceTree = SOURCE_ROOT; };
-		D7EB7AFE277842B6BD624B71 /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		E4EBFBB43A3740B38E8A19FC /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		F960C3ECC808433196860519 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = orbiter_db.cpp; path = src/mongo/orbiter_db.cpp; sourceTree = SOURCE_ROOT; };
-		FB910AA202BF4B109B8B7A1F /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = proto/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		077D725811B54C669D51E02F /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = renderer.cpp; path = src/ps/renderer.cpp; sourceTree = SOURCE_ROOT; };
+		17E9DCA36DF144D7850C547D /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		2849F9BEE116479C82D909B8 /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		35A3BAAB38B2403E94B405BA /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = optimise.cpp; path = src/optimise.cpp; sourceTree = SOURCE_ROOT; };
+		39F0E9381E734CBE9762E4B3 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = solution.pb.h; path = proto/solution.pb.h; sourceTree = SOURCE_ROOT; };
+		56BC3EF65D8345AC8534817E /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = pareto.cpp; path = src/plot/pareto.cpp; sourceTree = SOURCE_ROOT; };
+		63A6669B78BC40EEA38D0E74 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = solution.pb.cc.rule; path = proto/solution.pb.cc.rule; sourceTree = SOURCE_ROOT; };
+		7DAB91FB52F048BE9297B1A5 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = orbiter_db.cpp; path = src/mongo/orbiter_db.cpp; sourceTree = SOURCE_ROOT; };
+		89C1F50ECB2848258592A0D4 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = solution.pb.cc; path = proto/solution.pb.cc; sourceTree = SOURCE_ROOT; };
+		92023B8936CB472DB2C19A2B /* proto */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libproto.a; refType = 0; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BD306A837AF4C219DF5E8D0 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = transx_problem.cpp; path = src/problems/transx_problem.cpp; sourceTree = SOURCE_ROOT; };
+		A3ECC442BA8C42CF9BE71E6B /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = param.cpp; path = src/param.cpp; sourceTree = SOURCE_ROOT; };
+		AB61737161434BD9862DA443 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mga_transx.cpp; path = src/problems/mga_transx.cpp; sourceTree = SOURCE_ROOT; };
+		B78990AFD3964C0783D5700F /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		BAB79EC8FD6F4B09B89CA8FC /* OrbiterKEP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = OrbiterKEP; refType = 0; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC0B0A07949541509A0CF3EC /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = proto/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		D5C4885C8FF449F89DBA09B4 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = OrbiterKEP.cpp; path = OrbiterKEP.cpp; sourceTree = SOURCE_ROOT; };
+		F4EC4BEF78E1483FBA20997A /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mga_1dsm_transx.cpp; path = src/problems/mga_1dsm_transx.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		392ED5096AF84D6C9959709F /* ZERO_CHECK */ = {
+		170D92794D0F431D8741E78A /* CMake Rules */ = {
 			isa = PBXGroup;
 			children = (
-				8D04FBFF8668424EB14AAF80 /* CMake Rules */,
-				771A682F74FE490093A1768A /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */,
-			);
-			name = ZERO_CHECK;
-			sourceTree = "<group>";
-		};
-		5BB98096D98344D28460241F /* OrbiterKEP */ = {
-			isa = PBXGroup;
-			children = (
-				70492AE576FD4077970470F4 /* Source Files */,
-				E4EBFBB43A3740B38E8A19FC /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */,
-			);
-			name = OrbiterKEP;
-			sourceTree = "<group>";
-		};
-		70492AE576FD4077970470F4 /* Source Files */ = {
-			isa = PBXGroup;
-			children = (
-				490B3DEEEB58498FB20478E4 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */,
-				F960C3ECC808433196860519 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */,
-				78E0D697E1914F7EBEBF66CA /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */,
-				1DCBE3DAF0EB46BBB040F5B4 /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */,
-				D0B0379FD42D4B2DBE634D27 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */,
-				0FD88F6F49FE4F23B544BEBF /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */,
-				01FE4A5316624738940270D7 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */,
-				7C09F1DD6801454B98563378 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */,
-				1E1195ACBE6F48FB9DDDB6A6 /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */,
-			);
-			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		7F7AD252170344B6814F3FBE /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				5BB98096D98344D28460241F /* OrbiterKEP */,
-				8ECE52F2757848448685AEE8 /* ALL_BUILD */,
-				392ED5096AF84D6C9959709F /* ZERO_CHECK */,
-				CD6E9B9246EE45DE8FDD0DF0 /* proto */,
-			);
-			name = Sources;
-			sourceTree = "<group>";
-		};
-		8256C560CCDE4CAA9163A173 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				764EB4C571A14F5BB43ACA0E /* OrbiterKEP */,
-				790C4844C9C446BCB451E40A /* proto */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8D04FBFF8668424EB14AAF80 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
+				63A6669B78BC40EEA38D0E74 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */,
 			);
 			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
-		8ECE52F2757848448685AEE8 /* ALL_BUILD */ = {
-			isa = PBXGroup;
-			children = (
-				D8908C060EEE45DCBF878167 /* CMake Rules */,
-				D7EB7AFE277842B6BD624B71 /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */,
-			);
-			name = ALL_BUILD;
-			sourceTree = "<group>";
-		};
-		B0F04CE2A5194E7A9379B1E7 = {
-			isa = PBXGroup;
-			children = (
-				7F7AD252170344B6814F3FBE /* Sources */,
-				ED336796929B4CCDB781D91A /* Resources */,
-				8256C560CCDE4CAA9163A173 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		BA2FDC8298D44BA2901A3681 /* Source Files */ = {
-			isa = PBXGroup;
-			children = (
-				2FBC662E826F488EA707C26D /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */,
-			);
-			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		C26E7A9447E54C54B0637F9D /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				7D4C62D517D94C1CA57EF7DC /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		CD6E9B9246EE45DE8FDD0DF0 /* proto */ = {
-			isa = PBXGroup;
-			children = (
-				C26E7A9447E54C54B0637F9D /* Header Files */,
-				BA2FDC8298D44BA2901A3681 /* Source Files */,
-				CFE943510BB843F094016AA0 /* CMake Rules */,
-				FB910AA202BF4B109B8B7A1F /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */,
-			);
-			name = proto;
-			sourceTree = "<group>";
-		};
-		CFE943510BB843F094016AA0 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-				A16B2271CA85490E941F2B8A /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc.rule */,
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		D8908C060EEE45DCBF878167 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		ED336796929B4CCDB781D91A /* Resources */ = {
+		37346B30F2EB4411A500BACE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		6D6BCA969B0B425FA2098118 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BAB79EC8FD6F4B09B89CA8FC /* OrbiterKEP */,
+				92023B8936CB472DB2C19A2B /* proto */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77EEF2950A24484E94F41FBC /* proto */ = {
+			isa = PBXGroup;
+			children = (
+				BEE3390C348F436994E5483D /* Header Files */,
+				AE9D990756884B1A8F3C8A77 /* Source Files */,
+				170D92794D0F431D8741E78A /* CMake Rules */,
+				CC0B0A07949541509A0CF3EC /* /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeLists.txt */,
+			);
+			name = proto;
+			sourceTree = "<group>";
+		};
+		78FFA588689C40CD9D6893AD /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		8BB7CAF57AE64235B765FFDE /* ZERO_CHECK */ = {
+			isa = PBXGroup;
+			children = (
+				78FFA588689C40CD9D6893AD /* CMake Rules */,
+				B78990AFD3964C0783D5700F /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */,
+			);
+			name = ZERO_CHECK;
+			sourceTree = "<group>";
+		};
+		9046E99AD29244FE8E64E9C1 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				D5C4885C8FF449F89DBA09B4 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */,
+				7DAB91FB52F048BE9297B1A5 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */,
+				35A3BAAB38B2403E94B405BA /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */,
+				A3ECC442BA8C42CF9BE71E6B /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */,
+				56BC3EF65D8345AC8534817E /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */,
+				F4EC4BEF78E1483FBA20997A /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */,
+				AB61737161434BD9862DA443 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */,
+				9BD306A837AF4C219DF5E8D0 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */,
+				077D725811B54C669D51E02F /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		AE9D990756884B1A8F3C8A77 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				89C1F50ECB2848258592A0D4 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		BA5134FCC5594CDFA8E98CCF /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				DE36224111F04DCEA4832773 /* OrbiterKEP */,
+				F69DADD2DA7549E7B5F0A43E /* ALL_BUILD */,
+				8BB7CAF57AE64235B765FFDE /* ZERO_CHECK */,
+				77EEF2950A24484E94F41FBC /* proto */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		BEE3390C348F436994E5483D /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				39F0E9381E734CBE9762E4B3 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		D13DA1435ED54F0182A167BE = {
+			isa = PBXGroup;
+			children = (
+				BA5134FCC5594CDFA8E98CCF /* Sources */,
+				37346B30F2EB4411A500BACE /* Resources */,
+				6D6BCA969B0B425FA2098118 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D864FB55C21E4639A260EC5C /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		DE36224111F04DCEA4832773 /* OrbiterKEP */ = {
+			isa = PBXGroup;
+			children = (
+				9046E99AD29244FE8E64E9C1 /* Source Files */,
+				2849F9BEE116479C82D909B8 /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */,
+			);
+			name = OrbiterKEP;
+			sourceTree = "<group>";
+		};
+		F69DADD2DA7549E7B5F0A43E /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				D864FB55C21E4639A260EC5C /* CMake Rules */,
+				17E9DCA36DF144D7850C547D /* /Users/csabatuz/PyKEP/orbiter-kep/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		82760782C3D64CD0A57F003E /* proto */ = {
+		9F311627D709465CB8B09B5F /* OrbiterKEP */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2E9C9470BBA64D1483D4BB14 /* Build configuration list for PBXNativeTarget "proto" */;
+			buildConfigurationList = 2042CC9A307647A885B85953 /* Build configuration list for PBXNativeTarget "OrbiterKEP" */;
 			buildPhases = (
-				D146C2EF62874965A588350E /* CMake Rules */,
-				10B0C225D01342F2AC6D47BF /* Sources */,
+				5A5A6913326044188D59D2D6 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				F10FE827FC564091BCB2CFBA /* PBXTargetDependency */,
-			);
-			name = proto;
-			productName = proto;
-			productReference = 790C4844C9C446BCB451E40A /* proto */;
-			productType = "com.apple.product-type.library.static";
-		};
-		84E2BDAD64784348BBFD4E60 /* OrbiterKEP */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 78D9FDB96B4045228D6F0E87 /* Build configuration list for PBXNativeTarget "OrbiterKEP" */;
-			buildPhases = (
-				D1EB4F6A12074E42B79DDF85 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E93EACC7450D47C6946ACD38 /* PBXTargetDependency */,
-				0AE1A1AA98D24335A6E2EE5B /* PBXTargetDependency */,
+				DBD3BB8A53DB4C1191FED341 /* PBXTargetDependency */,
+				550F674BB8904527A27155B3 /* PBXTargetDependency */,
 			);
 			name = OrbiterKEP;
 			productName = OrbiterKEP;
-			productReference = 764EB4C571A14F5BB43ACA0E /* OrbiterKEP */;
+			productReference = BAB79EC8FD6F4B09B89CA8FC /* OrbiterKEP */;
 			productType = "com.apple.product-type.tool";
+		};
+		EE27377B36964293A4E2E164 /* proto */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA00D2680C37425FA193E049 /* Build configuration list for PBXNativeTarget "proto" */;
+			buildPhases = (
+				E8C1F40A2D3348C6AA86D40A /* CMake Rules */,
+				7FC6302961034AC9B92539C2 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB904872BC3F4AE5B42E93F6 /* PBXTargetDependency */,
+			);
+			name = proto;
+			productName = proto;
+			productReference = 92023B8936CB472DB2C19A2B /* proto */;
+			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		BAB85BA621494A1183E78ABC /* Project object */ = {
+		E99BE6F27DD74ABBAD441AC2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 0730;
 			};
-			buildConfigurationList = DE3258359C5543E5AFED57BC /* Build configuration list for PBXProject "OrbiterKEP" */;
+			buildConfigurationList = 1570F9FC92544734B4388244 /* Build configuration list for PBXProject "OrbiterKEP" */;
 			buildSettings = {
 			};
 			buildStyles = (
-				C60775C7333945558AA65AC7 /* Debug */,
-				9B5CC327C54A47C58B9FF995 /* Release */,
-				C032A08B18F74F9997892AF6 /* MinSizeRel */,
-				9BC1AA6572AC422CAD6F5A12 /* RelWithDebInfo */,
+				FBA19A2C6FD748D4A7725A2A /* Debug */,
+				9A036AEB07E54D02BDF84C7B /* Release */,
+				D2F17C58491E46EA9C76521F /* MinSizeRel */,
+				98139E76A85A43288E8B3DD0 /* RelWithDebInfo */,
 			);
 			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 0;
-			mainGroup = B0F04CE2A5194E7A9379B1E7;
+			mainGroup = D13DA1435ED54F0182A167BE;
 			projectDirPath = .;
 			projectRoot = "";
 			targets = (
-				A39B70B88FFF4CF59949C371 /* ALL_BUILD */,
-				84E2BDAD64784348BBFD4E60 /* OrbiterKEP */,
-				94A0F36D1F3A474CAA7AF486 /* ZERO_CHECK */,
-				87A6133F2116472C8CC6FB5E /* install */,
-				82760782C3D64CD0A57F003E /* proto */,
+				D192359A0B784A19ACC4A87E /* ALL_BUILD */,
+				9F311627D709465CB8B09B5F /* OrbiterKEP */,
+				966C5F6B879E49A29432EEDD /* ZERO_CHECK */,
+				1026FA1F02954A528493CF62 /* install */,
+				EE27377B36964293A4E2E164 /* proto */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0DA12B51265945F2A8023ED0 = {
+		09F5A69E14364EA8A2BE4BC9 = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -385,70 +385,7 @@
 exit 0";
 			showEnvVarsInLog = 0;
 		};
-		15FD800CF7E646B9901CFC71 = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# shell script goes here
-exit 0";
-			showEnvVarsInLog = 0;
-		};
-		6F56A4D06806452D8D0E4F18 /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep -f /Users/csabatuz/PyKEP/orbiter-kep/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		8A4EC2456B154E57A3252857 = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# shell script goes here
-exit 0";
-			showEnvVarsInLog = 0;
-		};
-		B4F95E7F9DEB4550AD0F442C /* CMake PostBuild Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake PostBuild Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep -f /Users/csabatuz/PyKEP/orbiter-kep/CMakeScripts/install_postBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		D146C2EF62874965A588350E /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep/proto -f /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeScripts/proto_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		EDD8CDF69A5B4A6CA503F9EA /* CMake Rules */ = {
+		4BEC1B9DF50449A8BAEA94D0 /* CMake Rules */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -459,131 +396,138 @@ exit 0";
 			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep -f /Users/csabatuz/PyKEP/orbiter-kep/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
 			showEnvVarsInLog = 0;
 		};
+		8B5C6A99FDFA444EA257CB94 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep -f /Users/csabatuz/PyKEP/orbiter-kep/CMakeScripts/install_postBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		8D32DB6492124428B253C491 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		CA68554B73DB47E790C45BE1 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep -f /Users/csabatuz/PyKEP/orbiter-kep/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		E8C1F40A2D3348C6AA86D40A /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/csabatuz/PyKEP/orbiter-kep/proto -f /Users/csabatuz/PyKEP/orbiter-kep/proto/CMakeScripts/proto_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		EBB239C0DEE840C5A70780B5 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		10B0C225D01342F2AC6D47BF /* Sources */ = {
+		5A5A6913326044188D59D2D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				695AE20B01ED43999003A0A8 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */,
+				2DBFB64DC0BF435CABAD0993 /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */,
+				2ECC69A9A54F4D0E9E526924 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */,
+				5485B9253B3C4ADFBD4D7530 /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */,
+				C8F758CC3B144D0595F44EBE /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */,
+				9F971FC39B954078A489FEA1 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */,
+				538EAC77D7B84A9EA227DDD9 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */,
+				EE73536D7125402BA42F4FC3 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */,
+				8686D830321F401E8908FCE3 /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */,
+				30CF7A19028C4C7AAEEAAA8E /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D1EB4F6A12074E42B79DDF85 /* Sources */ = {
+		7FC6302961034AC9B92539C2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E054B73E6E3C4C299929E90A /* /Users/csabatuz/PyKEP/orbiter-kep/OrbiterKEP.cpp */,
-				5F090B099FAE42A2893D32C2 /* /Users/csabatuz/PyKEP/orbiter-kep/src/mongo/orbiter_db.cpp */,
-				3F6765659A324212A1552350 /* /Users/csabatuz/PyKEP/orbiter-kep/src/optimise.cpp */,
-				6F3E1A74D6BB4FF4A6A4064F /* /Users/csabatuz/PyKEP/orbiter-kep/src/param.cpp */,
-				A50E87933C20425AAF6AF473 /* /Users/csabatuz/PyKEP/orbiter-kep/src/plot/pareto.cpp */,
-				84CA4BAB7AB44201819A016F /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_1dsm_transx.cpp */,
-				0DC34BC3C5654174909FAFBE /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/mga_transx.cpp */,
-				24CF14C255534AE8BCB3943C /* /Users/csabatuz/PyKEP/orbiter-kep/src/problems/transx_problem.cpp */,
-				82CF03C73A9E473CAC82653F /* /Users/csabatuz/PyKEP/orbiter-kep/src/ps/renderer.cpp */,
+				1EF6EE00AEC641F99AB754D5 /* /Users/csabatuz/PyKEP/orbiter-kep/proto/solution.pb.cc */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0AE1A1AA98D24335A6E2EE5B /* PBXTargetDependency */ = {
+		550F674BB8904527A27155B3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 94A0F36D1F3A474CAA7AF486 /* ZERO_CHECK */;
-			targetProxy = AFCEE47EECD44F5B839C693A /* PBXContainerItemProxy */;
+			target = EE27377B36964293A4E2E164 /* proto */;
+			targetProxy = 50BFBD3B679D4F4A888BADFB /* PBXContainerItemProxy */;
 		};
-		1CE192A3B2054BDE88A5AAE5 /* PBXTargetDependency */ = {
+		693E49C1781549F98CCEA82A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 82760782C3D64CD0A57F003E /* proto */;
-			targetProxy = 84A2E9E639F4479DB0790DC0 /* PBXContainerItemProxy */;
+			target = D192359A0B784A19ACC4A87E /* ALL_BUILD */;
+			targetProxy = 8D32B74D364E47A491F89D9F /* PBXContainerItemProxy */;
 		};
-		3FC2FBCCDFF54D8DA37C8EB7 /* PBXTargetDependency */ = {
+		A225DA92F8DE4BF0BED545A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 94A0F36D1F3A474CAA7AF486 /* ZERO_CHECK */;
-			targetProxy = CE48A712807949C0AE18F2C2 /* PBXContainerItemProxy */;
+			target = 9F311627D709465CB8B09B5F /* OrbiterKEP */;
+			targetProxy = 0C8F1DEC2F3F4F109CCA8935 /* PBXContainerItemProxy */;
 		};
-		4603F89C576F45228F9C4C89 /* PBXTargetDependency */ = {
+		AB904872BC3F4AE5B42E93F6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A39B70B88FFF4CF59949C371 /* ALL_BUILD */;
-			targetProxy = 5F42D865AFB24F6D84855F18 /* PBXContainerItemProxy */;
+			target = 966C5F6B879E49A29432EEDD /* ZERO_CHECK */;
+			targetProxy = 2B006E3EF4DA48D0A6CC80DF /* PBXContainerItemProxy */;
 		};
-		9D597774FB364C95A0B68349 /* PBXTargetDependency */ = {
+		C7257CA43B3D433F9F5A9E47 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84E2BDAD64784348BBFD4E60 /* OrbiterKEP */;
-			targetProxy = CACA36EF165540EEBCD4486F /* PBXContainerItemProxy */;
+			target = EE27377B36964293A4E2E164 /* proto */;
+			targetProxy = A945E9E42C0445AAABF58C86 /* PBXContainerItemProxy */;
 		};
-		E93EACC7450D47C6946ACD38 /* PBXTargetDependency */ = {
+		D3D8F7930BB94DEF9B94A9BF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 82760782C3D64CD0A57F003E /* proto */;
-			targetProxy = 152FF089C56B4626BB763CF5 /* PBXContainerItemProxy */;
+			target = 966C5F6B879E49A29432EEDD /* ZERO_CHECK */;
+			targetProxy = C2B535A0C1A44C61963F14C7 /* PBXContainerItemProxy */;
 		};
-		F10FE827FC564091BCB2CFBA /* PBXTargetDependency */ = {
+		DBD3BB8A53DB4C1191FED341 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 94A0F36D1F3A474CAA7AF486 /* ZERO_CHECK */;
-			targetProxy = AC52A109A3654F42BE5B8B7C /* PBXContainerItemProxy */;
+			target = 966C5F6B879E49A29432EEDD /* ZERO_CHECK */;
+			targetProxy = 1BE4D53B10054A30921F3FDE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0832DF3949E64579BEA9EE00 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
-				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
-				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
-				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  /Users/csabatuz/PyKEP/orbiter-kep/proto/MinSizeRel/libproto.a /usr/local/lib/libprotobuf.dylib -lmongocxx -lbsoncxx -lpagmo -lkeplerian_toolbox -lboost_filesystem -lboost_system -lboost_serialization -lboost_iostreams";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = OrbiterKEP;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = MinSizeRel;
-		};
-		09D7B644E31F45C0A560E00F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = Release;
-		};
-		1C601F61E5F0416293BA8424 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
-			};
-			name = Debug;
-		};
-		39D6226270314697BC161DA8 /* Debug */ = {
+		038878DB56424F8098CFF0D9 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -594,12 +538,12 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
-				OTHER_CPLUSPLUSFLAGS = "           '-std=gnu++11'  ";
-				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  /Users/csabatuz/PyKEP/orbiter-kep/proto/Debug/libproto.a /usr/local/lib/libprotobuf.dylib -lmongocxx -lbsoncxx -lpagmo -lkeplerian_toolbox -lboost_filesystem -lboost_system -lboost_serialization -lboost_iostreams";
+				OTHER_CPLUSPLUSFLAGS = "               -DNDEBUG '-std=gnu++11'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lmongoc-1.0 -lbson-1.0 /Users/csabatuz/PyKEP/orbiter-kep/proto/RelWithDebInfo/libproto.a /usr/local/lib/libprotobuf.dylib -lpagmo -lkeplerian_toolbox /usr/local/lib/libboost_filesystem.dylib /usr/local/lib/libboost_system.dylib /usr/local/lib/libboost_serialization.dylib /usr/local/lib/libboost_iostreams.dylib /usr/local/lib/libboost_regex.dylib";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = OrbiterKEP;
 				SECTORDER_FLAGS = "";
@@ -607,30 +551,9 @@ exit 0";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
 			};
-			name = Debug;
-		};
-		3DFA8E8F4F954C79AFE8C4AD /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
 			name = RelWithDebInfo;
 		};
-		3F52AB83865D4784B3242805 /* Debug */ = {
+		055109B810F547C58953FD3E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -639,28 +562,7 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = Debug;
-		};
-		4036C6FB5B87473F8DB59582 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -670,9 +572,18 @@ exit 0";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
 			};
-			name = MinSizeRel;
+			name = Debug;
 		};
-		4B463B2E595A4F02BC173B78 /* Debug */ = {
+		06FB0EE34EC747F8B4DC6052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
+			};
+			name = Release;
+		};
+		0E693CCE73A54DD2AC450B72 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -681,7 +592,78 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = Release;
+		};
+		190B4F358CF34991AA3B0990 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = proto;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/proto";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = MinSizeRel;
+		};
+		24886EED5B32462AB95E74F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = proto;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/proto";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = Release;
+		};
+		2C7A8FD8DF614245A02DA323 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -693,16 +675,7 @@ exit 0";
 			};
 			name = Debug;
 		};
-		4FDEE987335F4A9F8681A305 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
-			};
-			name = Release;
-		};
-		5016E72F412248DCA37F3BF1 /* Debug */ = {
+		2E21F67667854F62B792328C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -713,7 +686,7 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				OTHER_CPLUSPLUSFLAGS = "           '-std=gnu++11'  ";
@@ -727,7 +700,28 @@ exit 0";
 			};
 			name = Debug;
 		};
-		50849E1A3780420AA14F613C /* Release */ = {
+		43BB9A4865D14FE6AC8B86F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = Release;
+		};
+		5B25EDD687174C7890D35631 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -738,12 +732,12 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
 				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
-				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  /Users/csabatuz/PyKEP/orbiter-kep/proto/Release/libproto.a /usr/local/lib/libprotobuf.dylib -lmongocxx -lbsoncxx -lpagmo -lkeplerian_toolbox -lboost_filesystem -lboost_system -lboost_serialization -lboost_iostreams";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lmongoc-1.0 -lbson-1.0 /Users/csabatuz/PyKEP/orbiter-kep/proto/Release/libproto.a /usr/local/lib/libprotobuf.dylib -lpagmo -lkeplerian_toolbox /usr/local/lib/libboost_filesystem.dylib /usr/local/lib/libboost_system.dylib /usr/local/lib/libboost_serialization.dylib /usr/local/lib/libboost_iostreams.dylib /usr/local/lib/libboost_regex.dylib";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = OrbiterKEP;
 				SECTORDER_FLAGS = "";
@@ -753,96 +747,25 @@ exit 0";
 			};
 			name = Release;
 		};
-		6A17F74C5B964C9491B03169 /* Release */ = {
+		739840288D2D4A15A5FC9B3F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
-				OTHER_LIBTOOLFLAGS = " ";
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
+				OTHER_CPLUSPLUSFLAGS = "           '-std=gnu++11'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lmongoc-1.0 -lbson-1.0 /Users/csabatuz/PyKEP/orbiter-kep/proto/Debug/libproto.a /usr/local/lib/libprotobuf.dylib -lpagmo -lkeplerian_toolbox /usr/local/lib/libboost_filesystem.dylib /usr/local/lib/libboost_system.dylib /usr/local/lib/libboost_serialization.dylib /usr/local/lib/libboost_iostreams.dylib /usr/local/lib/libboost_regex.dylib";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = proto;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/proto";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = Release;
-		};
-		7DB661B684F74BF09ECCA376 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
-			};
-			name = MinSizeRel;
-		};
-		8ED22AF9BA094C06802EDF0E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = Release;
-		};
-		A710480EF5F94F77BFCD7B17 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = RelWithDebInfo;
-		};
-		B05482BFF03141CCB451041F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
+				PRODUCT_NAME = OrbiterKEP;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
 				USE_HEADERMAP = NO;
@@ -850,16 +773,7 @@ exit 0";
 			};
 			name = Debug;
 		};
-		B1603ED2CC5048BBA41B3ED9 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
-			};
-			name = RelWithDebInfo;
-		};
-		B58D09BEBC74433894D08881 /* MinSizeRel */ = {
+		7FB324931151476AB847A3D6 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -868,7 +782,97 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = RelWithDebInfo;
+		};
+		8126AAE627414F379491D5BA /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
+			};
+			name = RelWithDebInfo;
+		};
+		93D89B75C86542BD90A0A0E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = Debug;
+		};
+		98FAF801DD904B6489A90717 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
+			};
+			name = MinSizeRel;
+		};
+		9B4E84018F864A3FAE0B257A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/build";
+			};
+			name = Debug;
+		};
+		B73ED2400E374F4789C6C248 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = Release;
+		};
+		B7E8EEDE87A04DFEA960D537 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -880,7 +884,28 @@ exit 0";
 			};
 			name = MinSizeRel;
 		};
-		BB116C7893754294B03BFFDC /* RelWithDebInfo */ = {
+		BF7703B17CE54454B17DB01B /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
+			name = MinSizeRel;
+		};
+		D8C1310A7A2C4D7AADB5E102 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -888,15 +913,15 @@ exit 0";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/lib;
 				LIBRARY_SEARCH_PATHS = " /usr/local/lib/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME) /usr/local/lib";
-				OTHER_CPLUSPLUSFLAGS = "               -DNDEBUG '-std=gnu++11'  ";
-				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  /Users/csabatuz/PyKEP/orbiter-kep/proto/RelWithDebInfo/libproto.a /usr/local/lib/libprotobuf.dylib -lmongocxx -lbsoncxx -lpagmo -lkeplerian_toolbox -lboost_filesystem -lboost_system -lboost_serialization -lboost_iostreams";
+				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
+				OTHER_LDFLAGS = " -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -lmongoc-1.0 -lbson-1.0 /Users/csabatuz/PyKEP/orbiter-kep/proto/MinSizeRel/libproto.a /usr/local/lib/libprotobuf.dylib -lpagmo -lkeplerian_toolbox /usr/local/lib/libboost_filesystem.dylib /usr/local/lib/libboost_system.dylib /usr/local/lib/libboost_serialization.dylib /usr/local/lib/libboost_iostreams.dylib /usr/local/lib/libboost_regex.dylib";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = OrbiterKEP;
 				SECTORDER_FLAGS = "";
@@ -904,9 +929,30 @@ exit 0";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
 			};
+			name = MinSizeRel;
+		};
+		E653E15A26054683BFABD5CC /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
+			};
 			name = RelWithDebInfo;
 		};
-		C15C9588861D47F0B5022E7D /* RelWithDebInfo */ = {
+		E7AD344D02814C6EA4BA7C5F /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -917,7 +963,7 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				OTHER_CPLUSPLUSFLAGS = "               -DNDEBUG '-std=gnu++11'  ";
@@ -931,7 +977,7 @@ exit 0";
 			};
 			name = RelWithDebInfo;
 		};
-		D1A93968A07F4A5184F66802 /* MinSizeRel */ = {
+		EA56076DB9CE4953BA18C80B /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -940,7 +986,7 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -950,34 +996,9 @@ exit 0";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
 			};
-			name = MinSizeRel;
+			name = RelWithDebInfo;
 		};
-		D1C6469AA93F48BCB83BE86E /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				OTHER_CPLUSPLUSFLAGS = "            -DNDEBUG '-std=gnu++11'  ";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = proto;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep/proto";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = MinSizeRel;
-		};
-		E2AE7EDAE76744058872D0AA /* Release */ = {
+		FC3F3F5580594B5D9044F386 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -986,28 +1007,7 @@ exit 0";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/csabatuz/PyKEP/orbiter-kep";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
-			};
-			name = Release;
-		};
-		EBBABDA3A33A45288F619C78 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'", );
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, /usr/local/include/mongocxx/v_noabi, /usr/local/include/bsoncxx/v_noabi, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", );
+				HEADER_SEARCH_PATHS = ("/Users/csabatuz/PyKEP/orbiter-kep", /usr/local/include, "/Users/csabatuz/PyKEP/orbiter-kep/src", "/Users/csabatuz/PyKEP/orbiter-kep/src/problems", "/Users/csabatuz/PyKEP/orbiter-kep/third_party/gnuplot-iostream", "/usr/local/include/libmongoc-1.0", "/usr/local/include/libbson-1.0", );
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -1017,78 +1017,78 @@ exit 0";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("-Wmost", "-Wno-four-char-constants", "-Wno-unknown-pragmas", "$(inherited)", );
 			};
-			name = RelWithDebInfo;
+			name = MinSizeRel;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2E9C9470BBA64D1483D4BB14 /* Build configuration list for PBXNativeTarget "proto" */ = {
+		1570F9FC92544734B4388244 /* Build configuration list for PBXProject "OrbiterKEP" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5016E72F412248DCA37F3BF1 /* Debug */,
-				6A17F74C5B964C9491B03169 /* Release */,
-				D1C6469AA93F48BCB83BE86E /* MinSizeRel */,
-				C15C9588861D47F0B5022E7D /* RelWithDebInfo */,
+				9B4E84018F864A3FAE0B257A /* Debug */,
+				06FB0EE34EC747F8B4DC6052 /* Release */,
+				98FAF801DD904B6489A90717 /* MinSizeRel */,
+				8126AAE627414F379491D5BA /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		78D9FDB96B4045228D6F0E87 /* Build configuration list for PBXNativeTarget "OrbiterKEP" */ = {
+		2042CC9A307647A885B85953 /* Build configuration list for PBXNativeTarget "OrbiterKEP" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				39D6226270314697BC161DA8 /* Debug */,
-				50849E1A3780420AA14F613C /* Release */,
-				0832DF3949E64579BEA9EE00 /* MinSizeRel */,
-				BB116C7893754294B03BFFDC /* RelWithDebInfo */,
+				739840288D2D4A15A5FC9B3F /* Debug */,
+				5B25EDD687174C7890D35631 /* Release */,
+				D8C1310A7A2C4D7AADB5E102 /* MinSizeRel */,
+				038878DB56424F8098CFF0D9 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		8613454595E448EB97F77EF5 /* Build configuration list for PBXAggregateTarget "install" */ = {
+		615D6FE6B37E4D9E8341BE35 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B05482BFF03141CCB451041F /* Debug */,
-				09D7B644E31F45C0A560E00F /* Release */,
-				4036C6FB5B87473F8DB59582 /* MinSizeRel */,
-				EBBABDA3A33A45288F619C78 /* RelWithDebInfo */,
+				2C7A8FD8DF614245A02DA323 /* Debug */,
+				B73ED2400E374F4789C6C248 /* Release */,
+				B7E8EEDE87A04DFEA960D537 /* MinSizeRel */,
+				E653E15A26054683BFABD5CC /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D6F84E08735D482CBF74DF70 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+		6696773F42CB402BA8B29632 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B463B2E595A4F02BC173B78 /* Debug */,
-				8ED22AF9BA094C06802EDF0E /* Release */,
-				B58D09BEBC74433894D08881 /* MinSizeRel */,
-				3DFA8E8F4F954C79AFE8C4AD /* RelWithDebInfo */,
+				93D89B75C86542BD90A0A0E5 /* Debug */,
+				43BB9A4865D14FE6AC8B86F2 /* Release */,
+				BF7703B17CE54454B17DB01B /* MinSizeRel */,
+				EA56076DB9CE4953BA18C80B /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		DE3258359C5543E5AFED57BC /* Build configuration list for PBXProject "OrbiterKEP" */ = {
+		A4BF377FF63141FF9C9E0D3B /* Build configuration list for PBXAggregateTarget "install" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C601F61E5F0416293BA8424 /* Debug */,
-				4FDEE987335F4A9F8681A305 /* Release */,
-				7DB661B684F74BF09ECCA376 /* MinSizeRel */,
-				B1603ED2CC5048BBA41B3ED9 /* RelWithDebInfo */,
+				055109B810F547C58953FD3E /* Debug */,
+				0E693CCE73A54DD2AC450B72 /* Release */,
+				FC3F3F5580594B5D9044F386 /* MinSizeRel */,
+				7FB324931151476AB847A3D6 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		EDCB54A41B8F48FFAD990991 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+		CA00D2680C37425FA193E049 /* Build configuration list for PBXNativeTarget "proto" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3F52AB83865D4784B3242805 /* Debug */,
-				E2AE7EDAE76744058872D0AA /* Release */,
-				D1A93968A07F4A5184F66802 /* MinSizeRel */,
-				A710480EF5F94F77BFCD7B17 /* RelWithDebInfo */,
+				2E21F67667854F62B792328C /* Debug */,
+				24886EED5B32462AB95E74F5 /* Release */,
+				190B4F358CF34991AA3B0990 /* MinSizeRel */,
+				E7AD344D02814C6EA4BA7C5F /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = BAB85BA621494A1183E78ABC /* Project object */;
+	rootObject = E99BE6F27DD74ABBAD441AC2 /* Project object */;
 }

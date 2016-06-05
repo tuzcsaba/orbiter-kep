@@ -88,7 +88,6 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
       ++i;
     }
 
-    double prev;
     for (int i = 0; i < m_gen / m_mf; ++i) {
 
       std::cout << "." << std::flush;
@@ -113,7 +112,6 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
           std::cerr << "Improved: " << best_f << std::fixed << std::setprecision(3) << " m/s" << std::endl;
         }
 
-        prev = val;
       }
 
     }

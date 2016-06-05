@@ -14,25 +14,54 @@
 
 # Find libmongo-c, either via pkg-config, find-package in config mode,
 # or other less admirable jiggery-pokery
+unset(libbson_LIBRARIES CACHE)
+unset(libbson_INCLUDE_DIRS CACHE)
+unset(libbson_LIBRARY CACHE)
+unset(libbson_INCLUDE_DIR CACHE)
+unset(libbson_LIBNAME)
 
-SET(LIBBSON_DIR "" CACHE STRING "Manual search path for LIBBSON")
+
+SET(libbson_ROOT ${CMAKE_INSTALL_PREFIX} STRING "Manual search path for libbson")
+
+set(_libbson_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+
+set(libbson_LIBNAME "bson-1.0" STRING "Mangoc Library name")
+
+if (WIN32)
+  if (libbson_USE_STATIC_LIBS)
+    set(libbson_LIBNAME "bson-static-1.0" STRING "Mangoc Library name")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib")
+  endif()
+else()
+  if (libbson_USE_STATIC_LIBS)
+    set(libbson_LIBNAME "bson-static-1.0" STRING "Mangoc library name")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".so;.dylib")
+  endif()
+endif()
+
+find_path(libbson_INCLUDE_DIR NAMES bson.h
+  HINTS ${libbson_ROOT}/include
+  PATH_SUFFIXES libbson-1.0)
 
 include(FindPackageHandleStandardArgs)
 
-# Load up PkgConfig if we have it
-find_package(PkgConfig QUIET)
+find_library(libbson_LIBRARY ${libbson_LIBNAME}
+  PATHS ${libbson_ROOT}
+  PATH_SUFFIXES lib
+  NO_DEFAULT_PATH)
 
-if (PKG_CONFIG_FOUND)
-  pkg_check_modules(LIBBSON REQUIRED libbson-1.0 )
-  # We don't reiterate the version information here because we assume that
-  # pkg_check_modules has honored our request.
-  find_package_handle_standard_args(LIBBSON DEFAULT_MSG LIBBSON_FOUND)
-elseif(LIBBSON_DIR)
-  # The best we can do until libBSONC starts installing a libmongoc-config.cmake file
-  set(LIBBSON_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
-  set(LIBBSON_LIBRARY_DIRS ${LIBBSON_DIR}/lib CACHE INTERNAL "")
-  set(LIBBSON_INCLUDE_DIRS ${LIBBSON}/include/libmongoc-1.0 CACHE INTERNAL "")
-  find_package_handle_standard_args(LIBBSON DEFAULT_MSG LIBBSON_LIBRARIES LIBBSON_LIBRARY_DIRS LIBBSON_INCLUDE_DIRS)
-else()
-    message(FATAL_ERROR "Don't know how to find LIBBSON; please set LIBBSON_DIR to the prefix directory with which libbson was configured.")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ${_libbson_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
+
+find_package_handle_standard_args(libbson DEFAULT_MSG
+  libbson_INCLUDE_DIR libbson_LIBRARY libbson_LIBNAME)
+
+if(libbson_FOUND)
+  set(libbson_INCLUDE_DIRS ${libbson_INCLUDE_DIR})
+  set(libbson_LIBRARIES ${libbson_LIBRARY})
 endif()
+
+

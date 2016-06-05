@@ -14,25 +14,54 @@
 
 # Find libmongo-c, either via pkg-config, find-package in config mode,
 # or other less admirable jiggery-pokery
+unset(libmongoc_LIBRARIES CACHE)
+unset(libmongoc_INCLUDE_DIRS CACHE)
+unset(libmongoc_LIBRARY CACHE)
+unset(libmongoc_INCLUDE_DIR CACHE)
+unset(libmongoc_LIBNAME)
 
-SET(LIBMONGOC_DIR "" CACHE STRING "Manual search path for libmongoc")
+
+SET(libmongoc_ROOT ${CMAKE_INSTALL_PREFIX} STRING "Manual search path for libmongoc")
+
+set(_libmongoc_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+
+set(libmongoc_LIBNAME "mongoc-1.0" STRING "Mangoc Library name")
+
+if (WIN32)
+  if (libmongoc_USE_STATIC_LIBS)
+    set(libmongoc_LIBNAME "mongoc-static-1.0" STRING "Mangoc Library name")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib")
+  endif()
+else()
+  if (libmongoc_USE_STATIC_LIBS)
+    set(libmongoc_LIBNAME "mongoc-static-1.0" STRING "Mangoc library name")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".so;.dylib")
+  endif()
+endif()
+
+find_path(libmongoc_INCLUDE_DIR NAMES mongoc.h
+  HINTS ${libmongoc_ROOT}/include
+  PATH_SUFFIXES libmongoc-1.0)
 
 include(FindPackageHandleStandardArgs)
 
-# Load up PkgConfig if we have it
-find_package(PkgConfig QUIET)
+find_library(libmongoc_LIBRARY ${libmongoc_LIBNAME}
+  PATHS ${libmongoc_ROOT}
+  PATH_SUFFIXES lib
+  NO_DEFAULT_PATH)
 
-if (PKG_CONFIG_FOUND)
-  pkg_check_modules(LIBMONGOC REQUIRED libmongoc-1.0 )
-  # We don't reiterate the version information here because we assume that
-  # pkg_check_modules has honored our request.
-  find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_FOUND)
-elseif(LIBMONGOC_DIR)
-  # The best we can do until libMONGOC starts installing a libmongoc-config.cmake file
-  set(LIBMONGOC_LIBRARIES mongoc-1.0 CACHE INTERNAL "")
-  set(LIBMONGOC_LIBRARY_DIRS ${LIBMONGOC_DIR}/lib CACHE INTERNAL "")
-  set(LIBMONGOC_INCLUDE_DIRS ${LIBMONGOC}/include/libmongoc-1.0 CACHE INTERNAL "")
-  find_package_handle_standard_args(LIBMONGOC DEFAULT_MSG LIBMONGOC_LIBRARIES LIBMONGOC_LIBRARY_DIRS LIBMONGOC_INCLUDE_DIRS)
-else()
-    message(FATAL_ERROR "Don't know how to find libmongoc; please set LIBMONGOC_DIR to the prefix directory with which libbson was configured.")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ${_libmongoc_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
+
+find_package_handle_standard_args(libmongoc DEFAULT_MSG
+  libmongoc_INCLUDE_DIR libmongoc_LIBRARY libmongoc_LIBNAME)
+
+if(libmongoc_FOUND)
+  set(libmongoc_INCLUDE_DIRS ${libmongoc_INCLUDE_DIR})
+  set(libmongoc_LIBRARIES ${libmongoc_LIBRARY})
 endif()
+
+

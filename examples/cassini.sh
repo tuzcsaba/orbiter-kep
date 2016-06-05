@@ -1,5 +1,5 @@
 #!/bin/bash
-OrbiterKEP \
+valgrind --tool=memcheck --leak-check=full --num-callers=100 --dsymutil=yes ./build/OrbiterKEP \
     --planets "earth,venus,venus,earth,jupiter,saturn" \
     --launch 19970101T000000,19971231T000000 \
     --tof-min 0.1 --tof-max 7 \

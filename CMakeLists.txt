@@ -38,6 +38,7 @@ file(GLOB ORBITERKEP_SRC_LIST
   "OrbiterKEP.cpp"
 )
 
+SET(BUILD_SHARED_LIBRARIES ${BUILD_STATIC})
 
 add_executable(OrbiterKEP ${ORBITERKEP_SRC_LIST})
 
@@ -45,52 +46,56 @@ add_executable(OrbiterKEP ${ORBITERKEP_SRC_LIST})
 set (OrbiterKEP_VERSION_MAJOR 0)
 set (OrbiterKEP_VERSION_MINOR 1)
 
+
 SET(Boost_USE_STATIC_LIBS ${BUILD_STATIC})
 set(Boost_USE_MULTITHREADED ON)
 SET(Boost_USE_STATIC_RUNTIME ${BUILD_STATIC})
-find_Package(Boost COMPONENTS filesystem system serialization iostreams)
+find_package(Boost COMPONENTS filesystem system serialization iostreams thread)
 
 if (Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
+  link_directories(${Boost_LIBRARY_DIRS})
+  target_link_libraries(OrbiterKEP ${Boost_LIBRARIES})
+  target_compile_options(OrbiterKEP PUBLIC ${Boost_CFLAGS_OTHER})
 endif()
 
 if (BUILD_MONGODB)
+  unset(libmongoc_LIBRARIES)
+  unset(libmongoc_INCLUDE_DIRS)
 
-  set(LIBMONGOC_USE_STATIC_LIBS ${BUILD_STATIC})
-  set(LIBBSON_USE_STATIC_LIBS ${BUILD_STATIC})
+  set(libmongoc_USE_STATIC_LIBS ${BUILD_STATIC})
+  set(libbson_USE_STATIC_LIBS ${BUILD_STATIC})
 
-  find_package(LIBMONGOC REQUIRED)
-  find_package(LIBBSON REQUIRED)
+  find_package(libmongoc REQUIRED)
+  find_package(libbson REQUIRED)
  
-  include_directories(${LIBMONGOC_INCLUDE_DIRS})
-  include_directories(${LIBBSON_INCLUDE_DIRS})
+  include_directories(${libmongoc_INCLUDE_DIRS})
+  link_directories(${libmongoc_LIBRARY_DIRS})
+  target_link_libraries(OrbiterKEP ${libmongoc_LIBRARIES})
+  target_compile_options(OrbiterKEP PUBLIC ${libmongoc_CFLAGS_OTHER})
 
-  link_directories(${LIBMONGOC_LIBRARY_DIRS})
-  link_directories(${LIBBSON_LIBRARY_DIRS})
-
-  target_link_libraries(OrbiterKEP ${LIBMONGOC_LIBRARIES} ${LIBBSON_LIBRARY})
+  include_directories(${libbson_INCLUDE_DIRS})
+  link_directories(${libbson_LIBRARY_DIRS})
+  target_link_libraries(OrbiterKEP ${libbson_LIBRARIES})
+  target_compile_options(OrbiterKEP PUBLIC ${libbson_CFLAGS_OTHER})
 
 endif(BUILD_MONGODB)
 
 
-if(BUILD_STATIC)
+set(pagmo_USE_STATIC_LIBS ${BUILD_STATIC})
+set(pykep_USE_STATIC_LIBS ${BUILD_STATIC})
 
-set (ESA_LIBRARIES  
-  libpagmo.a
-  libkeplerian_toolbox.a
-)
+find_package(pagmo REQUIRED)
+find_package(pykep REQUIRED)
 
-ELSE(BUILD_STATIC)
+include_directories(${pagmo_INCLUDE_DIRS} ${pykep_INCLUDE_DIRS})
+link_directories(${pagmo_LIBRARY_DIRS} ${pykep_LIBRARY_DIRS})
+target_link_libraries(OrbiterKEP ${pagmo_LIBRARIES} ${pykep_LIBRARIES})
+target_compile_options(OrbiterKEP PUBLIC ${pagmo_CFLAGS_OTHER} ${pykep_CFLAGS_OTHER})
 
-set (ESA_LIBRARIES  
-  pagmo
-  keplerian_toolbox
-)
-
-ENDIF(BUILD_STATIC)
 
 ADD_SUBDIRECTORY(proto)
-target_link_libraries(OrbiterKEP proto ${PROTOBUF_LIBRARY} ${MONGO_LIBRARIES} ${ESA_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(OrbiterKEP proto ${PROTOBUF_LIBRARY})
 
 INSTALL(TARGETS OrbiterKEP RUNTIME DESTINATION bin)
 

@@ -18,4 +18,7 @@
 	url = https://github.com/mongodb/mongo-c-driver.git
 [submodule "third_party/protobuf"]
 	path = third_party/protobuf
-	url = https://github.com/google/protobuf
+	url = https://github.com/google/protobuf.git
+[submodule "third_party/protobuf-c"]
+	path = third_party/protobuf-c
+	url = https://github.com/protobuf-c/protobuf-c.git
