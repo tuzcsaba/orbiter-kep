@@ -33,7 +33,7 @@ class __PAGMO_VISIBLE transx_problem : public base
 
 
     virtual std::string get_name() const;
-    TransXSolution get_solution(const decision_vector &x, bool extended_output = false) const;
+    void fill_solution(TransXSolution * solution, const decision_vector &x, bool extended_output = false) const;
 
 
     std::vector<kep_toolbox::planet::planet_ptr> get_seq() const { return m_seq; }
@@ -43,7 +43,7 @@ class __PAGMO_VISIBLE transx_problem : public base
     double get_dep_altitude() const { return m_dep_altitude; }
     double get_arr_altitude() const { return m_arr_altitude; }
 
-    virtual TransXSolution calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
+    virtual void calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false, TransXSolution * solution = 0) const;
 
   protected:
     void transx_time_info(TransXTimes *times, std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> time_list) const;

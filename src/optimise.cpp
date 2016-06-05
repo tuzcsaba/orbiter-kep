@@ -6,7 +6,7 @@
 namespace orbiterkep {
 
 optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
-  m_problem(prob), m_n_isl(8), m_population(64), m_n_trial(n_trial), m_mf(mf), m_gen(gen), m_mr(mr) {
+  m_problem(prob), m_n_isl(8), m_population(60), m_n_trial(n_trial), m_mf(mf), m_gen(gen), m_mr(mr) {
 }
 
 pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV, std::vector<std::string> algo_list) {
@@ -63,7 +63,7 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
     }
   }
 
-  const pagmo::topology::fully_connected &topology = pagmo::topology::fully_connected();
+  const pagmo::topology::ageing_clustered_ba topology = pagmo::topology::ageing_clustered_ba();
 
   double best_f = 10000000;
   pagmo::decision_vector best_x;

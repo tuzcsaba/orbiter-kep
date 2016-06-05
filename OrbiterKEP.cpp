@@ -21,11 +21,10 @@
 
 namespace orbiterkep {
   
-  static orbiterkep_db db;
 
 } // namespaces
 
-pagmo::problem::TransXSolution run_problem(const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
+void run_problem(pagmo::problem::TransXSolution * solution, const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
       int mf = 150;
 
       pagmo::decision_vector sol_mga;
@@ -42,13 +41,12 @@ pagmo::problem::TransXSolution run_problem(const pagmo::problem::transx_problem 
         std::cout << "Done" << std::endl;
       }
 
-      auto solution = single_obj.get_solution(sol_mga);
-
-      return solution;
+      single_obj.fill_solution(solution, sol_mga);
 }
 
 int main(int argc, char **argv) {
   try {
+    orbiterkep::orbiterkep_db db;
 
     orbiterkep::parameters param = orbiterkep::parse_parameters(argc, argv);
 
@@ -74,11 +72,11 @@ int main(int argc, char **argv) {
 
       pagmo::problem::TransXSolution solution;
       if (param.use_db) {
-        solution = mga.get_solution(orbiterkep::db.get_stored_solution(param, "MGA"));
+        mga.fill_solution(&solution, db.get_stored_solution(param, "MGA"));
       } else {
-        solution = run_problem(mga, mga_multi, param.n_mga, param.n_gen, param.max_deltaV, param.multi_obj);
+        run_problem(&solution, mga, mga_multi, param.n_mga, param.n_gen, param.max_deltaV, param.multi_obj);
 
-        orbiterkep::db.store_solution(param, solution, "MGA");
+        db.store_solution(param, solution, "MGA");
       }
 
       std::cout << solution << std::endl;
@@ -105,11 +103,11 @@ int main(int argc, char **argv) {
 
       pagmo::problem::TransXSolution solution;
       if (param.use_db) {
-        solution = mga_1dsm.get_solution(orbiterkep::db.get_stored_solution(param, "MGA-1DSM"));
+        mga_1dsm.fill_solution(&solution, db.get_stored_solution(param, "MGA-1DSM"));
       } else {
-        solution = run_problem(mga_1dsm, mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, param.max_deltaV, param.multi_obj);
+        run_problem(&solution, mga_1dsm, mga_1dsm_multi, param.n_mga_1dsm, param.n_gen, param.max_deltaV, param.multi_obj);
 
-        orbiterkep::db.store_solution(param, solution, "MGA-1DSM");
+        db.store_solution(param, solution, "MGA-1DSM");
       }
 
       std::cout << solution << std::endl;

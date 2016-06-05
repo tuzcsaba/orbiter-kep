@@ -12,7 +12,7 @@
 
 namespace orbiterkep {
 
-const int max_count_per_problem = 100;
+const int max_count_per_problem = 25;
 
 orbiterkep_db::orbiterkep_db() {
   mongoc_init();
@@ -20,7 +20,9 @@ orbiterkep_db::orbiterkep_db() {
 }
 
 orbiterkep_db::~orbiterkep_db() {
-  mongoc_client_destroy(m_client);
+  if (m_client != 0) {
+    mongoc_client_destroy(m_client);
+  }
   mongoc_cleanup();
 }
 
@@ -79,14 +81,16 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
   std::size_t param_hash = boost::hash_value(params);
   boost::hash_combine(param_hash, problem);
 
-  auto query = BCON_NEW("$query", "{", "param_hash", param_hash, "}",
+  bson_t * countQuery = BCON_NEW("param_hash", BCON_INT64(param_hash));
+
+  bson_t * query = BCON_NEW("$query", "{", "param_hash", BCON_INT64(param_hash), "}",
                         "$orderby", "{", "delta-v", BCON_INT32(-1), "}");
   
-  
-  int count = mongoc_collection_count(collection, MONGOC_QUERY_NONE, query, 0, 0, NULL, &error);
-
+  int count = mongoc_collection_count(collection, MONGOC_QUERY_NONE, countQuery, 0, 0, NULL, &error);
   auto cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, query, NULL, NULL);
   int i = count - max_count_per_problem;
+
+  bson_destroy(countQuery);
 
   const bson_t * doc;
   while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &doc)) {
@@ -119,7 +123,6 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
   }
   bson_destroy(query);
   mongoc_cursor_destroy(cursor);
-
 
   bson_oid_t oid;
   bson_oid_init(&oid, NULL);
@@ -163,7 +166,6 @@ void orbiterkep_db::store_solution(const parameters &params, const pagmo::proble
   }
 
   bson_destroy(document);
-
   mongoc_collection_destroy(collection);
 };
 

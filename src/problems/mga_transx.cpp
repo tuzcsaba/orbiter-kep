@@ -41,9 +41,7 @@ base_ptr mga_transx::clone() const {
   return base_ptr(new mga_transx(*this));
 }
 
-TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print) const {
-
-  TransXSolution solution;
+void mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, bool should_print, TransXSolution * solution) const {
 
   int n = get_n_legs();
 
@@ -74,7 +72,9 @@ TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vect
   kep_toolbox::array3D v_end_l;
   kep_toolbox::array3D v_beg_l;
 
-  transx_time_info(solution.mutable_times(), get_seq(), t_P);
+  if (should_print) {
+    transx_time_info(solution->mutable_times(), get_seq(), t_P);
+  }
 
   kep_toolbox::array3D vout, vin;
   for (int i = 0; i < get_n_legs(); ++i) {
@@ -94,7 +94,7 @@ TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vect
         DV[0] = burn_cost(get_seq()[0], vout_rel, false, true);
       }
       if (should_print) {
-        transx_escape(solution.mutable_escape(), get_seq()[0], v_P[0], r_P[0], vout_rel, t_P[0].mjd());
+        transx_escape(solution->mutable_escape(), get_seq()[0], v_P[0], r_P[0], vout_rel, t_P[0].mjd());
       }
     } else {
       kep_toolbox::array3D v_rel_in(vin), v_rel_out(vout);
@@ -104,7 +104,7 @@ TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vect
       kep_toolbox::fb_vel(DV[i], v_rel_in, v_rel_out, *planet);
 
       if (should_print) {
-        transx_flyby(solution.add_flybyes(), planet, v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd());
+        transx_flyby(solution->add_flybyes(), planet, v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd());
       }
     }
 
@@ -117,14 +117,15 @@ TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vect
     DV[DV.size() - 1] = burn_cost(get_seq()[get_seq().size() - 1], Vexc_arr, true, get_circularize());
   }
 
-  if (should_print)
-    transx_arrival(solution.mutable_arrival(), get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
+  if (should_print) {
+    transx_arrival(solution->mutable_arrival(), get_seq()[get_seq().size() - 1], Vexc_arr, t_P[t_P.size() - 1].mjd());
+  }
 
   double fuelCost = std::accumulate(DV.begin(), DV.end(), 0.0);
   double totalTime = std::accumulate(T.begin(), T.end(), 0.0);
 
   if (should_print) {
-    solution.set_fuel_cost(fuelCost);
+    solution->set_fuel_cost(fuelCost);
   }
 
   f[0] = fuelCost;
@@ -132,7 +133,6 @@ TransXSolution mga_transx::calc_objective(fitness_vector &f, const decision_vect
     f[1] = totalTime;
   }
 
-  return solution;
 }
 
 std::string mga_transx::get_name() const {

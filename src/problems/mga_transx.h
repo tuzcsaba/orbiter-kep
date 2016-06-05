@@ -32,7 +32,7 @@ public:
   bool get_add_vinf_arr() const { return m_add_vinf_arr; }
 
   virtual std::string get_name() const;
-  virtual TransXSolution calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false) const;
+  virtual void calc_objective(fitness_vector &f, const decision_vector &x, bool should_print = false, TransXSolution * solution = 0) const;
   
 private:
   friend class boost::serialization::access;

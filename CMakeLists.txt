@@ -95,7 +95,7 @@ target_compile_options(OrbiterKEP PUBLIC ${pagmo_CFLAGS_OTHER} ${pykep_CFLAGS_OT
 
 
 ADD_SUBDIRECTORY(proto)
-target_link_libraries(OrbiterKEP proto ${PROTOBUF_LIBRARY})
+target_link_libraries(OrbiterKEP proto)
 
 INSTALL(TARGETS OrbiterKEP RUNTIME DESTINATION bin)
 
