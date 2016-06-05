@@ -1,12 +1,138 @@
+#include "OrbiterKEPConfig.h"
 
 #include "opt/optimise.h"
 
+#include "model/param.h"
+
 #include "plot/pareto.h"
+
+#include "problems/mga_transx.h"
+#include "problems/mga_1dsm_transx.h"
+
+#ifdef BUILD_MONGODB
+
+#include "db/orbiter_db.h"
+
+#endif
+
+extern "C" _Orbiterkep__TransXSolution * orbiterkep_optimize(const _Orbiterkep__Parameters &params) {
+  int len = orbiterkep__parameters__get_packed_size(&params);
+  uint8_t *buf;
+  buf = (uint8_t *)malloc(len);
+  orbiterkep__parameters__pack(&params, buf);
+
+  std::string raw(reinterpret_cast<char const*>(buf), len);
+  orbiterkep::Parameters param_cpp;
+  param_cpp.ParseFromString(raw);
+  free(buf);
+
+  orbiterkep::TransXSolution sol_cpp;
+  orbiterkep::optimize(param_cpp, &sol_cpp);
+
+  std::string result_raw;
+  sol_cpp.SerializeToString(&result_raw);
+  const uint8_t *c = (uint8_t *)result_raw.c_str();
+  len = result_raw.length();
+
+  return orbiterkep__trans_xsolution__unpack(NULL, len, c);
+}
 
 namespace orbiterkep {
 
+void run_problem(TransXSolution * solution, const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
+      int mf = 150;
+
+      pagmo::decision_vector sol_mga;
+
+      std::cout << "- Running single-objective optimisation";
+      orbiterkep::optimiser op(single_obj, trials, gen, mf, 1);
+      sol_mga = op.run_once(0, false, max_deltav);
+      std::cout << " Done" << std::endl;
+
+      if (run_multi_obj) {
+        std::cout << "- Running multi-objective optimisation";
+        orbiterkep::optimiser op_multi(multi_obj, trials, gen, mf, 1);
+        op_multi.run_once(&sol_mga, true, max_deltav);
+        std::cout << "Done" << std::endl;
+      }
+
+      single_obj.fill_solution(solution, sol_mga);
+}
+
+void optimize(const Parameters &param, TransXSolution * solution) {
+
+#ifdef BUILD_MONGODB
+    orbiterkep::orbiterkep_db db;
+#endif
+
+    auto planets = orbiterkep::kep_toolbox_planets(param);
+
+    pagmo::problem::transx_problem * single; 
+    pagmo::problem::transx_problem * multi;
+
+    if (param.n_trials() <= 0) {
+      return;
+    }
+    
+    auto MJD = kep_toolbox::epoch::type::MJD;
+
+    if (param.problem() == "MGA") {
+      single = new pagmo::problem::mga_transx(planets, 
+          param.dep_altitude(), param.arr_altitude(), param.circularize(), 
+          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
+          param.tof().min(), param.tof().max(), 
+          param.vinf().min(), param.vinf().max(),
+          param.add_dep_vinf(), param.add_arr_vinf(),
+          false);
+
+      multi = new pagmo::problem::mga_transx(planets,
+          param.dep_altitude(), param.arr_altitude(), param.circularize(), 
+          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
+          param.tof().min(), param.tof().max(), 
+          param.vinf().min(), param.vinf().max(),
+          param.add_dep_vinf(), param.add_arr_vinf(),
+           true);
+
+      std::cout << "Executing MGA trials" << std::endl;
+    } else if (param.problem() == "MGA-1DSM") {
+       single = new pagmo::problem::mga_1dsm_transx(planets, 
+          param.dep_altitude(), param.arr_altitude(), param.circularize(), 
+          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
+          param.tof().min(), param.tof().max(), 
+          param.vinf().min(), param.vinf().max(),
+          param.add_dep_vinf(), param.add_arr_vinf(),
+          false, true);
+
+      multi = new pagmo::problem::mga_1dsm_transx(planets,
+          param.dep_altitude(), param.arr_altitude(), param.circularize(), 
+          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
+          param.tof().min(), param.tof().max(), 
+          param.vinf().min(), param.vinf().max(),
+          param.add_dep_vinf(), param.add_arr_vinf(),
+           true, true);
+
+
+    }
+
+    
+#ifdef BUILD_MONGODB
+    if (param.use_db()) {
+      single->fill_solution(solution, db.get_stored_solution(param, "MGA"));
+    } else {
+#endif
+      run_problem(solution, *single, *multi, param.n_trials(), param.n_gen(), param.max_deltav(), param.multi_objective());
+#ifdef BUILD_MONGODB
+      db.store_solution(param, *solution, "MGA");
+    }
+#endif
+
+    delete single;
+    delete multi;
+}
+
+
 optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) : 
-  m_problem(prob), m_n_isl(8), m_population(60), m_n_trial(n_trial), m_mf(mf), m_gen(gen), m_mr(mr) {
+  m_problem(prob), m_n_isl(12), m_population(60), m_n_trial(n_trial), m_mf(mf), m_gen(gen), m_mr(mr) {
 }
 
 pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV, std::vector<std::string> algo_list) {
@@ -39,11 +165,11 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
   algos_map["mbh_cs"] = std::auto_ptr<pagmo::algorithm::base>(new pagmo::algorithm::mbh(*algos_map["cs"]));
   algos_map["ms_jde"] = std::auto_ptr<pagmo::algorithm::base>(new pagmo::algorithm::ms(*algos_map["jde"], m_mf));
 
-  pagmo::migration::best_s_policy sel_single(0.1, pagmo::migration::rate_type::fractional);
-  pagmo::migration::fair_r_policy rep_single(0.1, pagmo::migration::rate_type::fractional);
+  pagmo::migration::best_s_policy sel_single(0.15, pagmo::migration::rate_type::fractional);
+  pagmo::migration::fair_r_policy rep_single(0.15, pagmo::migration::rate_type::fractional);
 
-  pagmo::migration::best_s_policy sel_multi(0.1, pagmo::migration::rate_type::fractional);
-  pagmo::migration::fair_r_policy rep_multi(0.1, pagmo::migration::rate_type::fractional);
+  pagmo::migration::best_s_policy sel_multi(0.15, pagmo::migration::rate_type::fractional);
+  pagmo::migration::fair_r_policy rep_multi(0.15, pagmo::migration::rate_type::fractional);
 
   std::vector<pagmo::algorithm::base_ptr> algos;
 
@@ -117,6 +243,7 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
     }
 
 
+#ifdef BUILD_PLOT
     if (m_problem.get_f_dimension() == 2 && print_fronts) {
       pagmo::population sum_pop(m_problem);
       for (int i = 0; i < archi.get_size(); ++i) {
@@ -128,6 +255,7 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
 
       population_plot_pareto_fronts(sum_pop, maxDeltaV);
     }
+#endif
   }
 
   return best_x;

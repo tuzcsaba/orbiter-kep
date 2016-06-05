@@ -2,3 +2,4 @@
 #define OrbiterKEP_VERSION_MINOR @OrbiterKEP_VERSION_MINOR@
 
 #cmakedefine BUILD_MONGODB
+#cmakedefine BUILD_PLOT

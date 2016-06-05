@@ -105,6 +105,13 @@ void mga_transx::calc_objective(fitness_vector &f, const decision_vector &x, boo
       kep_toolbox::planet::planet_ptr planet = get_seq()[i];
       kep_toolbox::fb_vel(DV[i], v_rel_in, v_rel_out, *planet);
 
+      double ta  = acos(kep_toolbox::dot(v_rel_in, v_rel_out)/sqrt(kep_toolbox::dot(v_rel_in,v_rel_in))/sqrt(kep_toolbox::dot(v_rel_out,v_rel_out)));
+      double alt = (planet->get_mu_self() / kep_toolbox::dot(v_rel_in,v_rel_in)*(1/sin(ta/2)-1) - planet->get_radius())/1000;
+      if (alt > planet->get_safe_radius()) {
+        f[0] = DBL_MAX;
+        return;
+      }
+
       if (should_print) {
         transx_flyby(solution->add_flybyes(), planet, v_P[i], r_P[i], v_rel_in, v_rel_out, t_P[i].mjd());
       }

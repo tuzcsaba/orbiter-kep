@@ -1,5 +1,14 @@
 #include <pagmo/pagmo.h>
 
+#include "proto/parameters.pb.h"
+#include "proto/parameters.pb-c.h"
+
+extern "C" {
+#include "proto/solution.pb.h"
+#include "proto/solution.pb-c.h"
+}
+
+
 namespace orbiterkep {
 
 class optimiser {
@@ -18,4 +27,9 @@ class optimiser {
      int m_gen;
 };
 
+void optimize(const Parameters &params, TransXSolution * solution);
+
 } // namespaces
+
+
+extern "C" _Orbiterkep__TransXSolution * orbiterkep_optimize(const _Orbiterkep__Parameters &params);

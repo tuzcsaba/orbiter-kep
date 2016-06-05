@@ -15,7 +15,7 @@ namespace orbiterkep {
 
 void load_spice_kernels();
 
-void parse_parameters(Parameters * param, int argc, char ** argv);
+bool parse_parameters(Parameters * param, int argc, char ** argv);
 
 std::vector<kep_toolbox::planet::planet_ptr> kep_toolbox_planets(const Parameters &param);
 

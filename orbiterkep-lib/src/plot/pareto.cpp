@@ -1,5 +1,8 @@
 #include "plot/pareto.h"
 
+
+#ifdef BUILD_PLOT
+
 void population_plot_pareto_fronts(const pagmo::population &pop, double maxDeltaV) {
   
   std::vector<std::vector<pagmo::population::size_type> > p_list = pop.compute_pareto_fronts();
@@ -33,3 +36,4 @@ void population_plot_pareto_fronts(const pagmo::population &pop, double maxDelta
 
 }
 
+#endif

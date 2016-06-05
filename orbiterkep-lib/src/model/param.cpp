@@ -73,12 +73,14 @@ namespace orbiterkep {
         return seq;
     }
     
-    void parse_parameters(Parameters * param, int argc, char ** argv) {
+    bool parse_parameters(Parameters * param, int argc, char ** argv) {
         
+      try {
         TCLAP::CmdLine cmd("Calculate Optimal MGA and MGA-1DSM trajectories", ' ', "0.1");
         
         configure_command(cmd);
         
+        if (argc == 1 || argv == NULL) return false;
         cmd.parse(argc, argv);
         
         param->set_use_spice(spiceArg.getValue());
@@ -100,10 +102,10 @@ namespace orbiterkep {
         std::vector<std::string> t0s;
         boost::split(t0s, launchArg.getValue(), boost::is_any_of(","));
         param->mutable_t0()->set_min(kep_toolbox::epoch_from_iso_string(t0s[0]).mjd());
-        param->mutable_t0()->set_min(kep_toolbox::epoch_from_iso_string(t0s[1]).mjd());
+        param->mutable_t0()->set_max(kep_toolbox::epoch_from_iso_string(t0s[1]).mjd());
         
         param->mutable_tof()->set_min( tofMinArg.getValue() );
-        param->mutable_tof()->set_min( tofMaxArg.getValue() );
+        param->mutable_tof()->set_max( tofMaxArg.getValue() );
         
         param->mutable_vinf()->set_min( 0.1 );
         param->mutable_vinf()->set_max( vinfMaxArg.getValue() );
@@ -136,6 +138,12 @@ namespace orbiterkep {
         }
         
         param->set_use_db( useDBArg.getValue() );
+
+        return true;
+      } catch (TCLAP::ArgException &e) {
+        std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+        return false;
+      }
     };
     
     void load_spice_kernels() {

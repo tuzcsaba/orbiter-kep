@@ -6,6 +6,7 @@
 namespace orbiterkep {
 
 std::ostream& operator<<(std::ostream& ss, const TransXArrival &arriv) {
+
   ss << std::fixed;
   ss << arriv.planet() << " arrival" << std::endl;
   ss << "--------------------------------------" << std::endl;
