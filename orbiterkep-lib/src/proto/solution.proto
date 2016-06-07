@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package orbiterkep;
+
+message TransXTimes {
+    
+  repeated string planets = 1;
+  repeated double times = 2;
+
+}
+  message TransXEscape {
+
+    double mjd = 1;
+    double vinf = 2;
+    double burn = 3;
+
+    double prograde = 4;
+    double outward  = 5;
+    double plane    = 6;
+    
+    string planet   = 20;
+  }
+ 
+ 
+  message TransXDSM {
+
+    double mjd = 1;
+    double vinf = 2;
+    double burn = 3;
+
+    double prograde = 4;
+    double outward  = 5;
+    double plane    = 6;
+  }
+
+message TransXFlyBy {
+
+    double mjd = 1;
+    double burn = 3;
+
+    double prograde = 4;
+    double outward  = 5;
+    double plane    = 6;
+
+    double approach_vel = 7;
+    double departure_vel = 8;
+
+    double outward_angle = 9;
+    double inclination = 10;
+    double turning_angle = 11;
+
+    double periapsis_altitude = 12;
+
+    string planet = 20;
+  }
+
+  message TransXArrival {
+
+    double mjd = 1;
+    double vinf = 2;
+    double burn = 3;
+
+    string planet = 20;
+
+  }
+ 
+
+message TransXSolution {
+  repeated double x = 1; 
+  string problem = 2;
+  double fuel_cost = 3;
+  TransXTimes times = 4;
+
+  TransXEscape escape = 5;
+
+  repeated TransXDSM dsms = 6;
+
+  
+  repeated TransXFlyBy flybyes = 7;
+  TransXArrival arrival = 8;
+
+}

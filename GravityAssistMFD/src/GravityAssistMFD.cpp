@@ -5,8 +5,6 @@
 
 #include "Orbitersdk.h"
 
-#include "orbiterkep/opt/optimise.h"
-
 #include "DlgCtrl.h"
 #include "MGAFinder.h"
 #include <windows.h>

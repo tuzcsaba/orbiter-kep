@@ -1,4 +1,4 @@
-#include "ext.h"
+#include "proto/ext.h"
 
 #include <iostream>
 #include <iomanip>
@@ -25,7 +25,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXSolution &sol)
 
   ss << sol.escape();
 
-  int i = 0; 
+  int i = 0;
   int j = 0;
   auto dsms = sol.dsms();
   auto flybyes = sol.flybyes();
@@ -46,7 +46,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXSolution &sol)
 }
 
 
-   
+
 std::ostream& operator<<(std::ostream& ss, const TransXTimes &tim) {
   ss << std::fixed;
 
@@ -93,7 +93,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXDSM &dsm) {
   ss << "Plane:                   " << dsm.plane() << std::setprecision(3) << std::endl;
   ss << "Hyp. excess velocity:    " << dsm.vinf() << std::setprecision(3) <<  "m/s" << std::endl;
   ss << "DSM burn:                " << dsm.burn() << std::setprecision(3) << std::endl;
-  
+
   ss << std::endl << std::endl;
 
   return ss;
@@ -105,7 +105,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXFlyBy &f) {
   ss << "--------------------------------------" << std::endl;
   ss << "MJD:                   " << f.mjd() << std::setprecision(4) << std::endl;
   ss << "Approach velocity:     " << f.approach_vel() << std::setprecision(3) << std::endl;
-  ss << "Departure velocity:    " << f.departure_vel() << std::setprecision(3) << std::endl;  
+  ss << "Departure velocity:    " << f.departure_vel() << std::setprecision(3) << std::endl;
 
   ss << "Outward angle:         " << f.outward_angle() << std::endl;
   ss << "Inclination:           " << f.inclination() << std::setprecision(3) << " deg" << std::endl;

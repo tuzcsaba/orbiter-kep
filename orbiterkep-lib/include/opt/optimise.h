@@ -16,7 +16,7 @@ class optimiser {
 
      pagmo::decision_vector run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts = false, double maxDeltaV = 20000, std::vector<std::string> algo_list = std::vector<std::string>());
 
-     static void optimize(const Parameters &params, TransXSolution * solution);
+     static orbiterkep_lib_EXPORT void optimize(const Parameters &params, TransXSolution * solution);
 
    private:
      const pagmo::problem::base &m_problem;

@@ -7,6 +7,10 @@ SET (${PROJECT_NAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 SET (${PROJECT_NAME}_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 SET (${PROJECT_NAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+# Protocol buffers
+
+add_subdirectory(${${PROJECT_NAME}_SOURCE_DIR}/proto)
+
 file(GLOB orbiterkep-lib_SRCS
   "${${PROJECT_NAME}_SOURCE_DIR}/**/*.cpp"
   "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp"
@@ -23,8 +27,6 @@ file(GLOB orbiterkep-lib_INCL
   "${${PROJECT_NAME}_INCLUDE_DIR}/*.hpp"
 )
 
-add_subdirectory(proto)
-
 INCLUDE_DIRECTORIES(${orbiterkep-proto_INCLUDES})
 
 INCLUDE_DIRECTORIES(${gnuplot-iostream_INCLUDES})
@@ -39,8 +41,7 @@ INCLUDE_DIRECTORIES(${${PROJECT_NAME}_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${${PROJECT_NAME}_BIN_DIR})
 
 set_target_properties(${PROJECT_NAME}
-  PROPERTIES POSITION_INDEPENDENT_CODE OFF)
-target_link_libraries(${PROJECT_NAME} orbiterkep-proto)
+  PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 SET(Boost_USE_STATIC_LIBS ${BUILD_STATIC})
 set(Boost_USE_MULTITHREADED ON)
@@ -49,7 +50,7 @@ find_package(Boost REQUIRED COMPONENTS filesystem system serialization iostreams
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} orbiterkep-proto)
 
 # PyKEP/PaGMO
 
@@ -107,3 +108,7 @@ SET(${PROJECT_NAME}_INCLUDES ${${PROJECT_NAME}_INCLUDE_DIR}
     CACHE INTERNAL "${PROJECT_NAME}: Include Directories" FORCE
 )
 
+INSTALL(TARGETS orbiterkep-lib DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+INSTALL(DIRECTORY ${${PROJECT_NAME}_INCLUDE_DIR}/ ${${PROJECT_NAME}_BIN_DIR}/src/
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/orbiterkep
+  FILES_MATCHING PATTERN "*.h")

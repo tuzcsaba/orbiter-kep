@@ -11,11 +11,13 @@
 
 #include "proto/parameters.pb.h"
 
+#include "orbiterkep-lib_Export.h"
+
 namespace orbiterkep {
 
 void load_spice_kernels();
 
-bool parse_parameters(Parameters * param, int argc, char ** argv);
+orbiterkep_lib_EXPORT bool parse_parameters(Parameters * param, int argc, char ** argv);
 
 std::vector<kep_toolbox::planet::planet_ptr> kep_toolbox_planets(const Parameters &param);
 
