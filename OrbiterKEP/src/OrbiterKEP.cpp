@@ -5,13 +5,14 @@
 
 #include "model/param.h"
 #include "opt/optimise.h"
+#include "opt/optimise-c.h"
 
 #include "proto/ext.h"
 
 int main(int argc, char **argv) {
 
     orbiterkep::Parameters param;
-    
+
     if (!orbiterkep::parse_parameters(&param, argc, argv)) {
       return -1;
     }
@@ -21,7 +22,7 @@ int main(int argc, char **argv) {
 
     orbiterkep::TransXSolution solution;
 
-    orbiterkep::optimize(param, &solution);
+    orbiterkep::optimiser::optimize(param, &solution);
 
     std::cout << solution << std::endl;
 

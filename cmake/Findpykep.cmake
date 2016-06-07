@@ -31,9 +31,9 @@ set(pykep_LIBNAME "keplerian_toolbox" STRING "Mangoc Library name")
 if (WIN32)
   if (pykep_USE_STATIC_LIBS)
     set(pykep_LIBNAME "keplerian_toolbox" STRING "Mangoc Library name")
-    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib;.a")
   else()
-    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib;.dll")
   endif()
 else()
   if (pykep_USE_STATIC_LIBS)
@@ -57,10 +57,8 @@ find_library(pykep_LIBRARY NAMES ${pykep_LIBNAME}
 
 if (pykep_USE_STATIC_LIBS)
   if (WIN32)
-    set(spice_LIBNAME "cspice.lib")
   else()
     set(spice_LIBNAME "cspice.a")
-  endif()
 
   find_library(spice_LIBRARY NAMES ${spice_LIBNAME}
     PATHS ${pykep_ROOT}
@@ -68,6 +66,7 @@ if (pykep_USE_STATIC_LIBS)
     NO_DEFAULT_PATH)
 
   if (spice_FOUND)
+  endif()
   endif()
 endif()
 

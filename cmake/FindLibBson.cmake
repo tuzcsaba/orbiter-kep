@@ -32,7 +32,7 @@ if (WIN32)
     set(libbson_LIBNAME "bson-static-1.0" STRING "Mangoc Library name")
     set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
   else()
-    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib;.dll")
   endif()
 else()
   if (libbson_USE_STATIC_LIBS)
@@ -51,7 +51,7 @@ include(FindPackageHandleStandardArgs)
 
 find_library(libbson_LIBRARY ${libbson_LIBNAME}
   PATHS ${LIBBSON_DIR}
-  PATH_SUFFIXES lib
+  PATH_SUFFIXES lib bin
   NO_DEFAULT_PATH)
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ${_libbson_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})

@@ -32,7 +32,7 @@ if (WIN32)
     set(libmongoc_LIBNAME "mongoc-static-1.0" STRING "Mangoc Library name")
     set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
   else()
-    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib")
+    set(CMAKE_FIND_LIBRARY_SUFFIXES "_dll.lib;.dll")
   endif()
 else()
   if (libmongoc_USE_STATIC_LIBS)
@@ -51,7 +51,7 @@ include(FindPackageHandleStandardArgs)
 
 find_library(libmongoc_LIBRARY ${libmongoc_LIBNAME}
   PATHS ${LIBMONGOC_DIR}
-  PATH_SUFFIXES lib
+  PATH_SUFFIXES lib bin
   NO_DEFAULT_PATH)
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ${_libmongoc_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
