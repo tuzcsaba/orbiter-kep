@@ -1,9 +1,6 @@
-#include "proto/solution.pb.h"
-#include "proto/parameters.pb.h"
+#include "proto/ext.h"
 
 #include <pagmo/problem/base.h>
-
-#include "orbiterkep-lib_Export.h"
 
 namespace orbiterkep {
 

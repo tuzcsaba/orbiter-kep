@@ -59,17 +59,17 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
     if (param.problem() == "MGA") {
       single = new pagmo::problem::mga_transx(planets,
           param.dep_altitude(), param.arr_altitude(), param.circularize(),
-          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
-          param.tof().min(), param.tof().max(),
-          param.vinf().min(), param.vinf().max(),
+          kep_toolbox::epoch(param.t0().lb(), MJD), kep_toolbox::epoch(param.t0().ub(), MJD),
+          param.tof().lb(), param.tof().ub(),
+          param.vinf().lb(), param.vinf().ub(),
           param.add_dep_vinf(), param.add_arr_vinf(),
           false);
 
       multi = new pagmo::problem::mga_transx(planets,
           param.dep_altitude(), param.arr_altitude(), param.circularize(),
-          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
-          param.tof().min(), param.tof().max(),
-          param.vinf().min(), param.vinf().max(),
+          kep_toolbox::epoch(param.t0().lb(), MJD), kep_toolbox::epoch(param.t0().ub(), MJD),
+          param.tof().lb(), param.tof().ub(),
+          param.vinf().lb(), param.vinf().ub(),
           param.add_dep_vinf(), param.add_arr_vinf(),
            true);
 
@@ -77,17 +77,17 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
     } else if (param.problem() == "MGA-1DSM") {
        single = new pagmo::problem::mga_1dsm_transx(planets,
           param.dep_altitude(), param.arr_altitude(), param.circularize(),
-          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
-          param.tof().min(), param.tof().max(),
-          param.vinf().min(), param.vinf().max(),
+          kep_toolbox::epoch(param.t0().lb(), MJD), kep_toolbox::epoch(param.t0().ub(), MJD),
+          param.tof().lb(), param.tof().ub(),
+          param.vinf().lb(), param.vinf().ub(),
           param.add_dep_vinf(), param.add_arr_vinf(),
           false, true);
 
       multi = new pagmo::problem::mga_1dsm_transx(planets,
           param.dep_altitude(), param.arr_altitude(), param.circularize(),
-          kep_toolbox::epoch(param.t0().min(), MJD), kep_toolbox::epoch(param.t0().max(), MJD),
-          param.tof().min(), param.tof().max(),
-          param.vinf().min(), param.vinf().max(),
+          kep_toolbox::epoch(param.t0().lb(), MJD), kep_toolbox::epoch(param.t0().ub(), MJD),
+          param.tof().lb(), param.tof().ub(),
+          param.vinf().lb(), param.vinf().ub(),
           param.add_dep_vinf(), param.add_arr_vinf(),
            true, true);
 

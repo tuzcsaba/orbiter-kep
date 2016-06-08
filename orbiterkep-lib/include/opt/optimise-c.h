@@ -1,6 +1,6 @@
-#include "proto/parameters.pb-c.h"
-#include "proto/solution.pb-c.h"
-
 #include "orbiterkep-lib_Export.h"
 
-extern "C" orbiterkep_lib_EXPORT _Orbiterkep__TransXSolution * orbiterkep_optimize(const _Orbiterkep__Parameters &params);
+#include <stdint.h>
+
+
+extern "C" orbiterkep_lib_EXPORT int orbiterkep_optimize(const uint8_t * param_buf, int param_l, uint8_t * sol_buf);

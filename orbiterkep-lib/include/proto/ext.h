@@ -1,7 +1,11 @@
-#include "proto/solution.pb.h"
-#include "proto/parameters.pb.h"
 #include "orbiterkep-lib_Export.h"
+#include "proto/orbiterkep-proto_Export.h"
 
+#include "proto/solution.pb.h"
+#include "proto/solution.pb-c.h"
+#include "proto/parameters.pb.h"
+#include "proto/parameters.pb-c.h"
+	
 namespace orbiterkep {
 
 orbiterkep_lib_EXPORT std::ostream& operator<<(std::ostream& os, const TransXSolution &sol);

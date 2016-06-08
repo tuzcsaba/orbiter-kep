@@ -27,6 +27,7 @@ file(GLOB orbiterkep-lib_INCL
   "${${PROJECT_NAME}_INCLUDE_DIR}/*.hpp"
 )
 
+INCLUDE_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/include)
 INCLUDE_DIRECTORIES(${orbiterkep-proto_INCLUDES})
 
 INCLUDE_DIRECTORIES(${gnuplot-iostream_INCLUDES})

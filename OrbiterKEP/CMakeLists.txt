@@ -8,6 +8,8 @@ SET(${PROJECT_NAME}_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 SET(${PROJECT_NAME}_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 SET(${PROJECT_NAME}_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
 
+INCLUDE_DIRECTORIES(${PROJECT_NAME} ${CMAKE_INSTALL_PREFIX}/include)
+
 file(GLOB ${PROJECT_NAME}_SRCS
   "${${PROJECT_NAME}_SOURCE_DIR}/**/*.cpp"
   "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp"
@@ -21,4 +23,4 @@ INCLUDE_DIRECTORIES(${orbiterkep-lib_INCLUDES})
 
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
 
-target_link_libraries(${PROJECT_NAME} orbiterkep-lib)
+target_link_libraries(${PROJECT_NAME} orbiterkep-lib orbiterkep-proto-c)

@@ -2,24 +2,33 @@
 
 #include "opt/optimise.h"
 
-_Orbiterkep__TransXSolution * orbiterkep_optimize(const _Orbiterkep__Parameters &params) {
-  int len = orbiterkep__parameters__get_packed_size(&params);
-  uint8_t *buf;
-  buf = (uint8_t *)malloc(len);
-  orbiterkep__parameters__pack(&params, buf);
+#include "proto/parameters.pb-c.h"
+#include "proto/solution.pb-c.h"
 
-  std::string raw(reinterpret_cast<char const*>(buf), len);
+struct membuf : std::streambuf
+{
+    membuf(char* begin, char* end) {
+        this->setg(begin, begin, end);
+    }
+};
+
+int orbiterkep_optimize(const uint8_t * param_buf, int param_l, uint8_t * sol_buf) {
+
+  membuf sbuf((char *)param_buf, (char *)param_buf + param_l);
+  std::istream in(&sbuf);
   orbiterkep::Parameters param_cpp;
-  param_cpp.ParseFromString(raw);
-  free(buf);
+  param_cpp.ParseFromIstream(&in);
+
+  std::cout << param_cpp.planets(0) << std::endl;
+  std::cout << param_cpp.dep_altitude() << std::endl;
 
   orbiterkep::TransXSolution sol_cpp;
   orbiterkep::optimiser::optimize(param_cpp, &sol_cpp);
 
   std::string result_raw;
   sol_cpp.SerializeToString(&result_raw);
-  const uint8_t *c = (uint8_t *)result_raw.c_str();
-  len = result_raw.length();
-
-  return orbiterkep__trans_xsolution__unpack(NULL, len, c);
+  int len = result_raw.length();
+  memcpy(sol_buf, result_raw.c_str(), len);
+  return len;
 }
+

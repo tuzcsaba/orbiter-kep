@@ -9,9 +9,7 @@
 
 #include <tclap/CmdLine.h>
 
-#include "proto/parameters.pb.h"
-
-#include "orbiterkep-lib_Export.h"
+#include "proto/ext.h"
 
 namespace orbiterkep {
 
@@ -31,14 +29,14 @@ namespace boost {
       boost::hash_combine(seed, p.planets(i));
     }
 
-    boost::hash_combine(seed, p.t0().min());
-    boost::hash_combine(seed, p.t0().max());
+    boost::hash_combine(seed, p.t0().lb());
+    boost::hash_combine(seed, p.t0().ub());
 
-    boost::hash_combine(seed, p.tof().min());
-    boost::hash_combine(seed, p.tof().max());
+    boost::hash_combine(seed, p.tof().lb());
+    boost::hash_combine(seed, p.tof().ub());
 
-    boost::hash_combine(seed, p.vinf().min());
-    boost::hash_combine(seed, p.vinf().max());
+    boost::hash_combine(seed, p.vinf().lb());
+    boost::hash_combine(seed, p.vinf().ub());
 
     boost::hash_combine(seed, p.dep_altitude());
     boost::hash_combine(seed, p.arr_altitude());

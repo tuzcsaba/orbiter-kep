@@ -10,11 +10,11 @@ find_package(PkgConfig)
 pkg_check_modules(PC_PROTOBUFC_QUIET libprotobuf-c)
 set(PROTOBUFC_DEFINITIONS ${PC_PROTOBUFC_CFLAGS_OTHER})
 
-find_path(PROTOBUFC_INCLUDE_DIR google/protobuf-c/protobuf-c.h 
+find_path(PROTOBUFC_INCLUDE_DIR google/protobuf-c/protobuf-c.h
 	HINTS ${PC_PROTOBUFC_INCLUDEDIR} ${PC_PROTOBUFC_INCLUDE_DIRS}
 	PATH_SUFFIXES libprotobuf-c)
 
-find_library(PROTOBUFC_LIBRARY NAMES protobuf-c 
+find_library(PROTOBUFC_LIBRARY NAMES protobuf-c
 	HINTS ${PC_PROTOBUFC_LIBDIR}
 	${PC_PROTOBUFC_LIBRARY_DIRS})
 
@@ -46,10 +46,11 @@ function(PROTOC VAR)
 		add_custom_command(
 			OUTPUT ${${VAR}} ${INCL}
 			COMMAND  ${PROTOBUFC_COMPILER}
-			ARGS --c_out  ${CMAKE_CURRENT_BINARY_DIR} --proto_path ${CMAKE_CURRENT_SOURCE_DIR} ${ABS_FIL}
+			# ARGS --c_out dllexport_decl=orbiterkep_proto_EXPORT:${CMAKE_CURRENT_BINARY_DIR} --proto_path ${CMAKE_CURRENT_SOURCE_DIR} ${ABS_FIL}
+			ARGS --c_out ${CMAKE_CURRENT_BINARY_DIR} --proto_path ${CMAKE_CURRENT_SOURCE_DIR} ${ABS_FIL}
 			DEPENDS ${ABS_FIL}
 			COMMENT "Running protocol buffer compiler on ${FIL}"
-			VERBATIM 
+			VERBATIM
 	)
 
   SET_SOURCE_FILES_PROPERTIES(${${VAR}} ${INCL} PROPERTIES GENERATED TRUE)
