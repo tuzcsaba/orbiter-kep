@@ -148,16 +148,16 @@ void orbiterkep_db::store_solution(const Parameters &params, const orbiterkep::T
   std::stringstream ss;
   ss.str("");
   ss.clear();
-  ss << kep_toolbox::epoch(params.t0().min(), kep_toolbox::epoch::type::MJD);
+  ss << kep_toolbox::epoch(params.t0().lb(), kep_toolbox::epoch::type::MJD);
   auto t0_min = ss.str();
 
   ss.str("");
   ss.clear();
-  ss << kep_toolbox::epoch(params.t0().max(), kep_toolbox::epoch::type::MJD);
+  ss << kep_toolbox::epoch(params.t0().ub(), kep_toolbox::epoch::type::MJD);
   auto t0_max = ss.str();
   BSON_APPEND_DOCUMENT(document, "t0", BCON_NEW("min", BCON_UTF8(t0_min.c_str()), "max", BCON_UTF8(t0_max.c_str())));
-  BSON_APPEND_DOCUMENT(document, "tof", BCON_NEW("min", BCON_DOUBLE(params.tof().min()), "max", BCON_DOUBLE(params.tof().max())));
-  BSON_APPEND_DOCUMENT(document, "vinf", BCON_NEW("min", BCON_DOUBLE(params.vinf().min()), "max", BCON_DOUBLE(params.vinf().max())));
+  BSON_APPEND_DOCUMENT(document, "tof", BCON_NEW("min", BCON_DOUBLE(params.tof().lb()), "max", BCON_DOUBLE(params.tof().ub())));
+  BSON_APPEND_DOCUMENT(document, "vinf", BCON_NEW("min", BCON_DOUBLE(params.vinf().lb()), "max", BCON_DOUBLE(params.vinf().ub())));
   BSON_APPEND_DOUBLE(document, "launch_mjd", launch);
   BSON_APPEND_DOUBLE(document, "eject_altitude", params.dep_altitude());
   BSON_APPEND_DOUBLE(document, "target_altitude", params.arr_altitude());

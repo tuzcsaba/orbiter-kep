@@ -87,8 +87,7 @@ if (BUILD_MONGODB)
 
 endif(BUILD_MONGODB)
 
-if (WIN32)
- GENERATE_EXPORT_HEADER( orbiterkep-lib
+GENERATE_EXPORT_HEADER( orbiterkep-lib
               BASE_NAME orbiterkep-lib
               EXPORT_MACRO_NAME orbiterkep-lib_EXPORT
               EXPORT_FILE_NAME orbiterkep-lib_Export.h
@@ -97,7 +96,6 @@ if (WIN32)
 # SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAG
 #   "-Wl,--gc-sections,--output-def,${CMAKE_CURRENT_BINARY_DIR}/liborbiterkep-lib.def,--out-implib,${CMAKE_CURRENT_BINARY_DIR}/liborbiterkep-lib.a"
 # )
-endif(WIN32)
 
 
 SET(${PROJECT_NAME}_INCLUDES ${${PROJECT_NAME}_INCLUDE_DIR}
