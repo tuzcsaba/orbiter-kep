@@ -2,6 +2,12 @@
 
 #include <pagmo/problem/base.h>
 
+namespace pagmo { namespace algorithm {
+
+    class base;
+
+}} // namespaces
+
 namespace orbiterkep {
 
 	class Parameters;
@@ -9,17 +15,19 @@ namespace orbiterkep {
 
 class optimiser {
    public:
-     optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr);
+     optimiser(const pagmo::problem::base &prob, const int n_isl = 4, const int population = 60, const int gen = 10000, const int mf = 100, const double mr = 0.15);
+     ~optimiser();
 
-     pagmo::decision_vector run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts = false, double maxDeltaV = 20000, std::vector<std::string> algo_list = std::vector<std::string>());
+     pagmo::decision_vector run_once(pagmo::decision_vector *single_obj_result, const Parameters &params);
 
      static orbiterkep_lib_EXPORT void optimize(const Parameters &params, TransXSolution * solution);
 
    private:
+     std::map<std::string, pagmo::algorithm::base *> m_algos_map;
+
      const pagmo::problem::base &m_problem;
      int m_n_isl;
      int m_population;
-     int m_n_trial;
      int m_mf;
      double m_mr;
      int m_gen;

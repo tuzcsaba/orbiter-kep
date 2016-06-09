@@ -9,6 +9,16 @@ message ParamBounds {
 
 }
 
+message ParamPaGMO {
+
+  int32 n_isl = 1;
+  int32 population = 2;
+
+  int32 n_gen = 3;
+  int32 mf = 4;
+  double mr = 5;
+}
+
 message Parameters {
 
   repeated string planets = 1;
@@ -21,7 +31,6 @@ message Parameters {
 
   string problem = 7;
   int32 n_trials = 8;
-  int32 n_gen = 9;
 
   double dep_altitude = 10;
   double arr_altitude = 11;
@@ -37,4 +46,6 @@ message Parameters {
   bool multi_objective = 17;
 
   bool use_db = 18;
+
+  ParamPaGMO pagmo = 19;
 }

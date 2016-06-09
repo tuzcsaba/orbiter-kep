@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Orbiterkep" />
+		<Option pch_mode="2" />
+		<Option compiler="null" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/Orbiterkep" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Unit filename="../orbiterkep-lib/include/db/orbiter_db.h" />
+		<Unit filename="../orbiterkep-lib/include/model/param.h" />
+		<Unit filename="../orbiterkep-lib/include/opt/optimise-c.h" />
+		<Unit filename="../orbiterkep-lib/include/opt/optimise.h" />
+		<Unit filename="../orbiterkep-lib/include/plot/pareto.h" />
+		<Unit filename="../orbiterkep-lib/include/problems/mga_1dsm_transx.h" />
+		<Unit filename="../orbiterkep-lib/include/problems/mga_transx.h" />
+		<Unit filename="../orbiterkep-lib/include/problems/transx_problem.h" />
+		<Unit filename="../orbiterkep-lib/include/proto/ext.h" />
+		<Unit filename="../orbiterkep-lib/include/ps/renderer.h" />
+		<Unit filename="../orbiterkep-lib/src/db/orbiter_db.cpp" />
+		<Unit filename="../orbiterkep-lib/src/model/param.cpp" />
+		<Unit filename="../orbiterkep-lib/src/opt/optimise-c.cpp" />
+		<Unit filename="../orbiterkep-lib/src/opt/optimise.cpp" />
+		<Unit filename="../orbiterkep-lib/src/plot/pareto.cpp" />
+		<Unit filename="../orbiterkep-lib/src/problems/mga_1dsm_transx.cpp" />
+		<Unit filename="../orbiterkep-lib/src/problems/mga_transx.cpp" />
+		<Unit filename="../orbiterkep-lib/src/problems/transx_problem.cpp" />
+		<Unit filename="../orbiterkep-lib/src/proto/ext.cpp" />
+		<Unit filename="../orbiterkep-lib/src/ps/renderer.cpp" />
+		<Unit filename="src/OrbiterKEP.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

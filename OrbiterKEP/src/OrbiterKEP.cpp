@@ -16,7 +16,9 @@ int main(int argc, char **argv) {
 
     orbiterkep::Parameters par;
 
-    if (!orbiterkep::parse_parameters(&par, argc, argv)) {
+    orbiterkep::CommandLine cmd;
+    
+    if (!cmd.parse_parameters(&par, argc, argv)) {
       return -1;
     }
 
@@ -44,9 +46,6 @@ int main(int argc, char **argv) {
 	param.has_n_trials = 1;
 	param.n_trials = 1;
 
-	param.has_n_gen = 1;
-	param.n_gen = 100000;
-
 	Orbiterkep__ParamBounds t0 = ORBITERKEP__PARAM_BOUNDS__INIT;
 	t0.has_lb = 1; t0.has_ub = 1;
 	t0.lb = 51000; t0.ub = 56000;
@@ -61,6 +60,14 @@ int main(int argc, char **argv) {
 	vinf.has_lb = 1; vinf.has_ub = 1;
 	vinf.lb = 0.1; vinf.ub = 12.0;
 	param.vinf = &vinf;
+
+  Orbiterkep__ParamPaGMO pagmo = ORBITERKEP__PARAM_PA_GMO__INIT;
+  pagmo.has_n_isl = 1; pagmo.n_isl = 8;
+  pagmo.has_n_gen = 1; pagmo.n_gen = 100000;
+  pagmo.has_population = 1; pagmo.population = 60;
+  pagmo.has_mf = 1; pagmo.mf = 150;
+  pagmo.has_mr = 1; pagmo.mr = 0.15;
+  param.pagmo = &pagmo;
 
 	param.has_max_deltav = 1;
 	param.max_deltav = 24.0;

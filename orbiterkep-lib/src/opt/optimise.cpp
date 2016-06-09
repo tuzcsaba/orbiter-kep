@@ -20,21 +20,25 @@
 
 namespace orbiterkep {
 
-void run_problem(TransXSolution * solution, const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, int trials, int gen, double max_deltav, bool run_multi_obj) {
-      int mf = 150;
+void run_problem(TransXSolution * solution, const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, const orbiterkep::Parameters &params) {
+      int mf = params.pagmo().mf();
+      double mr = params.pagmo().mr();
+      int gen = params.pagmo().n_gen();
+      int population = params.pagmo().population();
+      int n_isl = params.pagmo().n_isl();
 
       pagmo::decision_vector sol_mga;
 
-      std::cout << "- Running single-objective optimisation";
-      orbiterkep::optimiser op(single_obj, trials, gen, mf, 1);
-      sol_mga = op.run_once(0, false, max_deltav);
-      std::cout << " Done" << std::endl;
-
-      if (run_multi_obj) {
+      if (params.multi_objective()) {
         std::cout << "- Running multi-objective optimisation";
-        orbiterkep::optimiser op_multi(multi_obj, trials, gen, mf, 1);
-        op_multi.run_once(&sol_mga, true, max_deltav);
+        orbiterkep::optimiser op_multi(multi_obj, n_isl, population, gen, mf, mr);
+        op_multi.run_once(0, params);
         std::cout << "Done" << std::endl;
+      } else {
+        std::cout << "- Running single-objective optimisation";
+        orbiterkep::optimiser op(single_obj, n_isl, population, gen, mf, mr);
+        sol_mga = op.run_once(0, params);
+        std::cout << " Done" << std::endl;
       }
 
       single_obj.fill_solution(solution, sol_mga);
@@ -45,14 +49,10 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
     orbiterkep::orbiterkep_db db;
 #endif
 
-    auto planets = orbiterkep::kep_toolbox_planets(param);
+    auto planets = orbiterkep::CommandLine::kep_toolbox_planets(param);
 
     pagmo::problem::transx_problem * single;
     pagmo::problem::transx_problem * multi;
-
-    if (param.n_trials() <= 0) {
-      return;
-    }
 
     auto MJD = kep_toolbox::epoch::type::MJD;
 
@@ -100,7 +100,7 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
       single->fill_solution(solution, db.get_stored_solution(param, "MGA"));
     } else {
 #endif
-      run_problem(solution, *single, *multi, param.n_trials(), param.n_gen(), param.max_deltav(), param.multi_objective());
+      run_problem(solution, *single, *multi, param);
 #ifdef BUILD_MONGODB
       db.store_solution(param, *solution, "MGA");
     }
@@ -111,45 +111,51 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
 }
 
 
-optimiser::optimiser(const pagmo::problem::base &prob, const int n_trial, const int gen, const int mf, const double mr) :
-  m_problem(prob), m_n_isl(12), m_population(60), m_n_trial(n_trial), m_mf(mf), m_gen(gen), m_mr(mr) {
-}
-
-pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const bool print_fronts, double maxDeltaV, std::vector<std::string> algo_list) {
-
-  std::map<std::string, pagmo::algorithm::base *> algos_map;
-
-  // Single-obj
-  algos_map["jde"] = new pagmo::algorithm::jde(m_mf, 2, 1, 1e-1, 1e-2, true);
-  algos_map["jde_11"] = new pagmo::algorithm::jde(m_mf, 11, 2, 1e-1, 1e-2, true);
-  algos_map["jde_13"] = new pagmo::algorithm::jde(m_mf, 13, 2, 1e-1, 1e-2, true);
-  algos_map["jde_15"] = new pagmo::algorithm::jde(m_mf, 15, 2, 1e-1, 1e-2, true);
-  algos_map["jde_17"] = new pagmo::algorithm::jde(m_mf, 17, 2, 1e-1, 1e-2, true);
-  algos_map["de_1220"] = new pagmo::algorithm::de_1220(m_mf);
-  algos_map["mde_pbx"] = new pagmo::algorithm::mde_pbx(m_mf);
-  algos_map["pso"] = new pagmo::algorithm::pso(m_mf);
-  algos_map["bee_colony"] = new pagmo::algorithm::bee_colony(m_mf);
-  algos_map["cmaes"] = new pagmo::algorithm::cmaes(m_mf);
-  algos_map["sga_gray"] = new pagmo::algorithm::sga_gray(m_mf);
-  algos_map["sa_corana"] = new pagmo::algorithm::sa_corana(m_mf * 100);
+optimiser::optimiser(const pagmo::problem::base &prob, const int n_isl, const int population, const int gen, const int mf, const double mr) :
+  m_problem(prob), m_n_isl(n_isl), m_population(population), m_mf(mf), m_gen(gen), m_mr(mr) {
+// Single-obj
+  m_algos_map["jde"] = new pagmo::algorithm::jde(m_mf, 2, 1, 1e-1, 1e-2, true);
+  m_algos_map["jde_11"] = new pagmo::algorithm::jde(m_mf, 11, 2, 1e-1, 1e-2, true);
+  m_algos_map["jde_13"] = new pagmo::algorithm::jde(m_mf, 13, 2, 1e-1, 1e-2, true);
+  m_algos_map["jde_15"] = new pagmo::algorithm::jde(m_mf, 15, 2, 1e-1, 1e-2, true);
+  m_algos_map["jde_17"] = new pagmo::algorithm::jde(m_mf, 17, 2, 1e-1, 1e-2, true);
+  m_algos_map["de_1220"] = new pagmo::algorithm::de_1220(m_mf);
+  m_algos_map["mde_pbx"] = new pagmo::algorithm::mde_pbx(m_mf);
+  m_algos_map["pso"] = new pagmo::algorithm::pso(m_mf);
+  m_algos_map["bee_colony"] = new pagmo::algorithm::bee_colony(m_mf);
+  m_algos_map["cmaes"] = new pagmo::algorithm::cmaes(m_mf);
+  m_algos_map["sga_gray"] = new pagmo::algorithm::sga_gray(m_mf);
+  m_algos_map["sa_corana"] = new pagmo::algorithm::sa_corana(m_mf * 100);
 
   // Multi-obj
-  algos_map["nsga2"] = new pagmo::algorithm::nsga2(m_mf);
+  m_algos_map["nsga2"] = new pagmo::algorithm::nsga2(m_mf);
 
   // Meta-algorithm
 
   // Local optimizers
-  algos_map["cs"] = new pagmo::algorithm::cs(m_mf);
+  m_algos_map["cs"] = new pagmo::algorithm::cs(m_mf);
 
   // Meta-algorithm
-  algos_map["mbh_cs"] = new pagmo::algorithm::mbh(*algos_map["cs"]);
-  algos_map["ms_jde"] = new pagmo::algorithm::ms(*algos_map["jde"], m_mf);
+  m_algos_map["mbh_cs"] = new pagmo::algorithm::mbh(*m_algos_map["cs"]);
+  m_algos_map["ms_jde"] = new pagmo::algorithm::ms(*m_algos_map["jde"], m_mf);
+}
 
-  pagmo::migration::best_s_policy sel_single(0.15, pagmo::migration::rate_type::fractional);
-  pagmo::migration::fair_r_policy rep_single(0.15, pagmo::migration::rate_type::fractional);
+optimiser::~optimiser() {
+    for(auto iterator = m_algos_map.begin(); iterator != m_algos_map.end(); iterator++) {
+        delete iterator->second;
+    }
+}
 
-  pagmo::migration::best_s_policy sel_multi(0.15, pagmo::migration::rate_type::fractional);
-  pagmo::migration::fair_r_policy rep_multi(0.15, pagmo::migration::rate_type::fractional);
+pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const Parameters &params) {
+
+
+
+
+  pagmo::migration::best_s_policy sel_single(m_mr, pagmo::migration::rate_type::fractional);
+  pagmo::migration::fair_r_policy rep_single(m_mr, pagmo::migration::rate_type::fractional);
+
+  pagmo::migration::best_s_policy sel_multi(m_mr, pagmo::migration::rate_type::fractional);
+  pagmo::migration::fair_r_policy rep_multi(m_mr, pagmo::migration::rate_type::fractional);
 
   std::vector<pagmo::algorithm::base *> algos;
 
@@ -161,11 +167,16 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
     rep = &rep_multi;
   }
 
+  auto theAlgos = params.multi_objective() ? params.multi_objective_algos() : params.single_objective_algos();
+  std::vector<std::string> algo_list;
+  for (auto algo : theAlgos) {
+    algo_list.push_back(algo);
+  }
   if (algo_list.size() == 0) {
-    algos.push_back((m_problem.get_f_dimension() == 2 ? algos_map["nsga2"] : algos_map["jde"]));
+    algos.push_back((m_problem.get_f_dimension() == 2 ? m_algos_map["nsga2"] : m_algos_map["jde"]));
   } else {
     for (int i = 0; i < algo_list.size(); ++i) {
-      algos.push_back(algos_map[algo_list[i]]);
+      algos.push_back(m_algos_map[algo_list[i]]);
     }
   }
 
@@ -176,7 +187,6 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
 
   pagmo::decision_vector *to_feed = single_obj_result;
 
-  for (int u = 0; u < m_n_trial; ++u) {
     pagmo::archipelago archi(topology);
     int i = 0;
 
@@ -220,13 +230,8 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
 
       }
 
-    }
-
-    for(auto iterator = algos_map.begin(); iterator != algos_map.end(); iterator++) {
-        delete iterator->second;
-    }
-
 #ifdef BUILD_PLOT
+    bool print_fronts = params.multi_objective();
     if (m_problem.get_f_dimension() == 2 && print_fronts) {
       pagmo::population sum_pop(m_problem);
       for (int i = 0; i < archi.get_size(); ++i) {
@@ -236,7 +241,7 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
         }
       }
 
-      population_plot_pareto_fronts(sum_pop, maxDeltaV);
+      population_plot_pareto_fronts(sum_pop, params.max_deltav());
     }
 #endif
   }
