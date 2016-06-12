@@ -45,7 +45,7 @@ protected:
 private:
 	void ParamToUI(const Orbiterkep__Parameters &param);
 	void SolutionToUI(const Orbiterkep__TransXSolution &solution);
-	void UIToParam(Orbiterkep__Parameters &param);
+	void UIToParam();
 
 	Optimization  * m_optimizer;
 

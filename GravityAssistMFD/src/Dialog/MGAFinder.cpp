@@ -34,7 +34,7 @@ MGAFinder::MGAFinder(HINSTANCE hDLL)
 		"Define and execute Multiple Gravity Assist optimization task",
 		::OpenDialog, this);
 
-	g_optimizer->RunOptimization(hDlg);
+	g_optimizer->Update(hDlg);
 }
 
 MGAFinder::~MGAFinder() {
@@ -67,45 +67,114 @@ void MGAFinder::CloseDialog()
 	}
 }
 
-void MGAFinder::UIToParam(Orbiterkep__Parameters &param) {
+void MGAFinder::UIToParam() {
 	char buf[256];
+
+	Orbiterkep__Parameters * newParam = (Orbiterkep__Parameters *)malloc(sizeof(Orbiterkep__Parameters));
+	orbiterkep__parameters__init(newParam);
+	newParam->t0 = (Orbiterkep__ParamBounds *)malloc(sizeof(Orbiterkep__ParamBounds));
+	orbiterkep__param_bounds__init(newParam->t0);
+	newParam->t0->has_lb = 1; newParam->t0->has_ub = 1;
+	newParam->tof = (Orbiterkep__ParamBounds *)malloc(sizeof(Orbiterkep__ParamBounds));
+	orbiterkep__param_bounds__init(newParam->tof);
+	newParam->tof->has_lb = 1; newParam->tof->has_ub = 1;
+	newParam->vinf = (Orbiterkep__ParamBounds *)malloc(sizeof(Orbiterkep__ParamBounds));
+	orbiterkep__param_bounds__init(newParam->vinf);
+	newParam->vinf->has_lb = 1; newParam->vinf->has_ub = 1;
+	newParam->pagmo = (Orbiterkep__ParamPaGMO *)malloc(sizeof(Orbiterkep__ParamPaGMO));
+	orbiterkep__param_pa_gmo__init(newParam->pagmo);
 	// Launch date
-	GetDlgItemText(hDlg, IDC_T0_MIN, buf, 256);
-	sscanf_s(buf, "%lf", &(param.t0->lb));
-	GetDlgItemText(hDlg, IDC_T0_MAX, buf, 256);
-	sscanf_s(buf, "%lf", &(param.t0->ub));
+	GetDlgItemText(hDlg, IDC_T0_MIN, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->t0->lb));
+	GetDlgItemText(hDlg, IDC_T0_MAX, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->t0->ub));
 	// Time of flight
-	GetDlgItemText(hDlg, IDC_TOF_MIN, buf, 256);
-	sscanf_s(buf, "%lf", &(param.tof->lb));
-	GetDlgItemText(hDlg, IDC_TOF_MAX, buf, 256);
-	sscanf_s(buf, "%lf", &(param.tof->ub));
+	GetDlgItemText(hDlg, IDC_TOF_MIN, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->tof->lb));
+	GetDlgItemText(hDlg, IDC_TOF_MAX, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->tof->ub));
 	// Ejection VInf
-	GetDlgItemText(hDlg, IDC_VINF_MIN, buf, 256);
-	sscanf_s(buf, "%lf", &(param.vinf->lb));
-	GetDlgItemText(hDlg, IDC_VINF_MAX, buf, 256);
-	sscanf_s(buf, "%lf", &(param.vinf->ub));
+	GetDlgItemText(hDlg, IDC_VINF_MIN, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->vinf->lb));
+	GetDlgItemText(hDlg, IDC_VINF_MAX, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->vinf->ub));
 
-	param.add_arr_vinf = SendDlgItemMessage(hDlg, IDC_ADD_ARR_VINF, BM_GETCHECK, 0, 0);
-	param.add_dep_vinf = SendDlgItemMessage(hDlg, IDC_ADD_DEP_VINF, BM_GETCHECK, 0, 0);
-	param.circularize = SendDlgItemMessage(hDlg, IDC_CIRCULARIZE, BM_GETCHECK, 0, 0);
+	newParam->add_arr_vinf = SendDlgItemMessage(hDlg, IDC_ADD_ARR_VINF, BM_GETCHECK, 0, 0);
+	newParam->has_add_arr_vinf = 1;
+	newParam->add_dep_vinf = SendDlgItemMessage(hDlg, IDC_ADD_DEP_VINF, BM_GETCHECK, 0, 0);
+	newParam->has_add_dep_vinf = 1;
+	newParam->circularize = SendDlgItemMessage(hDlg, IDC_CIRCULARIZE, BM_GETCHECK, 0, 0);
+	newParam->has_circularize = 1;
 
-	GetDlgItemText(hDlg, IDC_EDIT_N_ISL, buf, 256);
-	sscanf_s(buf, "%d", &(param.pagmo->n_isl));
-	GetDlgItemText(hDlg, IDC_EDIT_POP, buf, 256);
-	sscanf_s(buf, "%d", &(param.pagmo->population));
-	GetDlgItemText(hDlg, IDC_EDIT_N_GEN, buf, 256);
-	sscanf_s(buf, "%d", &(param.pagmo->n_gen));
-	GetDlgItemText(hDlg, IDC_EDIT_MF, buf, 256);
-	sscanf_s(buf, "%d", &(param.pagmo->mf));
-	GetDlgItemText(hDlg, IDC_EDIT_MR, buf, 256);
-	sscanf_s(buf, "%lf", &(param.pagmo->mr));
+	GetDlgItemText(hDlg, IDC_EDIT_N_ISL, buf, 255);
+	sscanf_s(buf, "%d", &(newParam->pagmo->n_isl));
+	newParam->pagmo->has_n_isl = 1;
+	GetDlgItemText(hDlg, IDC_EDIT_POP, buf, 255);
+	sscanf_s(buf, "%d", &(newParam->pagmo->population));
+	newParam->pagmo->has_population = 1;
+	GetDlgItemText(hDlg, IDC_EDIT_N_GEN, buf, 255);
+	sscanf_s(buf, "%d", &(newParam->pagmo->n_gen));
+	newParam->pagmo->has_n_gen = 1;
+	GetDlgItemText(hDlg, IDC_EDIT_MF, buf, 255);
+	sscanf_s(buf, "%d", &(newParam->pagmo->mf));
+	newParam->pagmo->has_mf = 1;
+	GetDlgItemText(hDlg, IDC_EDIT_MR, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->pagmo->mr));
+	newParam->pagmo->has_mr = 1;
+	GetDlgItemText(hDlg, IDC_DEP_ALT, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->dep_altitude));
+	newParam->has_dep_altitude = 1;
+	GetDlgItemText(hDlg, IDC_ARR_ALT, buf, 255);
+	sscanf_s(buf, "%lf", &(newParam->arr_altitude));
+	newParam->has_arr_altitude = 1;
+
+	char * problem_buf = (char *)malloc(sizeof(char) * 20);
+	GetDlgItemText(hDlg, IDC_PROBLEM, problem_buf, 20);
+	newParam->problem = problem_buf;
 
 	int nPlanets = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCOUNT, 0, 0);
-	param.n_planets = nPlanets;
+	newParam->planets = (char **)malloc(sizeof(char *) * nPlanets);
+	newParam->n_planets = nPlanets;
 	for (int i = 0; i < nPlanets; ++i) {
 		SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETTEXT, i, (LPARAM)buf);
-		strcpy(param.planets[i], buf);
+		newParam->planets[i] = (char *)malloc(sizeof(char) * (strlen(buf) + 1));
+		strcpy(newParam->planets[i], buf);
 	}
+
+	char ** single_obj_algos = (char **)malloc(sizeof(char *));
+	single_obj_algos[0] = (char *)malloc(sizeof(char) * 4);
+	strcpy(single_obj_algos[0], "jde");
+	newParam->n_single_objective_algos = 1;
+	newParam->single_objective_algos = single_obj_algos;
+
+	char ** multi_obj_algos = (char **)malloc(sizeof(char *));
+	multi_obj_algos[0] = (char *)malloc(sizeof(char) * 6);
+	strcpy(multi_obj_algos[0], "nsga2");
+	newParam->n_multi_objective_algos = 1;
+	newParam->multi_objective_algos = multi_obj_algos;
+
+	newParam->has_n_trials = 1;
+	newParam->n_trials = 1;
+
+	newParam->has_max_deltav = 1;
+	newParam->max_deltav = 24.0;
+
+	newParam->has_dep_altitude = 1;
+	newParam->dep_altitude = 300;
+
+	newParam->has_arr_altitude = 1;
+	newParam->arr_altitude = 300;
+
+	newParam->has_multi_objective = 1;
+	newParam->multi_objective = 0;
+
+	newParam->has_use_db = 1;
+	newParam->use_db = 0;
+
+	newParam->has_use_spice = 1;
+	newParam->use_spice = 0;
+
+	g_optimizer->update_parameters(newParam, false);
 }
 
 void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
@@ -141,12 +210,16 @@ void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
 	SetDlgItemText(hDlg, IDC_EDIT_MF, buf);
 	sprintf_s(buf, "%0.3lf", param.pagmo->mr);
 	SetDlgItemText(hDlg, IDC_EDIT_MR, buf);
+	sprintf_s(buf, "%0.3lf", param.dep_altitude);
+	SetDlgItemText(hDlg, IDC_DEP_ALT, buf);
+	sprintf_s(buf, "%0.3lf", param.arr_altitude);
+	SetDlgItemText(hDlg, IDC_ARR_ALT, buf);
 
 	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_RESETCONTENT, 0, 0);
 	if (param.n_planets > 0) {
 		for (unsigned int i = 0; i < param.n_planets; ++i) {
 			char * planet_name = param.planets[i];
-			SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_ADDSTRING, 0, (LPARAM)planet_name);
+			SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_INSERTSTRING, i, (LPARAM)planet_name);
 		}
 	}
 
@@ -161,6 +234,12 @@ void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
 	} else {
 		SetDlgItemText(hDlg, ID_OPT, "Find Optimum");
 	}
+
+	auto plans = g_optimizer->SavedPlans();
+	SendDlgItemMessage(hDlg, IDC_PLANS, CB_RESETCONTENT, 0, 0);
+	for (unsigned int i = 0; i < plans.size(); ++i) {
+		SendDlgItemMessage(hDlg, IDC_PLANS, CB_ADDSTRING, 0, (LPARAM)plans[i].c_str());
+	}
 }
 
 void MGAFinder::FillCBodyList(HWND hDlg)
@@ -169,10 +248,16 @@ void MGAFinder::FillCBodyList(HWND hDlg)
 
 	char cbuf[256];
 	SendDlgItemMessage(hDlg, hList, CB_RESETCONTENT, 0, 0);
+	auto mercury = oapiGetGbodyByName("Mercury");
+	double mercury_size = oapiGetSize(mercury);
 	for (DWORD n = 0; n < oapiGetGbodyCount(); ++n) {
-		int type = oapiGetObjectType(oapiGetGbodyByIndex(n));
+		auto body = oapiGetGbodyByIndex(n);
+		int type = oapiGetObjectType(body);
 		if (type == OBJTP_PLANET) {
-			oapiGetObjectName(oapiGetGbodyByIndex(n), cbuf, 256);
+			oapiGetObjectName(body, cbuf, 256);
+			auto celBody = oapiGetCelbodyInterface(body);
+			double objSize = oapiGetSize(body);
+			if (objSize < mercury_size) { continue; }
 			SendDlgItemMessage(hDlg, hList, CB_ADDSTRING, 0, (LPARAM)cbuf);
 		}
 	}
@@ -223,7 +308,7 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CloseDialog();
 			return TRUE;
 		case ID_OPT: {
-			UIToParam(g_optimizer->param());
+			UIToParam();
 			if (g_optimizer->computing()) {
 				g_optimizer->Cancel();
 				SetDlgItemText(hDlg, ID_OPT, "Find Optimum");
@@ -249,6 +334,28 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 		}
 			break;
+		case IDC_SAVE_PLAN:
+		{
+			UIToParam();
+			char buf[1000] = "test";
+			GetDlgItemText(hDlg, IDC_PLANS, buf, 999);
+			g_optimizer->SavePlan(buf);
+			char msg[200];
+			sprintf_s(msg, "The plan '%s' was saved to disk", buf);
+			int msgBoxID = MessageBox(hDlg, msg, "Plan saved", MB_OK);
+		}
+		break;
+		case IDC_LOAD_PLAN:
+		{
+			char buf[1000] = "test";
+			GetDlgItemText(hDlg, IDC_PLANS, buf, 999);
+			g_optimizer->LoadPlan(buf);
+			char msg[200];
+			sprintf_s(msg, "The plan '%s' was loaded from disk", buf);
+			int msgBoxID = MessageBox(hDlg, msg, "Plan loaded", MB_OK);
+			ParamToUI(g_optimizer->param());
+		}
+		break;
 		case IDHELP:
 			return TRUE;
 		}

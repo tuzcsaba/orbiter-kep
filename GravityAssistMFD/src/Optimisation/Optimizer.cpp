@@ -38,11 +38,8 @@ Optimization::~Optimization()
 {
 	Cancel();
 
-	if (m_param != 0) {
-		orbiterkep__parameters__free_unpacked(m_param, NULL); m_param = 0;
-	}
-
 	ResetSolutions();
+	ResetParam();
 }
 
 Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(messenger)
@@ -52,28 +49,38 @@ Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(me
 	m_best_solution = 0;
 	m_solutions = (Orbiterkep__TransXSolution **)malloc(25 * sizeof(Orbiterkep__TransXSolution *));
 
+	InitializeDefaultParam();
+}
+
+void Optimization::InitializeDefaultParam() {
 	m_param = (Orbiterkep__Parameters *)malloc(sizeof(Orbiterkep__Parameters));
 	orbiterkep__parameters__init(m_param);
-	char ** planets = allocate_string_array(10, 50);
-	m_param->n_planets = 3;	
-	strcpy_s(planets[0], 50, "earth");
-	strcpy_s(planets[1], 50, "venus");
-	strcpy_s(planets[2], 50, "mercury");
+	char ** planets = (char **)malloc(sizeof(char *) * 3);
+	char * p = "earth";
+	planets[0] = (char *)malloc(sizeof(char) * (strlen(p) + 1));
+	strcpy_s(planets[0], strlen(p) + 1, p);
+	p = "venus";
+	planets[1] = (char *)malloc(sizeof(char) * (strlen(p) + 1));
+	strcpy_s(planets[1], strlen(p) + 1, p);
+	p = "mercury";
+	planets[2] = (char *)malloc(sizeof(char) * (strlen(p) + 1));
+	strcpy_s(planets[2], strlen(p) + 1, p);
+	m_param->n_planets = 3;
 	m_param->planets = planets;
-	char ** single_obj_algos = allocate_string_array(10, 50);
-	strcpy_s(single_obj_algos[0], 50, "jde");
+	char ** single_obj_algos = (char **)malloc(sizeof(char *));
+	single_obj_algos[0] = (char *)malloc(sizeof(char) * 4);
+	strcpy_s(single_obj_algos[0], 4, "jde");
 	m_param->n_single_objective_algos = 1;
 	m_param->single_objective_algos = single_obj_algos;
-	char ** multi_obj_algos = allocate_string_array(10, 50);
-	strcpy_s(multi_obj_algos[0], 50, "nsga2");
+
+	char ** multi_obj_algos = (char **)malloc(sizeof(char *));
+	multi_obj_algos[0] = (char *)malloc(sizeof(char) * 6);
+	strcpy_s(multi_obj_algos[0], 6, "nsga2");
 	m_param->n_multi_objective_algos = 1;
 	m_param->multi_objective_algos = multi_obj_algos;
 
-	m_param->problem = (char *)malloc(50 * sizeof(char));
-	strcpy_s(m_param->problem, 50, "MGA");
-
-	m_param->has_n_trials = 1;
-	m_param->n_trials = 1;
+	m_param->problem = (char *)malloc(sizeof(char) * 4);
+	strcpy_s(m_param->problem, 4, "MGA");
 
 	Orbiterkep__ParamBounds * t0 = (Orbiterkep__ParamBounds *)malloc(sizeof(Orbiterkep__ParamBounds));
 	orbiterkep__param_bounds__init(t0);
@@ -102,9 +109,6 @@ Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(me
 	pagmo->has_mr = 1; pagmo->mr = 0.15;
 	m_param->pagmo = pagmo;
 
-	m_param->has_max_deltav = 1;
-	m_param->max_deltav = 24.0;
-
 	m_param->has_circularize = 1;
 	m_param->circularize = 1;
 
@@ -113,6 +117,12 @@ Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(me
 
 	m_param->has_add_dep_vinf = 1;
 	m_param->add_dep_vinf = 1;
+
+	m_param->has_n_trials = 1;
+	m_param->n_trials = 1;
+
+	m_param->has_max_deltav = 1;
+	m_param->max_deltav = 24.0;
 
 	m_param->has_dep_altitude = 1;
 	m_param->dep_altitude = 300;
@@ -128,6 +138,33 @@ Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(me
 
 	m_param->has_use_spice = 1;
 	m_param->use_spice = 0;
+
+	m_param_unpacked = true;
+}
+
+void Optimization::free_manual_param()
+{
+	for (unsigned int i = 0; i < m_param->n_planets; ++i) {
+		free(m_param->planets[i]);
+	}
+	free(m_param->planets);
+
+	for (unsigned int i = 0; i < m_param->n_single_objective_algos; ++i) {
+		free(m_param->single_objective_algos[i]);
+	}
+	free(m_param->single_objective_algos);
+
+	for (unsigned int i = 0; i < m_param->n_multi_objective_algos; ++i) {
+		free(m_param->multi_objective_algos[i]);
+	}
+	free(m_param->multi_objective_algos);
+
+	free(m_param->t0);
+	free(m_param->tof);
+	free(m_param->vinf);
+	free(m_param->pagmo);
+
+	free(m_param);
 }
 
 std::string Optimization::get_solution_str_current_stage() const
@@ -342,7 +379,7 @@ unsigned int base64_decode(const unsigned char* encoded_string, unsigned int in_
 	return out_len;
 }
 
-int readBase64FromScenario(FILEHANDLE scn, char * key, unsigned char * outputBuf) {
+int readBase64FromScenario(FILEHANDLE scn, const char * key, unsigned char * outputBuf) {
 	char * buf;
 	if (!oapiReadScenario_nextline(scn, buf)) {
 		return 0;
@@ -374,12 +411,90 @@ int readIntFromScenario(FILEHANDLE scn, char * key, int & result) {
 
 void writeBase64ToScenario(FILEHANDLE scn, char * key, const unsigned char * buf, int size)
 {
-	unsigned char base64[1024];
+	unsigned char base64[10000];
 	unsigned int out_l;
 	base64_encode(buf, size, base64, out_l);
 	base64[out_l] = 0;
 	
 	oapiWriteScenario_string(scn, key, (char *)base64);
+}
+
+void Optimization::SavePlan(char * file) {
+	char filename[MAX_PATH];
+	sprintf_s(filename, "MGAPlans/%s.mga", file);
+	auto fileHandle = oapiOpenFile(filename, FILE_OUT);
+
+	char buf[2048];
+	int i = 0;
+	int len = orbiterkep__parameters__get_packed_size(m_param);
+	orbiterkep__parameters__pack(m_param, (uint8_t *)buf);
+
+	unsigned char base64[2000];
+	unsigned int out_l;
+	base64_encode((unsigned char *)buf, len, base64, out_l);
+	base64[out_l] = 0;
+	oapiWriteItem_string(fileHandle, "Parameters", (char *)base64);
+
+	oapiCloseFile(fileHandle, FILE_OUT);
+}
+
+std::vector<std::string> Optimization::SavedPlans() {
+	WIN32_FIND_DATA fdFile;
+	HANDLE hFind = NULL;
+
+
+	std::vector<std::string> result;
+	char sPath[MAX_PATH];
+	sprintf_s(sPath, "%s\\*.mga", "MGAPlans");
+
+	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE) {
+		return result;
+	}
+	do {
+		if (strcmp(fdFile.cFileName, ".") == 0
+			|| strcmp(fdFile.cFileName, "..") == 0) continue;
+
+		std::string s(fdFile.cFileName, strlen(fdFile.cFileName)- 4);
+		result.push_back(s);
+	} while (FindNextFile(hFind, &fdFile));
+
+	return result;
+}
+
+void Optimization::ResetParam() {
+	if (m_param) {
+		if (m_param_unpacked) {
+			orbiterkep__parameters__free_unpacked(m_param, NULL);
+		} else {
+			free_manual_param();
+		}
+		m_param = 0;
+	}
+}
+
+void Optimization::LoadPlan(char * file) {
+	char filename[MAX_PATH];
+	sprintf_s(filename, "MGAPlans/%s.mga", file);
+	auto fileHandle = oapiOpenFile(filename, FILE_IN);
+
+	char buf[2000];
+	if (!oapiReadItem_string(fileHandle, "Parameters", buf)) {
+		return;
+	}
+
+	unsigned char message[2000];
+	unsigned int out_l;
+	base64_decode((unsigned char *)buf, strlen(buf), message, out_l);
+
+	bool comp = m_computing;
+	Cancel();
+
+	ResetSolutions();
+
+	update_parameters(orbiterkep__parameters__unpack(NULL, out_l, message), true);
+
+	oapiCloseFile(fileHandle, FILE_IN);
+	Signal();
 }
 
 void Optimization::LoadStateFrom(FILEHANDLE scn)
@@ -388,11 +503,9 @@ void Optimization::LoadStateFrom(FILEHANDLE scn)
 	unsigned char out[2048];
 	int out_l = readBase64FromScenario(scn, "Parameters", out);
 
-	if (m_param) {
-		orbiterkep__parameters__free_unpacked(m_param, NULL);
-		m_param = 0;
-	}
-	m_param = orbiterkep__parameters__unpack(NULL, out_l, out);
+	ResetSolutions();
+	
+	update_parameters(orbiterkep__parameters__unpack(NULL, out_l, out), true);
 
 	/** Load solutions */
 	int nSol;
@@ -402,13 +515,13 @@ void Optimization::LoadStateFrom(FILEHANDLE scn)
 
 	ResetSolutions();
 
+	char key[50];
+	unsigned char buf[16000];
 	for (int i = 0; i < nSol; ++i) {
-		char key[50];
 		sprintf_s(key, "Solution%02d", i);
-		unsigned char buf[1024];
 		int l = readBase64FromScenario(scn, key, buf);
 
-		m_solutions[i] = orbiterkep__trans_xsolution__unpack(NULL, l, buf);
+		AddSolution(orbiterkep__trans_xsolution__unpack(NULL, l, buf));
 	}
 	n_solutions = nSol;
 }
@@ -468,11 +581,12 @@ void Optimization::AddSolution(Orbiterkep__TransXSolution * newSolution) {
 
 void Optimization::Update(HWND _hDlg) {
 	char m_solution_buf[16000];
-	int len_sol = sprintf_transx_solution(m_solution_buf, m_best_solution);
-	m_solution_str = std::string(m_solution_buf, len_sol);
+	if (m_best_solution != 0) {
+		int len_sol = sprintf_transx_solution(m_solution_buf, m_best_solution);
+		m_solution_str = std::string(m_solution_buf, len_sol);
 
-	m_messenger.PutSolution(*m_best_solution);
-
+		m_messenger.PutSolution(*m_best_solution);
+	}
 	if (_hDlg != NULL) {
 		hDlg = _hDlg;
 	}

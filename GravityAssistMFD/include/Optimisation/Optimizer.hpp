@@ -20,6 +20,7 @@ class Optimization
 public:
 	Optimization(const MGAModuleMessenger &m_messenger);
 	~Optimization();
+	void InitializeDefaultParam();
 
 	const Orbiterkep__TransXSolution &get_best_solution() const { return *m_best_solution; };
 	std::string get_solution_str() const { return m_solution_str; };
@@ -31,6 +32,11 @@ public:
 		m_computing = _computing; 
 	}
 	bool cancelled() const { return m_cancel; }
+	void update_parameters(Orbiterkep__Parameters * newParam, bool unpacked) {
+		ResetParam();
+		m_param = newParam;
+		m_param_unpacked = unpacked;
+	}
 
 	std::string get_solution_str_current_stage() const;
 
@@ -39,13 +45,20 @@ public:
 	void Cancel();
 	void Update(HWND hDlg);
 	void ResetSolutions();
+	void ResetParam();
 
 	void LoadStateFrom(FILEHANDLE scn);
 	void SaveStateTo(FILEHANDLE scn);
+
+	void SavePlan(char * filename);
+	void LoadPlan(char * filename);
+	std::vector<std::string> SavedPlans();
+
 	void Signal();
 
 	void AddSolution(Orbiterkep__TransXSolution * newSolution);
 private:
+	void free_manual_param();
 
 	std::string m_solution_str;
 	bool m_computing;
@@ -55,6 +68,7 @@ private:
 	HWND hDlg;
 	
 	Orbiterkep__Parameters * m_param;
+	bool m_param_unpacked;
 	int n_solutions;
 	Orbiterkep__TransXSolution ** m_solutions;
 	Orbiterkep__TransXSolution * m_best_solution;
