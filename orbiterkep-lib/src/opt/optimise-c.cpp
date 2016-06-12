@@ -12,7 +12,7 @@ struct membuf : std::streambuf
     }
 };
 
-int orbiterkep_optimize(const uint8_t * param_buf, int param_l, uint8_t * sol_buf) {
+int __cdecl orbiterkep_optimize(const uint8_t * param_buf, int param_l, uint8_t * sol_buf) {
 
   membuf sbuf((char *)param_buf, (char *)param_buf + param_l);
   std::istream in(&sbuf);

@@ -23,4 +23,4 @@ INCLUDE_DIRECTORIES(${orbiterkep-lib_INCLUDES})
 
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
 
-target_link_libraries(${PROJECT_NAME} orbiterkep-lib orbiterkep-proto-c)
+target_link_libraries(${PROJECT_NAME} orbiterkep-lib)

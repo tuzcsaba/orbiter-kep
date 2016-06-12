@@ -19,6 +19,8 @@ file(GLOB orbiterkep-lib_SRCS
   "${${PROJECT_NAME}_SOURCE_DIR}/**/*.c"
   "${${PROJECT_NAME}_SOURCE_DIR}/*.c"
 )
+# list(REMOVE_ITEM orbiterkep-lib_SRCS "${${PROJECT_NAME}_SOURCE_DIR}/proto/ext.cpp")
+# list(REMOVE_ITEM orbiterkep-lib_SRCS "${${PROJECT_NAME}_SOURCE_DIR}/proto/ext-c.c")
 
 file(GLOB orbiterkep-lib_INCL
   "${${PROJECT_NAME}_INCLUDE_DIR}/**/*.h"
@@ -26,6 +28,8 @@ file(GLOB orbiterkep-lib_INCL
   "${${PROJECT_NAME}_INCLUDE_DIR}/*.h"
   "${${PROJECT_NAME}_INCLUDE_DIR}/*.hpp"
 )
+# list(REMOVE_ITEM orbiterkep-lib_INCL "${${PROJECT_NAME}_INCLUDE_DIR}/proto/ext.cpp")
+# list(REMOVE_ITEM orbiterkep-lib_INCL "${${PROJECT_NAME}_INCLUDE_DIR}/proto/ext-c.c")
 
 INCLUDE_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/include)
 INCLUDE_DIRECTORIES(${orbiterkep-proto_INCLUDES})
@@ -33,9 +37,9 @@ INCLUDE_DIRECTORIES(${orbiterkep-proto_INCLUDES})
 INCLUDE_DIRECTORIES(${gnuplot-iostream_INCLUDES})
 
 if (BUILD_STATIC)
-add_library(${PROJECT_NAME} SHARED ${orbiterkep-lib_SRCS})
+add_library(${PROJECT_NAME} SHARED ${orbiterkep-lib_SRCS} ${orbiterkep-lib_INCL})
 else (BUILD_STATIC)
-add_library(${PROJECT_NAME} SHARED ${orbiterkep-lib_SRCS})
+add_library(${PROJECT_NAME} SHARED ${orbiterkep-lib_SRCS} ${orbiterkep-lib_INCL})
 endif(BUILD_STATIC)
 
 INCLUDE_DIRECTORIES(${${PROJECT_NAME}_INCLUDE_DIR})
@@ -51,7 +55,7 @@ find_package(Boost REQUIRED COMPONENTS filesystem system serialization iostreams
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} orbiterkep-proto)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} orbiterkep-proto orbiterkep-proto-c)
 
 # PyKEP/PaGMO
 

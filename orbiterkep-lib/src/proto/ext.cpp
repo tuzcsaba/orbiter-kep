@@ -5,21 +5,20 @@
 
 namespace orbiterkep {
 
-std::ostream& operator<<(std::ostream& ss, const TransXArrival &arriv) {
+std::ostream& __cdecl operator<<(std::ostream& ss, const TransXArrival &arriv) {
 
   ss << std::fixed;
   ss << arriv.planet() << " arrival" << std::endl;
   ss << "--------------------------------------" << std::endl;
   ss << "MJD:                     " << arriv.mjd() << std::setprecision(4) << "   " << std::endl;
-  ss << "Hyp. excess velocity:    " << arriv.vinf() << std::setprecision(3) <<  "m/s" << std::endl;
+  ss << "Hyp. excess velocity:    " << arriv.vinf() << std::setprecision(3) << " m/s" << std::endl;
   ss << "Orbit insertion burn:    " << arriv.burn() << std::setprecision(3) << " m/s" << std::endl;
   ss << std::endl << std::endl;
 
   return ss;
 }
 
-
-std::ostream& operator<<(std::ostream& ss, const TransXSolution &sol)
+std::ostream& __cdecl operator<<(std::ostream& ss, const TransXSolution &sol)
 {
   ss << sol.times();
 
@@ -47,7 +46,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXSolution &sol)
 
 
 
-std::ostream& operator<<(std::ostream& ss, const TransXTimes &tim) {
+std::ostream& __cdecl operator<<(std::ostream& ss, const TransXTimes &tim) {
   ss << std::fixed;
 
   std::vector<std::string> encounters;
@@ -67,7 +66,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXTimes &tim) {
   return ss;
 }
 
-std::ostream& operator<<(std::ostream& ss, const TransXEscape &esc) {
+std::ostream& __cdecl operator<<(std::ostream& ss, const TransXEscape &esc) {
   ss << std::fixed;
   ss << "Escape - " << esc.planet() << std::endl;
   ss << "--------------------------------------" << std::endl;
@@ -82,7 +81,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXEscape &esc) {
   return ss;
 };
 
-std::ostream& operator<<(std::ostream& ss, const TransXDSM &dsm) {
+std::ostream& __cdecl operator<<(std::ostream& ss, const TransXDSM &dsm) {
 
   ss << std::fixed;
   ss << "Deep Space Maneuver - " << std::endl;
@@ -99,7 +98,7 @@ std::ostream& operator<<(std::ostream& ss, const TransXDSM &dsm) {
   return ss;
 }
 
-std::ostream& operator<<(std::ostream& ss, const TransXFlyBy &f) {
+std::ostream& __cdecl operator<<(std::ostream& ss, const TransXFlyBy &f) {
   ss << std::fixed;
   ss << f.planet() << " encounter" << std::endl;
   ss << "--------------------------------------" << std::endl;

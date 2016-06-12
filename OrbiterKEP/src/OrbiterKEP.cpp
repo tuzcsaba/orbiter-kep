@@ -11,13 +11,14 @@
 #include "proto/solution.pb-c.h"
 
 #include "proto/ext.h"
+#include "proto/ext-c.h"
 
 int main(int argc, char **argv) {
 
     orbiterkep::Parameters par;
 
     orbiterkep::CommandLine cmd;
-    
+
     if (!cmd.parse_parameters(&par, argc, argv)) {
       return -1;
     }
@@ -25,7 +26,7 @@ int main(int argc, char **argv) {
     orbiterkep::TransXSolution sol;
     orbiterkep::optimiser::optimize(par, &sol);
 
-    std::cout << sol.fuel_cost() << std::endl;
+    std::cout << sol << std::endl;
 
     std::cout << std::fixed;
     std::cerr << std::fixed;
@@ -104,7 +105,13 @@ int main(int argc, char **argv) {
 	int sol_len = orbiterkep_optimize((const uint8_t *)buf, len, (uint8_t *)sol_buf);
 	Orbiterkep__TransXSolution * solution = orbiterkep__trans_xsolution__unpack(NULL, sol_len, (uint8_t *)sol_buf);
 
-    std::cout << solution->fuel_cost << std::endl;
+	char output[16000];
+
+	sol_len = sprintf_transx_solution(output, solution);
+
+	std::string result(output, sol_len);
+
+    std::cout << result << std::endl;
 
 
 	orbiterkep__trans_xsolution__free_unpacked(solution, NULL);

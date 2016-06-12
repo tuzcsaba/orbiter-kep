@@ -33,9 +33,9 @@ IF(BUILD_STATIC)
 ENDIF()
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/..)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/..)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
-ADD_LIBRARY(orbiterkep-proto SHARED ${PROTO_SRC})
+ADD_LIBRARY(orbiterkep-proto SHARED ${PROTO_SRC} )
 ADD_LIBRARY(orbiterkep-proto-c STATIC ${PROTOC_SRC})
 
 set_target_properties(orbiterkep-proto PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -52,6 +52,12 @@ GENERATE_EXPORT_HEADER( orbiterkep-proto
               EXPORT_FILE_NAME orbiterkep-proto_Export.h
               STATIC_DEFINE orbiterkep-proto_BUILT_AS_STATIC
  )
+ GENERATE_EXPORT_HEADER( orbiterkep-proto-c
+              BASE_NAME orbiterkep-proto-c
+              EXPORT_MACRO_NAME orbiterkep-proto-c_EXPORT
+              EXPORT_FILE_NAME orbiterkep-proto-c_Export.h
+              STATIC_DEFINE orbiterkep-proto-c_BUILT_AS_STATIC
+ )
 
 #set_source_files_properties(${PROTO_SRC} ${PROTOBUFC_SRC}
     #PROPERTIES
@@ -63,6 +69,8 @@ SET(orbiterkep-proto_INCLUDES ${CMAKE_CURRENT_BINARY_DIR}/..
 
 INSTALL(TARGETS orbiterkep-proto DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 INSTALL(TARGETS orbiterkep-proto-c DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/liborbiterkep-proto-c.a DESTINATION ${CMAKE_INSTALL_PREFIX}/lib RENAME orbiterkep-proto-c.lib)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/liborbiterkep-proto.dll.a DESTINATION ${CMAKE_INSTALL_PREFIX}/lib RENAME orbiterkep-proto.lib)
 INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include/orbiterkep/proto
   FILES_MATCHING PATTERN "*.h")

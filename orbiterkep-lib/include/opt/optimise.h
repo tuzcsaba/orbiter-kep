@@ -2,6 +2,8 @@
 
 #include <pagmo/problem/base.h>
 
+#include "orbiterkep-lib_Export.h"
+
 namespace pagmo { namespace algorithm {
 
     class base;
@@ -20,7 +22,7 @@ class optimiser {
 
      pagmo::decision_vector run_once(pagmo::decision_vector *single_obj_result, const Parameters &params);
 
-     static orbiterkep_lib_EXPORT void optimize(const Parameters &params, TransXSolution * solution);
+     static orbiterkep_lib_EXPORT void __cdecl optimize(const Parameters &params, TransXSolution * solution);
 
    private:
      std::map<std::string, pagmo::algorithm::base *> m_algos_map;
