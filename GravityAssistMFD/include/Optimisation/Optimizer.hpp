@@ -6,11 +6,14 @@
 
 #include <Orbitersdk.h>
 
+#include <ppltasks.h>
 #include <string>
 #include <vector>
 #include <Windows.h>
 
 class MGAModuleMessenger;
+
+struct OptimThreadParam;
 
 class Optimization
 {
@@ -22,23 +25,34 @@ public:
 	std::string get_solution_str() const { return m_solution_str; };
 	Orbiterkep__Parameters & param() const { return *m_param; };
 	bool has_solution() const { return n_solutions > 0; }
+	int get_n_solutions() const { return n_solutions;  }
 	bool computing() const { return m_computing; }
+	void set_computing(bool _computing) { 
+		m_computing = _computing; 
+	}
+	bool cancelled() const { return m_cancel; }
 
 	std::string get_solution_str_current_stage() const;
 
 	void RunOptimization(HWND hDlg);
+
 	void Cancel();
 	void Update(HWND hDlg);
 	void ResetSolutions();
 
 	void LoadStateFrom(FILEHANDLE scn);
 	void SaveStateTo(FILEHANDLE scn);
-private:
+	void Signal();
+
 	void AddSolution(Orbiterkep__TransXSolution * newSolution);
+private:
 
 	std::string m_solution_str;
 	bool m_computing;
 	bool m_cancel;
+
+	concurrency::task<void> m_optimization_task;
+	HWND hDlg;
 	
 	Orbiterkep__Parameters * m_param;
 	int n_solutions;

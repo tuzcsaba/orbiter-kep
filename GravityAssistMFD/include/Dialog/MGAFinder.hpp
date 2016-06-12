@@ -21,13 +21,11 @@ const int WM_OPTIMIZATION_READY = WM_USER + 314;
 class MGAFinder {
 public:
 
-	MGAFinder(HINSTANCE hDLL, Optimization &optimizer);
+	MGAFinder(HINSTANCE hDLL);
 	~MGAFinder();
 	void OpenDialog();
 	void CloseDialog();
 	void InitDialog(HWND hDlg);
-
-	const Optimization &get_optimizer() { return m_optimizer; }
 
 	int MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -45,12 +43,11 @@ protected:
 	void MGAFinder::PlanetList_InsertItemAtIndex(char * item, int idx);
 
 private:
-	void Optimize();
 	void ParamToUI(const Orbiterkep__Parameters &param);
 	void SolutionToUI(const Orbiterkep__TransXSolution &solution);
 	void UIToParam(Orbiterkep__Parameters &param);
 
-	Optimization &m_optimizer;
+	Optimization  * m_optimizer;
 
 	DWORD dwCmd;
 	HWND hDlg;

@@ -18,12 +18,13 @@
 #include "orbiterkep/proto/ext-c.h"
 
 extern MGAFinder * g_mgaFinder;
+extern Optimization * g_optimizer;
 
 void OpenDialog(void * context);
 BOOL CALLBACK MGAFinderProc(HWND, UINT, WPARAM, LPARAM);
 
 
-MGAFinder::MGAFinder(HINSTANCE hDLL, Optimization &optimizer) : m_optimizer(optimizer)
+MGAFinder::MGAFinder(HINSTANCE hDLL)
 {
 	hInst = hDLL;
 	hDlg = NULL;
@@ -33,11 +34,10 @@ MGAFinder::MGAFinder(HINSTANCE hDLL, Optimization &optimizer) : m_optimizer(opti
 		"Define and execute Multiple Gravity Assist optimization task",
 		::OpenDialog, this);
 
-	Optimize();
+	g_optimizer->RunOptimization(hDlg);
 }
 
 MGAFinder::~MGAFinder() {
-	CloseDialog();
 	oapiUnregisterCustomCmd(dwCmd);
 }
 
@@ -48,9 +48,9 @@ void MGAFinder::InitDialog(HWND _hDlg)
 	FillCBodyList(hDlg);
 	FillProblemList(hDlg);
 
-	MGAFinder::ParamToUI(m_optimizer.param());
+	MGAFinder::ParamToUI(g_optimizer->param());
 
-	m_optimizer.Update(_hDlg);
+	g_optimizer->Update(_hDlg);
 }
 
 void MGAFinder::OpenDialog()
@@ -144,7 +144,7 @@ void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
 
 	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_RESETCONTENT, 0, 0);
 	if (param.n_planets > 0) {
-		for (int i = 0; i < param.n_planets; ++i) {
+		for (unsigned int i = 0; i < param.n_planets; ++i) {
 			char * planet_name = param.planets[i];
 			SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_ADDSTRING, 0, (LPARAM)planet_name);
 		}
@@ -152,11 +152,11 @@ void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
 
 	SendDlgItemMessage(hDlg, IDC_PROBLEM, CB_SELECTSTRING, -1, (LPARAM)param.problem);
 
-	if (m_optimizer.has_solution()) {
-		SetDlgItemText(hDlg, IDC_SOLUTION, m_optimizer.get_solution_str().c_str());
+	if (g_optimizer->has_solution()) {
+		SetDlgItemText(hDlg, IDC_SOLUTION, g_optimizer->get_solution_str().c_str());
 	}
 
-	if (m_optimizer.computing()) {
+	if (g_optimizer->computing()) {
 		SetDlgItemText(hDlg, ID_OPT, "Cancel");
 	} else {
 		SetDlgItemText(hDlg, ID_OPT, "Find Optimum");
@@ -189,30 +189,7 @@ void MGAFinder::FillProblemList(HWND hDlg)
 
 
 void MGAFinder::SolutionToUI(const Orbiterkep__TransXSolution &sol) {
-	SetDlgItemText(hDlg, IDC_SOLUTION, m_optimizer.get_solution_str().c_str());
-}
-
-struct OptimThreadParam {
-	HWND hDlg;
-	Optimization * opt;
-} ;
-
-void RunOptimization(LPVOID lpParameter) {
-	OptimThreadParam * param = reinterpret_cast<OptimThreadParam *>(lpParameter);
-	param->opt->RunOptimization(param->hDlg);
-
-	free(param);
-};
-
-void MGAFinder::Optimize() {
-
-		DWORD threadID;
-		OptimThreadParam * threadParam = (OptimThreadParam *)malloc(sizeof(OptimThreadParam));
-		threadParam->opt = &m_optimizer;
-		threadParam->hDlg = hDlg;
-		HANDLE myHandle = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(RunOptimization), threadParam, 0, &threadID);
-
-		CloseHandle(myHandle);
+	SetDlgItemText(hDlg, IDC_SOLUTION, g_optimizer->get_solution_str().c_str());
 }
 
 void MGAFinder::PlanetList_AddItem(char * item) {
@@ -246,12 +223,12 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CloseDialog();
 			return TRUE;
 		case ID_OPT: {
-			UIToParam(m_optimizer.param());
-			if (m_optimizer.computing()) {				
-				m_optimizer.Cancel();
+			UIToParam(g_optimizer->param());
+			if (g_optimizer->computing()) {
+				g_optimizer->Cancel();
 				SetDlgItemText(hDlg, ID_OPT, "Find Optimum");
 			} else {
-				Optimize();
+				g_optimizer->RunOptimization(hDlg);
 				SetDlgItemText(hDlg, ID_OPT, "Cancel");
 			}
 			break;
@@ -281,7 +258,7 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		break;
 	case WM_OPTIMIZATION_READY:
-		SolutionToUI(m_optimizer.get_best_solution());
+		SolutionToUI(g_optimizer->get_best_solution());
 		break;
 	}
 	return oapiDefDialogProc(hDlg, uMsg, wParam, lParam);

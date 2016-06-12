@@ -7,6 +7,18 @@
 #include "ModuleMessaging\MGAModuleMessenger.h"
 #include "Dialog/MGAFinder.hpp"
 
+#include <ppltasks.h>
+#include <iostream>
+#include <string>
+
+
+struct OptimThreadParam {
+	HWND hDlg;
+	Optimization * opt;
+	Orbiterkep__Parameters * param;
+};
+
+
 char ** allocate_string_array(int n_str, int max_l) {
 	char ** result = (char **)malloc(n_str * sizeof(char *));
 	for (int i = 0; i < n_str; ++i) {
@@ -24,15 +36,13 @@ void deallocate_string_array(char * strings[], int n_str) {
 
 Optimization::~Optimization()
 {
+	Cancel();
+
 	if (m_param != 0) {
 		orbiterkep__parameters__free_unpacked(m_param, NULL); m_param = 0;
 	}
 
-	for (int i = 0; i < n_solutions; ++i) {
-		orbiterkep__trans_xsolution__free_unpacked(m_solutions[i], NULL);
-	}
-
-	free(m_solutions);
+	ResetSolutions();
 }
 
 Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(messenger)
@@ -173,29 +183,46 @@ void Optimization::ResetSolutions() {
 	m_best_solution = 0;
 }
 
-void Optimization::RunOptimization(HWND hDlg)
-{
-	m_computing = true;
+void RunOptimization_thread(std::shared_ptr<OptimThreadParam> param) {
 
-	ResetSolutions();
+	char buf[2048];
+	int i = 0;
+	int len = orbiterkep__parameters__get_packed_size(param->param);
+	orbiterkep__parameters__pack(param->param, (uint8_t *)buf);
 
-	m_cancel = false;
-	while (n_solutions < 25 && !m_cancel) {
-		int len = orbiterkep__parameters__get_packed_size(m_param);
-		void * buf = malloc(len);
-		orbiterkep__parameters__pack(m_param, (uint8_t *)buf);
+	char sol_buf[2000];
+	int sol_len = 0;
 
-		void * sol_buf = malloc(2000);
-		int sol_len = orbiterkep_optimize((const uint8_t *)buf, len, (uint8_t *)sol_buf);
+	param->opt->set_computing(true);
+	while (param->opt->get_n_solutions() < 25 && !param->opt->cancelled()) {
+		sol_len = orbiterkep_optimize((const uint8_t *)buf, len, (uint8_t *)sol_buf);
 
 		Orbiterkep__TransXSolution * solution = orbiterkep__trans_xsolution__unpack(NULL, sol_len, (uint8_t *)sol_buf);
-		AddSolution(solution);
 
-		Update(hDlg);
+		param->opt->AddSolution(solution);
+		param->opt->Signal();
 	}
+	param->opt->set_computing(false);
+};
 
+void Optimization::Signal() {
 	Update(hDlg);
-	m_computing = false;
+}
+
+void Optimization::RunOptimization(HWND hDlg)
+{
+	ResetSolutions();
+	m_cancel = false;
+	
+	OptimThreadParam _threadParam;
+	auto threadParam = std::make_shared<OptimThreadParam>(_threadParam);
+	threadParam->opt = this;
+	threadParam->hDlg = hDlg;
+	threadParam->param = m_param;
+
+	m_optimization_task = concurrency::create_task([threadParam] {
+		RunOptimization_thread(threadParam);
+	});	
 }
 
 static const std::string base64_chars =
@@ -320,7 +347,7 @@ int readBase64FromScenario(FILEHANDLE scn, char * key, unsigned char * outputBuf
 	if (!oapiReadScenario_nextline(scn, buf)) {
 		return 0;
 	}
-	if (strnicmp(buf, key, strlen(key))) {
+	if (_strnicmp(buf, key, strlen(key))) {
 		return 0;
 	}
 	char * str = buf + strlen(key) + 1;
@@ -337,15 +364,15 @@ int readIntFromScenario(FILEHANDLE scn, char * key, int & result) {
 	if (!oapiReadScenario_nextline(scn, buf)) {
 		return -1;
 	}
-	if (!strnicmp(buf, key, strlen(key))) {
+	if (_strnicmp(buf, key, strlen(key))) {
 		return -1;
 	}
-	sscanf_s(buf + strlen(key), "%d", &result);
+	sscanf_s(buf + strlen(key) + 1, "%d", &result);
 
 	return 0;
 }
 
-int writeBase64ToScenario(FILEHANDLE scn, char * key, const unsigned char * buf, int size)
+void writeBase64ToScenario(FILEHANDLE scn, char * key, const unsigned char * buf, int size)
 {
 	unsigned char base64[1024];
 	unsigned int out_l;
@@ -377,7 +404,7 @@ void Optimization::LoadStateFrom(FILEHANDLE scn)
 
 	for (int i = 0; i < nSol; ++i) {
 		char key[50];
-		sprintf(key, "Solution%02d", i);
+		sprintf_s(key, "Solution%02d", i);
 		unsigned char buf[1024];
 		int l = readBase64FromScenario(scn, key, buf);
 
@@ -396,7 +423,7 @@ void Optimization::SaveStateTo(FILEHANDLE scn) {
 	oapiWriteScenario_int(scn, "NSolutions", n_solutions);
 	for (int i = 0; i < n_solutions; ++i) {
 		char key[50];
-		sprintf(key, "Solution%02d", i);
+		sprintf_s(key, "Solution%02d", i);
 		size = orbiterkep__trans_xsolution__get_packed_size(m_solutions[i]);
 		orbiterkep__trans_xsolution__pack(m_solutions[i], (unsigned char *)buf);
 
@@ -439,13 +466,16 @@ void Optimization::AddSolution(Orbiterkep__TransXSolution * newSolution) {
 }
 
 
-void Optimization::Update(HWND hDlg) {
+void Optimization::Update(HWND _hDlg) {
 	char m_solution_buf[16000];
 	int len_sol = sprintf_transx_solution(m_solution_buf, m_best_solution);
 	m_solution_str = std::string(m_solution_buf, len_sol);
 
 	m_messenger.PutSolution(*m_best_solution);
 
+	if (_hDlg != NULL) {
+		hDlg = _hDlg;
+	}
 	if (hDlg != 0) {
 		PostMessage(hDlg, WM_OPTIMIZATION_READY, 0, 0);
 	}

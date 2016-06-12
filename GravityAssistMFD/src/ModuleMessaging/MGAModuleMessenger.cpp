@@ -15,7 +15,7 @@ void MGAModuleMessenger::PutSolution(const Orbiterkep__TransXSolution &solution)
 
 	ModMsgPut("n_dsm", (int)solution.n_dsms);
 	ModMsgPut("n_flyby", (int)solution.n_flybyes);
-	for (int i = 0; i < solution.n_dsms; ++i) {
+	for (unsigned int i = 0; i < solution.n_dsms; ++i) {
 		sprintf(buf, "dsm[%d].mjd", i);
 		ModMsgPut(buf, solution.dsms[i]->mjd);
 		sprintf(buf, "dsm[%d].prograde", i);
@@ -26,7 +26,7 @@ void MGAModuleMessenger::PutSolution(const Orbiterkep__TransXSolution &solution)
 		ModMsgPut(buf, solution.dsms[i]->plane);
 	}
 
-	for (int i = 0; i < solution.n_flybyes; ++i) {
+	for (unsigned int i = 0; i < solution.n_flybyes; ++i) {
 		sprintf(buf, "flyby[%d].mjd", i);
 		ModMsgPut(buf, solution.flybyes[i]->mjd);
 		sprintf(buf, "flyby[%d].prograde", i);

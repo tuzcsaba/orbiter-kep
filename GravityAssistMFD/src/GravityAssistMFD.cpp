@@ -28,7 +28,7 @@ DLLCLBK void InitModule(HINSTANCE hDLL)
 
 	g_moduleMessenger = new MGAModuleMessenger();
 	g_optimizer = new Optimization(*g_moduleMessenger);
-	g_mgaFinder = new MGAFinder(hDLL, *g_optimizer);
+	g_mgaFinder = new MGAFinder(hDLL);
 
 	g_gravityAssist = new GravityAssistModule(hDLL, g_optimizer);
 
@@ -40,11 +40,13 @@ DLLCLBK void ExitModule(HINSTANCE hDLL)
 {
 	oapiUnregisterCustomControls(hDLL);
 
-	delete g_mgaFinder;
-	g_mgaFinder = 0;
+	g_optimizer->Cancel();
 
 	delete g_gravityAssist;
 	g_gravityAssist = 0;
+
+	delete g_mgaFinder;
+	g_mgaFinder = 0;
 
 	delete g_optimizer;
 	g_optimizer = 0;
@@ -67,12 +69,6 @@ GravityAssistModule::GravityAssistModule(HINSTANCE _hDLL, Optimization * optimiz
 }
 
 GravityAssistModule::~GravityAssistModule() {
-	if (m_mgaFinder != 0) {
-		delete m_mgaFinder; m_mgaFinder = 0;
-	}
-	if (m_optimizer != 0) {
-		delete m_optimizer; m_optimizer = 0;
-	}
 }
 
 bool GravityAssistModule::ShouldDrawHUD() const {
@@ -98,7 +94,7 @@ void GravityAssistModule::DrawMultilineString(int right, int top, std::string to
 	std::vector<std::string> lines;
 	boost::algorithm::split(lines, toDisplay, boost::is_any_of("\n"));
 	int offsetY = top;
-	int max = 0;
+	unsigned int max = 0;
 	for (auto line : lines) {
 		DWORD width = skp->GetTextWidth(line.c_str());
 		if (width > max) max = width;
