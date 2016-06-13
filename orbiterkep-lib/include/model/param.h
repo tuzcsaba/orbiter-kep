@@ -10,6 +10,7 @@
 #include <tclap/CmdLine.h>
 
 #include "proto/ext.h"
+#include "proto/parameters.pb-c.h"
 
 #include "orbiterkep-lib_Export.h"
 
@@ -37,6 +38,34 @@ namespace orbiterkep {
 }
 
 namespace boost {
+
+    static inline std::size_t hash_value(Orbiterkep__Parameters const &p) {
+        std::size_t seed = 0;
+
+        for (int i = 0; i < p.n_planets; ++i) {
+            boost::hash_combine(seed, std::string(p.planets[i], strlen(p.planets[i])));
+        }
+
+        boost::hash_combine(seed, p.t0->lb);
+        boost::hash_combine(seed, p.t0->ub);
+
+        boost::hash_combine(seed, p.tof->lb);
+        boost::hash_combine(seed, p.tof->ub);
+
+        boost::hash_combine(seed, p.vinf->lb);
+        boost::hash_combine(seed, p.vinf->ub);
+
+        boost::hash_combine(seed, p.dep_altitude);
+        boost::hash_combine(seed, p.arr_altitude);
+
+        boost::hash_combine(seed, p.use_spice);
+        boost::hash_combine(seed, p.circularize);
+
+        boost::hash_combine(seed, p.add_dep_vinf);
+        boost::hash_combine(seed, p.add_arr_vinf);
+
+        return seed;
+    }
 
     static inline std::size_t hash_value(orbiterkep::Parameters const &p) {
         std::size_t seed = 0;

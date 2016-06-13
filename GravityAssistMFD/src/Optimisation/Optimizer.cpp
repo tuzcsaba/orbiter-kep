@@ -140,6 +140,13 @@ void Optimization::InitializeDefaultParam() {
 	m_param->use_spice = 0;
 
 	m_param_unpacked = true;
+
+	int hash = param_hash(*m_param);
+
+	char cacheFile[40];
+	sprintf_s(cacheFile, "cache/%ld", (unsigned int)hash);
+
+	LoadPlan(cacheFile);
 }
 
 void Optimization::free_manual_param()
@@ -167,6 +174,14 @@ void Optimization::free_manual_param()
 	free(m_param);
 }
 
+std::string Optimization::get_solution_times() const
+{
+	char result_buf[10000];
+	int len = sprintf_transx_times(result_buf, m_best_solution->times);
+
+	return std::string(result_buf, len);
+}
+
 std::string Optimization::get_solution_str_current_stage() const
 {
 	if (!has_solution()) return "";
@@ -174,9 +189,10 @@ std::string Optimization::get_solution_str_current_stage() const
 	char result_buf[10000];
 	int len = 0;
 
+
 	double currentTime = oapiGetSimMJD();
 	if (currentTime <= m_best_solution->escape->mjd + 1) { // if we are less than 1 day after planned launch, current stage is ESCAPE
-		len = sprintf_transx_escape(result_buf, m_best_solution->escape);
+		len += sprintf_transx_escape(result_buf + len, m_best_solution->escape);
 	} else {
 		int i = 0; int j = 0;
 		int n_dsm = m_best_solution->n_dsms; int n_flyby = m_best_solution->n_flybyes;
@@ -184,7 +200,7 @@ std::string Optimization::get_solution_str_current_stage() const
 		while (i < n_dsm || j < n_flyby) {
 			if (i < n_dsm) {
 				if (currentTime < m_best_solution->dsms[i]->mjd + 1) {
-					len = sprintf_transx_dsm(result_buf, m_best_solution->dsms[i]);
+					len += sprintf_transx_dsm(result_buf + len, m_best_solution->dsms[i]);
 					found = true;
 					break;
 				}
@@ -192,7 +208,7 @@ std::string Optimization::get_solution_str_current_stage() const
 			}
 			if (j < n_flyby) {
 				if (currentTime < m_best_solution->flybyes[j]->mjd + 1) {
-					len = sprintf_transx_flyby(result_buf, m_best_solution->flybyes[j]);
+					len += sprintf_transx_flyby(result_buf + len, m_best_solution->flybyes[j]);
 					found = true;
 					break;
 				}
@@ -201,7 +217,7 @@ std::string Optimization::get_solution_str_current_stage() const
 		}
 
 		if (!found) {
-			len = sprintf_transx_arrival(result_buf, m_best_solution->arrival);
+			len += sprintf_transx_arrival(result_buf + len, m_best_solution->arrival);
 		}
 	}
 	return std::string(result_buf, len);
@@ -231,14 +247,17 @@ void RunOptimization_thread(std::shared_ptr<OptimThreadParam> param) {
 	int sol_len = 0;
 
 	param->opt->set_computing(true);
-	while (param->opt->get_n_solutions() < 25 && !param->opt->cancelled()) {
+	int c = 0;
+	while (c < 1 || (!param->opt->opt_found() && !param->opt->cancelled())) {
 		sol_len = orbiterkep_optimize((const uint8_t *)buf, len, (uint8_t *)sol_buf);
 
 		Orbiterkep__TransXSolution * solution = orbiterkep__trans_xsolution__unpack(NULL, sol_len, (uint8_t *)sol_buf);
 
 		param->opt->AddSolution(solution);
 		param->opt->Signal();
+		++c;
 	}
+	param->opt->Signal();
 	param->opt->set_computing(false);
 };
 
@@ -248,7 +267,6 @@ void Optimization::Signal() {
 
 void Optimization::RunOptimization(HWND hDlg)
 {
-	ResetSolutions();
 	m_cancel = false;
 	
 	OptimThreadParam _threadParam;
@@ -379,63 +397,144 @@ unsigned int base64_decode(const unsigned char* encoded_string, unsigned int in_
 	return out_len;
 }
 
-int readBase64FromScenario(FILEHANDLE scn, const char * key, unsigned char * outputBuf) {
-	char * buf;
-	if (!oapiReadScenario_nextline(scn, buf)) {
-		return 0;
-	}
-	if (_strnicmp(buf, key, strlen(key))) {
-		return 0;
-	}
-	char * str = buf + strlen(key) + 1;
+int readBase64FromFile(FILE * scn, char * key, unsigned char * outputBuf, unsigned int &out_l) {
+	char buf[10000];
+	char * str;
+
+		if (!fgets(buf, 9999, scn)) {
+			return -1;
+		}
+		if (!_stricmp(buf, key)) {
+			return -1;
+		}
+		str = buf + strlen(key) + 1;
 
 	int len = strlen((char *)str);
-	unsigned int out_l;
 	base64_decode((unsigned char *)str, len, outputBuf, out_l);
-
-	return out_l;
-}
-
-int readIntFromScenario(FILEHANDLE scn, char * key, int & result) {
-	char * buf;
-	if (!oapiReadScenario_nextline(scn, buf)) {
-		return -1;
-	}
-	if (_strnicmp(buf, key, strlen(key))) {
-		return -1;
-	}
-	sscanf_s(buf + strlen(key) + 1, "%d", &result);
 
 	return 0;
 }
 
-void writeBase64ToScenario(FILEHANDLE scn, char * key, const unsigned char * buf, int size)
+void writeBase64ToFile(FILE * scn, char * key, const unsigned char * buf, int size)
 {
 	unsigned char base64[10000];
 	unsigned int out_l;
 	base64_encode(buf, size, base64, out_l);
 	base64[out_l] = 0;
 	
-	oapiWriteScenario_string(scn, key, (char *)base64);
+	char str[10000];
+	sprintf_s(str, "%s %s\n", key, base64);
+	fputs(str, scn);
 }
 
-void Optimization::SavePlan(char * file) {
-	char filename[MAX_PATH];
-	sprintf_s(filename, "MGAPlans/%s.mga", file);
-	auto fileHandle = oapiOpenFile(filename, FILE_OUT);
+int readIntFromFile(FILEHANDLE scn, char * key, int & result, bool scenario) {
+	char *buf;
+	if (scenario) {
+		if (!oapiReadScenario_nextline(scn, buf)) {
+			return -1;
+		}
+		if (_strnicmp(buf, key, strlen(key))) {
+			return -1;
+		}
+		sscanf_s(buf + strlen(key) + 1, "%d", &result);
+	} else {
+		char b[10000];
+		if (!fgets(b, 9999, (FILE *)scn)) {
+			return -1;
+		}
+		if (!_stricmp(b, key)) {
+			return -1;
+		}
+		if (0 == sscanf(b + strlen(key) + 1, "%ld", &result)) {
+			return -1;
+		}
+	}	
 
-	char buf[2048];
-	int i = 0;
-	int len = orbiterkep__parameters__get_packed_size(m_param);
-	orbiterkep__parameters__pack(m_param, (uint8_t *)buf);
+	return 0;
+}
 
-	unsigned char base64[2000];
+void Optimization::ResetParam() {
+	if (m_param) {
+		if (m_param_unpacked) {
+			orbiterkep__parameters__free_unpacked(m_param, NULL);
+		} else {
+			free_manual_param();
+		}
+		m_param = 0;
+	}
+}
+
+void Optimization::LoadScenario(FILEHANDLE scn) {
+	int hash;
+	if (readIntFromFile(scn, "Hash", hash, true)) {
+		return;
+	}
+
+	char cacheFile[40];
+	sprintf_s(cacheFile, "cache/%ld", (unsigned int)hash);
+
+	LoadPlan(cacheFile);
+}
+
+void Optimization::SaveScenario(FILEHANDLE scn) {
+
+	int hash = SaveCurrentPlan();
+	
+	oapiWriteScenario_int(scn, "Hash", hash);
+}
+
+void Optimization::LoadStateFrom(FILE * scn)
+{
+	/** Load parameters */	
+	unsigned char out[2048];
 	unsigned int out_l;
-	base64_encode((unsigned char *)buf, len, base64, out_l);
-	base64[out_l] = 0;
-	oapiWriteItem_string(fileHandle, "Parameters", (char *)base64);
+	if (readBase64FromFile(scn, "Parameters", out, out_l)) {
+		return;
+	}
 
-	oapiCloseFile(fileHandle, FILE_OUT);
+	Cancel();
+
+	update_parameters(orbiterkep__parameters__unpack(NULL, out_l, out), true);
+
+	/** Load solutions */
+	int nSol;
+	if (readIntFromFile(scn, "NSolutions", nSol, false)) {
+		return;
+	}
+
+	char key[50];
+	unsigned char buf[16000];
+	for (int i = 0; i < nSol; ++i) {
+		sprintf_s(key, "Solution%02d", i);
+		unsigned int l;
+		if (readBase64FromFile(scn, key, buf, l)) {
+			return;
+		}
+
+		AddSolution(orbiterkep__trans_xsolution__unpack(NULL, l, buf));
+	}
+
+	Signal();
+}
+
+void Optimization::SaveStateTo(FILE * scn) {
+	int size = orbiterkep__parameters__get_packed_size(m_param);
+	uint8_t * buf[1024];
+	orbiterkep__parameters__pack(m_param, (unsigned char *)buf);
+
+	writeBase64ToFile(scn, "Parameters", (unsigned char *)buf, size);
+
+	sprintf((char *)buf, "NSolutions %ld\n", n_solutions);
+	fputs((char *)buf, scn);
+	for (int i = 0; i < n_solutions; ++i) {
+		char key[50];
+		sprintf_s(key, "Solution%02d", i);
+		size = orbiterkep__trans_xsolution__get_packed_size(m_solutions[i]);
+		memset(buf, 0, size);
+		size = orbiterkep__trans_xsolution__pack(m_solutions[i], (unsigned char *)buf);
+
+		writeBase64ToFile(scn, key, (unsigned char *)buf, size);
+	}
 }
 
 std::vector<std::string> Optimization::SavedPlans() {
@@ -454,94 +553,43 @@ std::vector<std::string> Optimization::SavedPlans() {
 		if (strcmp(fdFile.cFileName, ".") == 0
 			|| strcmp(fdFile.cFileName, "..") == 0) continue;
 
-		std::string s(fdFile.cFileName, strlen(fdFile.cFileName)- 4);
+		std::string s(fdFile.cFileName, strlen(fdFile.cFileName) - 4);
 		result.push_back(s);
 	} while (FindNextFile(hFind, &fdFile));
 
 	return result;
 }
 
-void Optimization::ResetParam() {
-	if (m_param) {
-		if (m_param_unpacked) {
-			orbiterkep__parameters__free_unpacked(m_param, NULL);
-		} else {
-			free_manual_param();
-		}
-		m_param = 0;
-	}
+int Optimization::SaveCurrentPlan() {
+	int hash = param_hash(*m_param);
+
+	char cacheFile[40];
+	sprintf_s(cacheFile, "cache/%ld", (unsigned int)hash);
+
+	SavePlan(cacheFile);
+	return hash;
 }
+
 
 void Optimization::LoadPlan(char * file) {
 	char filename[MAX_PATH];
 	sprintf_s(filename, "MGAPlans/%s.mga", file);
-	auto fileHandle = oapiOpenFile(filename, FILE_IN);
+	FILE * fileHandle = fopen(filename, "r");	
+	if (fileHandle == 0) return;
+	LoadStateFrom(fileHandle);
 
-	char buf[2000];
-	if (!oapiReadItem_string(fileHandle, "Parameters", buf)) {
-		return;
-	}
-
-	unsigned char message[2000];
-	unsigned int out_l;
-	base64_decode((unsigned char *)buf, strlen(buf), message, out_l);
-
-	bool comp = m_computing;
-	Cancel();
-
-	ResetSolutions();
-
-	update_parameters(orbiterkep__parameters__unpack(NULL, out_l, message), true);
-
-	oapiCloseFile(fileHandle, FILE_IN);
-	Signal();
+	fclose(fileHandle);
 }
 
-void Optimization::LoadStateFrom(FILEHANDLE scn)
-{
-	/** Load parameters */	
-	unsigned char out[2048];
-	int out_l = readBase64FromScenario(scn, "Parameters", out);
 
-	ResetSolutions();
-	
-	update_parameters(orbiterkep__parameters__unpack(NULL, out_l, out), true);
+void Optimization::SavePlan(char * file) {
+	char filename[MAX_PATH];
+	sprintf_s(filename, "MGAPlans/%s.mga", file);
+	FILE * fileHandle = fopen(filename, "w");
 
-	/** Load solutions */
-	int nSol;
-	if (readIntFromScenario(scn, "NSolutions", nSol)) {
-		return;
-	}
+	SaveStateTo(fileHandle);
 
-	ResetSolutions();
-
-	char key[50];
-	unsigned char buf[16000];
-	for (int i = 0; i < nSol; ++i) {
-		sprintf_s(key, "Solution%02d", i);
-		int l = readBase64FromScenario(scn, key, buf);
-
-		AddSolution(orbiterkep__trans_xsolution__unpack(NULL, l, buf));
-	}
-	n_solutions = nSol;
-}
-
-void Optimization::SaveStateTo(FILEHANDLE scn) {
-	int size = orbiterkep__parameters__get_packed_size(m_param);
-	uint8_t * buf[1024];
-	orbiterkep__parameters__pack(m_param, (unsigned char *)buf);
-
-	writeBase64ToScenario(scn, "Parameters", (unsigned char *)buf, size);
-
-	oapiWriteScenario_int(scn, "NSolutions", n_solutions);
-	for (int i = 0; i < n_solutions; ++i) {
-		char key[50];
-		sprintf_s(key, "Solution%02d", i);
-		size = orbiterkep__trans_xsolution__get_packed_size(m_solutions[i]);
-		orbiterkep__trans_xsolution__pack(m_solutions[i], (unsigned char *)buf);
-
-		writeBase64ToScenario(scn, key, (unsigned char *)buf, size);
-	}
+	fclose(fileHandle);
 }
 
 void Optimization::AddSolution(Orbiterkep__TransXSolution * newSolution) {
@@ -569,6 +617,9 @@ void Optimization::AddSolution(Orbiterkep__TransXSolution * newSolution) {
 
 		if (newSolution->fuel_cost > max) return;
 
+		if (m_best_solution == m_solutions[max_idx]) {
+			m_best_solution = 0;
+		}
 		orbiterkep__trans_xsolution__free_unpacked(m_solutions[max_idx], NULL);
 		m_solutions[max_idx] = newSolution;
 	}

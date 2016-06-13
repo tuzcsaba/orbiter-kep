@@ -1,6 +1,7 @@
 #ifndef GRAV_ASSIST_OPTIMIZER_H
 #define GRAV_ASSIST_OPTIMIZER_H
 
+#include "orbiterkep/opt/optimise-c.h"
 #include "orbiterkep/proto/solution.pb-c.h"
 #include "orbiterkep/proto/parameters.pb-c.h"
 
@@ -32,11 +33,38 @@ public:
 		m_computing = _computing; 
 	}
 	bool cancelled() const { return m_cancel; }
+	bool opt_found() const {
+		double min = DBL_MAX;
+		double max = 0;
+		if (n_solutions < 25) return false;
+		for (int i = 0; i < n_solutions; ++i) {
+			double c = m_solutions[i]->fuel_cost;
+			if (c > max) max = c;
+			if (c < min) min = c;
+		}
+		return max - min < 1;
+	}
 	void update_parameters(Orbiterkep__Parameters * newParam, bool unpacked) {
+		int current_hash = param_hash(*m_param);
+		int new_hash = param_hash(*newParam);
+
+		if (current_hash != new_hash) {
+			SaveCurrentPlan();
+		}
+
 		ResetParam();
 		m_param = newParam;
 		m_param_unpacked = unpacked;
+		
+		if (current_hash != new_hash) {
+			ResetSolutions();
+			char cacheFile[40];
+			sprintf_s(cacheFile, "cache/%ld", (unsigned int)new_hash);
+			LoadPlan(cacheFile);
+		}
 	}
+
+	std::string get_solution_times() const;
 
 	std::string get_solution_str_current_stage() const;
 
@@ -47,17 +75,21 @@ public:
 	void ResetSolutions();
 	void ResetParam();
 
-	void LoadStateFrom(FILEHANDLE scn);
-	void SaveStateTo(FILEHANDLE scn);
-
+	void LoadScenario(FILEHANDLE scn);
+	void SaveScenario(FILEHANDLE scn);
 	void SavePlan(char * filename);
-	void LoadPlan(char * filename);
+	int SaveCurrentPlan();
+	void LoadPlan(char * filename);	
 	std::vector<std::string> SavedPlans();
 
 	void Signal();
 
 	void AddSolution(Orbiterkep__TransXSolution * newSolution);
 private:
+
+	void LoadStateFrom(FILE * scn);
+	void SaveStateTo(FILE * scn);
+
 	void free_manual_param();
 
 	std::string m_solution_str;

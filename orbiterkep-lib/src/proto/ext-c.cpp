@@ -3,7 +3,11 @@
 
 #include "proto/ext-c.h"
 
+#include <keplerian_toolbox/epoch.h>
+
 #include <stdio.h>
+#include <iostream>
+#include <sstream>
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,8 +60,10 @@ int __cdecl sprintf_transx_times(char * buf, const Orbiterkep__TransXTimes * tim
     }
 
     for (i = 0; i < times->n_planets; ++i) {
+        std::stringstream ss;
+        ss << kep_toolbox::epoch(times->times[i], kep_toolbox::epoch::type::MJD);
         total_written += sprintf(buf + total_written, "Date of %s encounter:", times->planets[i]);
-        total_written += sprintf(buf + total_written, "%f\r\n", times->times[i]);
+        total_written += sprintf(buf + total_written, "%s\r\n", ss.str().c_str());
     }
 
     total_written += sprintf(buf + total_written, "Total mission duration: %0.2f days\n", times->times[times->n_times - 1] - times->times[0]);
@@ -85,7 +91,7 @@ int __cdecl sprintf_transx_dsm(char * buf, const Orbiterkep__TransXDSM * dsm) {
     int total_written = 0;
 
     total_written += sprintf(buf + total_written, "Deep Space Maneuver\n");
-    total_written += sprintf(buf + total_written, "--------------------------------------\n");
+    total_written += sprintf(buf + total_written, "--------------------------------------\r\n");
     total_written += sprintf(buf + total_written, "MJD:                  %12.4f\r\n", dsm->mjd);
     total_written += sprintf(buf + total_written, "Prograde:             %11.3f m/s\r\n", dsm->prograde);
     total_written += sprintf(buf + total_written, "Outward:              %11.3f m/s\r\n", dsm->outward);

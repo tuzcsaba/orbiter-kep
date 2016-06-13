@@ -366,6 +366,9 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_OPTIMIZATION_READY:
 		SolutionToUI(g_optimizer->get_best_solution());
+		ParamToUI(g_optimizer->param());
+
+		g_optimizer->SaveCurrentPlan();
 		break;
 	}
 	return oapiDefDialogProc(hDlg, uMsg, wParam, lParam);

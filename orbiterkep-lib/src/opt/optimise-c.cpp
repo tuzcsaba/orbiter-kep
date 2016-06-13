@@ -1,5 +1,6 @@
 #include "opt/optimise-c.h"
 
+#include "model/param.h"
 #include "opt/optimise.h"
 
 #include "proto/parameters.pb-c.h"
@@ -11,6 +12,10 @@ struct membuf : std::streambuf
         this->setg(begin, begin, end);
     }
 };
+
+int __cdecl param_hash(Orbiterkep__Parameters const &param) {
+    return boost::hash_value(param);
+}
 
 int __cdecl orbiterkep_optimize(const uint8_t * param_buf, int param_l, uint8_t * sol_buf) {
 
