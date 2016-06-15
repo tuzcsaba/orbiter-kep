@@ -157,7 +157,7 @@ void MGAFinder::UIToParam() {
 	newParam->n_trials = 1;
 
 	newParam->has_max_deltav = 1;
-	newParam->max_deltav = 24.0;
+	newParam->max_deltav = 24000;
 
 	newParam->has_dep_altitude = 1;
 	newParam->dep_altitude = 300;
@@ -307,6 +307,9 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDCANCEL:
 			CloseDialog();
 			return TRUE;
+		case IDC_RESET_SOL:
+			g_optimizer->ResetSolutions();
+			break;
 		case ID_OPT: {
 			UIToParam();
 			if (g_optimizer->computing()) {
@@ -315,6 +318,13 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			} else {
 				g_optimizer->RunOptimization(hDlg);
 				SetDlgItemText(hDlg, ID_OPT, "Cancel");
+			}
+			break;
+		}
+		case ID_PARETO: {
+			UIToParam();
+			if (!g_optimizer->computing()) {
+				g_optimizer->RunPareto(hDlg);
 			}
 			break;
 		}

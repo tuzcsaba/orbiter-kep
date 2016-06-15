@@ -20,7 +20,7 @@
 
 namespace orbiterkep {
 
-void run_problem(TransXSolution * solution, const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, const orbiterkep::Parameters &params) {
+void run_problem(TransXSolution * solution, const pagmo::problem::transx_problem &single_obj, const pagmo::problem::transx_problem &multi_obj, const orbiterkep::Parameters &params, std::vector<std::pair<double, double> > &pareto) {
       int mf = params.pagmo().mf();
       double mr = params.pagmo().mr();
       int gen = params.pagmo().n_gen();
@@ -32,19 +32,19 @@ void run_problem(TransXSolution * solution, const pagmo::problem::transx_problem
       if (params.multi_objective()) {
         std::cout << "- Running multi-objective optimisation";
         orbiterkep::optimiser op_multi(multi_obj, n_isl, population, gen, mf, mr);
-        op_multi.run_once(0, params);
+        op_multi.run_once(0, params, pareto);
         std::cout << "Done" << std::endl;
       } else {
         std::cout << "- Running single-objective optimisation";
         orbiterkep::optimiser op(single_obj, n_isl, population, gen, mf, mr);
-        sol_mga = op.run_once(0, params);
+        sol_mga = op.run_once(0, params, pareto);
         std::cout << " Done" << std::endl;
-      }
 
-      single_obj.fill_solution(solution, sol_mga);
+        single_obj.fill_solution(solution, sol_mga);
+      }
 }
 
-void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
+void optimiser::optimize(const Parameters &param, TransXSolution * solution, std::vector<std::pair<double, double> > &pareto) {
 #ifdef BUILD_MONGODB
     orbiterkep::orbiterkep_db db;
 #endif
@@ -100,7 +100,7 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution) {
       single->fill_solution(solution, db.get_stored_solution(param, "MGA"));
     } else {
 #endif
-      run_problem(solution, *single, *multi, param);
+      run_problem(solution, *single, *multi, param, pareto);
 #ifdef BUILD_MONGODB
       db.store_solution(param, *solution, "MGA");
     }
@@ -146,10 +146,27 @@ optimiser::~optimiser() {
     }
 }
 
-pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const Parameters &params) {
+void population_obtain_pareto_fronts(const pagmo::population &pop, double maxDeltaV, std::vector<std::pair<double, double> > &result) {
 
+  std::vector<std::vector<pagmo::population::size_type> > p_list = pop.compute_pareto_fronts();
 
+  double min_x = DBL_MAX, max_x = 0;
+  double min_y = DBL_MAX, max_y = 0;
+  for (int i = 0; i < p_list.size(); ++i) {
+    std::vector<pagmo::population::size_type> f = p_list[i];
 
+    for (int j = 0; j < p_list[i].size(); ++j) {
+      double x = pop.get_individual(f[j]).cur_f[0];
+      double y = pop.get_individual(f[j]).cur_f[1];
+      if (maxDeltaV != -1 && x > maxDeltaV) continue;
+
+      result.push_back(std::pair<double, double>(x, y));
+    }
+  }
+
+}
+
+pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_result, const Parameters &params, std::vector<std::pair<double, double> > &pareto) {
 
   pagmo::migration::best_s_policy sel_single(m_mr, pagmo::migration::rate_type::fractional);
   pagmo::migration::fair_r_policy rep_single(m_mr, pagmo::migration::rate_type::fractional);
@@ -230,9 +247,8 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
 
       }
 
-#ifdef BUILD_PLOT
     bool print_fronts = params.multi_objective();
-    if (m_problem.get_f_dimension() == 2 && print_fronts) {
+    if (m_problem.get_f_dimension() == 2) {
       pagmo::population sum_pop(m_problem);
       for (int i = 0; i < archi.get_size(); ++i) {
         pagmo::base_island_ptr isl = archi.get_island(i);
@@ -241,9 +257,13 @@ pagmo::decision_vector optimiser::run_once(pagmo::decision_vector *single_obj_re
         }
       }
 
+      population_obtain_pareto_fronts(sum_pop, params.max_deltav(), pareto);
+#ifdef BUILD_PLOT
+    if (print_fronts) {
       population_plot_pareto_fronts(sum_pop, params.max_deltav());
     }
 #endif
+    }
   }
 
   return best_x;

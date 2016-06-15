@@ -46,14 +46,14 @@ namespace boost {
             boost::hash_combine(seed, std::string(p.planets[i], strlen(p.planets[i])));
         }
 
-        boost::hash_combine(seed, p.t0->lb);
-        boost::hash_combine(seed, p.t0->ub);
+        // boost::hash_combine(seed, p.t0->lb);
+        // boost::hash_combine(seed, p.t0->ub);
 
-        boost::hash_combine(seed, p.tof->lb);
-        boost::hash_combine(seed, p.tof->ub);
+        // boost::hash_combine(seed, p.tof->lb);
+        // boost::hash_combine(seed, p.tof->ub);
 
-        boost::hash_combine(seed, p.vinf->lb);
-        boost::hash_combine(seed, p.vinf->ub);
+        // boost::hash_combine(seed, p.vinf->lb);
+        // boost::hash_combine(seed, p.vinf->ub);
 
         boost::hash_combine(seed, p.dep_altitude);
         boost::hash_combine(seed, p.arr_altitude);
@@ -74,14 +74,14 @@ namespace boost {
             boost::hash_combine(seed, p.planets(i));
         }
 
-        boost::hash_combine(seed, p.t0().lb());
-        boost::hash_combine(seed, p.t0().ub());
+        // boost::hash_combine(seed, p.t0().lb());
+        // boost::hash_combine(seed, p.t0().ub());
 
-        boost::hash_combine(seed, p.tof().lb());
-        boost::hash_combine(seed, p.tof().ub());
+        // boost::hash_combine(seed, p.tof().lb());
+        // boost::hash_combine(seed, p.tof().ub());
 
-        boost::hash_combine(seed, p.vinf().lb());
-        boost::hash_combine(seed, p.vinf().ub());
+        // boost::hash_combine(seed, p.vinf().lb());
+        // boost::hash_combine(seed, p.vinf().ub());
 
         boost::hash_combine(seed, p.dep_altitude());
         boost::hash_combine(seed, p.arr_altitude());

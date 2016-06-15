@@ -29,6 +29,8 @@ public:
 	bool has_solution() const { return n_solutions > 0; }
 	int get_n_solutions() const { return n_solutions;  }
 	bool computing() const { return m_computing; }
+	double ** pareto_buffer() { return m_pareto; }
+	int *n_pareto() { return &m_n_pareto; }
 	void set_computing(bool _computing) { 
 		m_computing = _computing; 
 	}
@@ -68,6 +70,7 @@ public:
 
 	std::string get_solution_str_current_stage() const;
 
+	void RunPareto(HWND hDlg);
 	void RunOptimization(HWND hDlg);
 
 	void Cancel();
@@ -104,6 +107,9 @@ private:
 	int n_solutions;
 	Orbiterkep__TransXSolution ** m_solutions;
 	Orbiterkep__TransXSolution * m_best_solution;
+	double** m_pareto;
+	int m_n_pareto;
+	const int max_pareto = 10000;
 
 	const MGAModuleMessenger &m_messenger;
 };

@@ -40,14 +40,21 @@ Optimization::~Optimization()
 
 	ResetSolutions();
 	ResetParam();
+
+	free(m_solutions);
+	for (int i = 0; i < max_pareto; ++i) free(m_pareto[i]);
+	free(m_pareto);
 }
 
 Optimization::Optimization(const MGAModuleMessenger &messenger) : m_messenger(messenger)
 {
 	m_computing = false;
 	n_solutions = 0;
+	m_n_pareto = 0;
 	m_best_solution = 0;
 	m_solutions = (Orbiterkep__TransXSolution **)malloc(25 * sizeof(Orbiterkep__TransXSolution *));
+	m_pareto = (double **)malloc(sizeof(double*) * max_pareto);
+	for (int i = 0; i < max_pareto; ++i) m_pareto[i] = (double *)malloc(sizeof(double) * 2);
 
 	InitializeDefaultParam();
 }
@@ -122,7 +129,7 @@ void Optimization::InitializeDefaultParam() {
 	m_param->n_trials = 1;
 
 	m_param->has_max_deltav = 1;
-	m_param->max_deltav = 24.0;
+	m_param->max_deltav = 24000;
 
 	m_param->has_dep_altitude = 1;
 	m_param->dep_altitude = 300;
@@ -261,6 +268,25 @@ void RunOptimization_thread(std::shared_ptr<OptimThreadParam> param) {
 	param->opt->set_computing(false);
 };
 
+void RunOptimization_pareto_thread(std::shared_ptr<OptimThreadParam> param) {
+
+	char buf[2048];
+	int i = 0;
+	int len = orbiterkep__parameters__get_packed_size(param->param);
+	orbiterkep__parameters__pack(param->param, (uint8_t *)buf);
+
+	char sol_buf[2000];
+	int sol_len = 0;
+
+	param->opt->set_computing(true);
+	int c = 0;
+	int n = 10000;
+	orbiterkep_optimize_multi((const uint8_t *)buf, len, param->opt->pareto_buffer(), &n);
+	*(param->opt->n_pareto()) = n;
+	param->opt->Signal();
+	param->opt->set_computing(false);
+};
+
 void Optimization::Signal() {
 	Update(hDlg);
 }
@@ -278,6 +304,20 @@ void Optimization::RunOptimization(HWND hDlg)
 	m_optimization_task = concurrency::create_task([threadParam] {
 		RunOptimization_thread(threadParam);
 	});	
+}
+
+void Optimization::RunPareto(HWND hDlg) {
+	m_cancel = false;
+
+	OptimThreadParam _threadParam;
+	auto threadParam = std::make_shared<OptimThreadParam>(_threadParam);
+	threadParam->opt = this;
+	threadParam->hDlg = hDlg;
+	threadParam->param = m_param;
+
+	m_optimization_task = concurrency::create_task([threadParam] {
+		RunOptimization_pareto_thread(threadParam);
+	});
 }
 
 static const std::string base64_chars =
@@ -514,6 +554,20 @@ void Optimization::LoadStateFrom(FILE * scn)
 		AddSolution(orbiterkep__trans_xsolution__unpack(NULL, l, buf));
 	}
 
+	double x;
+	double y;
+	int n = 0;
+	char b[1000];
+	if (2 == fscanf(scn, "Pareto %lf;%lf", &x, &y)) {
+		m_pareto[0][0] = x; m_pareto[0][1] = y;
+		n += 1;
+		while (2 == fscanf(scn, ";%lf;%lf", &x, &y)) {
+			m_pareto[n][0] = x; m_pareto[n][1] = y;
+			n += 1;
+		}
+		m_n_pareto = n;
+	}
+
 	Signal();
 }
 
@@ -534,6 +588,16 @@ void Optimization::SaveStateTo(FILE * scn) {
 		size = orbiterkep__trans_xsolution__pack(m_solutions[i], (unsigned char *)buf);
 
 		writeBase64ToFile(scn, key, (unsigned char *)buf, size);
+	}
+	if (m_n_pareto > 0) {
+		fputs("Pareto ", scn);
+		char buf[200];
+		for (int i = 0; i < m_n_pareto - 1; ++i) {
+			sprintf(buf, "%lf;%lf;", m_pareto[i][0], m_pareto[i][1]);
+			fputs(buf, scn);
+		}
+		sprintf(buf, "%lf;%lf\n", m_pareto[m_n_pareto - 1][0], m_pareto[m_n_pareto - 1][1]);
+		fputs(buf, scn);
 	}
 }
 

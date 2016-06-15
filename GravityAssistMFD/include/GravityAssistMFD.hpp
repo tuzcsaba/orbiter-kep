@@ -39,11 +39,12 @@ public:
 	virtual const char * GetModuleName() const;
 private:
 	void DrawSolution(const HUDPAINTSPEC *hps, oapi::Sketchpad * skp);
-	void DrawMultilineString(int right, int top, std::string toDisplay, oapi::Sketchpad * skp);
+	int DrawMultilineString(int right, int top, std::string toDisplay, oapi::Sketchpad * skp);
 
 	Optimization *m_optimizer;
 
 	oapi::Font * mfd_font;
+	oapi::Font * mfd_graph_font;
 };
 
 

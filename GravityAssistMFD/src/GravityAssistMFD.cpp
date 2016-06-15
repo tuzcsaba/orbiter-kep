@@ -26,6 +26,7 @@ MGAModuleMessenger * g_moduleMessenger = 0;
 GravityAssistMFD::GravityAssistMFD(DWORD w, DWORD h, VESSEL *vessel, GravityAssistModule * gravAssist) : MFD2(w, h, vessel), m_optimizer(&(gravAssist->optimizer()))
 {
 	mfd_font = oapiCreateFont(h / 20, true, "Fixed", FONT_NORMAL, 0);
+	mfd_graph_font = oapiCreateFont(h / 40, true, "Fixed", FONT_NORMAL, 0);
 }
 
 int GravityAssistMFD::MsgProc(UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam) {
@@ -41,7 +42,9 @@ GravityAssistMFD::~GravityAssistMFD()
 {
 	// Add MFD cleanup code here
 	oapiReleaseFont(mfd_font);
+	oapiReleaseFont(mfd_graph_font);
 	mfd_font = 0;
+	mfd_graph_font = 0;
 }
 
 
@@ -50,12 +53,80 @@ bool GravityAssistMFD::ShouldDrawHUD() const {
 }
 
 bool GravityAssistMFD::Update(oapi::Sketchpad * skp) {
+
 	Title(skp, "GravityAssist MFD");
-	skp->SetFont(mfd_font);
 
-	std::string toDisplay = m_optimizer->get_solution_str_current_stage();
-	DrawMultilineString(15, 40, toDisplay, skp);
+	if (!m_optimizer->has_solution() && *(m_optimizer->n_pareto()) == 0) return true;
 
+	int offsetY = 0;
+	int h = 0;
+	if (m_optimizer->has_solution()) {
+		skp->SetFont(mfd_font);
+
+		h = LOWORD(skp->GetCharSize());
+		std::string toDisplay = m_optimizer->get_solution_str_current_stage();
+		offsetY = DrawMultilineString(15, 40, toDisplay, skp);
+		offsetY -= h;
+	}
+
+	if (*(m_optimizer->n_pareto()) > 0) {
+		int bottom_margin = 25;
+		skp->SetFont(mfd_graph_font);
+		h = LOWORD(skp->GetCharSize());
+		skp->Line(15, offsetY + 10, 15, H - bottom_margin);
+		skp->Line(10, offsetY + 10 + 5, 15, offsetY + 10);
+		skp->Line(20, offsetY + 10 + 5, 15, offsetY + 10);
+
+		skp->Line(15, H - bottom_margin, W - 15, H - bottom_margin);
+		skp->Line(W - 20, H - bottom_margin - 5, W - 15, H - bottom_margin);
+		skp->Line(W - 20, H - bottom_margin + 5, W - 15, H - bottom_margin);
+
+		int n = *(m_optimizer->n_pareto());
+		double ** p = m_optimizer->pareto_buffer();
+		double minT = DBL_MAX;
+		double maxT = 0;
+		double minDV = DBL_MAX;
+		double maxDV = 0;
+		for (int i = 0; i < n; ++i) {
+			if (p[i][0] < minDV) minDV = p[i][0];
+			if (p[i][0] > maxDV) maxDV = p[i][0];
+			if (p[i][1] < minT) minT = p[i][1];
+			if (p[i][1] > maxT) maxT = p[i][1];
+		}
+		double scaleT = (H - bottom_margin - offsetY - 20) / (maxT - minT);
+		double scaleDV = (W - 35) / (maxDV - minDV);
+		for (int i = 0; i < n; ++i) {
+			double x = (p[i][0] - minDV) * scaleDV;
+			double y = (p[i][1] - minT) * scaleT;
+			double screenX = 15 + x;
+			double screenY = H - bottom_margin - y;
+			skp->Pixel(screenX, screenY, 0xFFFFFF);
+		}
+
+		/** T markers */
+		double ratio = 1;
+		char numbuf[100];
+		int offs = 0;
+		for (int i = 0; i < 4; ++i) {
+
+			offs = (int)floor(offsetY + 20 + (H - bottom_margin - offsetY - 20) * (1 - ratio));
+			skp->Line(10, offs, 20, offs);
+			sprintf(numbuf, "%0.1lf", minT + (maxT - minT) * (ratio));
+			skp->Text(25, offs - h / 2, numbuf, strlen(numbuf));
+			ratio /= 2;
+		}
+		/** DV markers */
+		ratio = 1;
+		for (int i = 0; i < 4; ++i) {
+
+			offs = (int)floor(15 + (W - 35) * ratio);
+			skp->Line(offs, H - bottom_margin - 5, offs, H - bottom_margin + 5);
+			sprintf(numbuf, "%0.1lf", minDV + (maxDV - minDV) * (ratio));
+			int w = skp->GetTextWidth(numbuf, 0);
+			skp->Text(offs - w / 2, H - bottom_margin + 10, numbuf, strlen(numbuf));
+			ratio /= 2;
+		}
+	}
 	return true;
 }
 
@@ -71,10 +142,23 @@ void GravityAssistMFD::DrawHUD(int mode, const HUDPAINTSPEC *hps, oapi::Sketchpa
 
 	std::string toDisplay = m_optimizer->get_solution_times();
 
-	DrawMultilineString(W - 700, 150, toDisplay, skp);
+	int left = W - 700;
+	int offsetY = DrawMultilineString(left, 150, toDisplay, skp);
+
+	int h = LOWORD(skp->GetCharSize());
+	double fuel_cost = m_optimizer->get_best_solution().fuel_cost;
+	char str[256];
+	sprintf_s(str, "Total DeltaV: %lf", fuel_cost);
+	skp->Text(left, offsetY, str, strlen(str));
+	offsetY += (int)floor(7 * h / 4);
+	if (m_optimizer->computing()) {
+		sprintf(str, "Working to find a better solution...");
+		skp->Text(left, offsetY, str, strlen(str));
+		offsetY += h;
+	}
 }
 
-void GravityAssistMFD::DrawMultilineString(int left, int top, std::string toDisplay, oapi::Sketchpad * skp) {
+int GravityAssistMFD::DrawMultilineString(int left, int top, std::string toDisplay, oapi::Sketchpad * skp) {
 	std::vector<std::string> lines;
 	boost::algorithm::split(lines, toDisplay, boost::is_any_of("\n"));
 	int h = LOWORD(skp->GetCharSize());
@@ -87,22 +171,13 @@ void GravityAssistMFD::DrawMultilineString(int left, int top, std::string toDisp
 	}
 	for (auto line : lines) {
 		if (strlen(line.c_str()) == 0) {
-			offsetY += (int)floor(3 * h / 4);
+			offsetY += (int)floor( h / 2.0);
 			continue;
 		}
 		skp->Text(left, offsetY, line.c_str(), line.length());
 		offsetY += h;
 	}
-	double fuel_cost = m_optimizer->get_best_solution().fuel_cost;
-	char str[256];
-	sprintf_s(str, "Total DeltaV: %lf", fuel_cost);
-	skp->Text(left, offsetY, str, strlen(str));
-	offsetY += (int)floor(7 * h / 4);
-	if (m_optimizer->computing()) {
-		sprintf(str, "Working to find a better solution...");
-		skp->Text(left, offsetY, str, strlen(str));
-		offsetY += h;
-	}
+	return offsetY;
 }
 
 void GravityAssistMFD::DrawSolution(const HUDPAINTSPEC *hps, oapi::Sketchpad * skp) {
