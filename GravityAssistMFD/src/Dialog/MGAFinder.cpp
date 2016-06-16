@@ -56,7 +56,7 @@ void MGAFinder::InitDialog(HWND _hDlg)
 void MGAFinder::OpenDialog()
 {
 	hDlg = oapiOpenDialogEx(hInst, IDD_MGA_FINDER, MGAFinderProc, 
-		DLG_CAPTIONCLOSE | DLG_CAPTIONHELP, this);
+		0, this);
 }
 	
 void MGAFinder::CloseDialog()

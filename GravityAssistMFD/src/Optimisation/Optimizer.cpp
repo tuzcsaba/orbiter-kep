@@ -608,7 +608,7 @@ std::vector<std::string> Optimization::SavedPlans() {
 
 	std::vector<std::string> result;
 	char sPath[MAX_PATH];
-	sprintf_s(sPath, "%s\\*.mga", "MGAPlans");
+	sprintf_s(sPath, "%s\\*.mga", "Config/MFD/GravityAssistMFD/MGAPlans");
 
 	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE) {
 		return result;
@@ -637,7 +637,7 @@ int Optimization::SaveCurrentPlan() {
 
 void Optimization::LoadPlan(char * file) {
 	char filename[MAX_PATH];
-	sprintf_s(filename, "MGAPlans/%s.mga", file);
+	sprintf_s(filename, "Config/MFD/GravityAssistMFD/MGAPlans/%s.mga", file);
 	FILE * fileHandle = fopen(filename, "r");	
 	if (fileHandle == 0) return;
 	LoadStateFrom(fileHandle);
@@ -648,7 +648,7 @@ void Optimization::LoadPlan(char * file) {
 
 void Optimization::SavePlan(char * file) {
 	char filename[MAX_PATH];
-	sprintf_s(filename, "MGAPlans/%s.mga", file);
+	sprintf_s(filename, "Config/MFD/GravityAssistMFD/MGAPlans/%s.mga", file);
 	FILE * fileHandle = fopen(filename, "w");
 
 	SaveStateTo(fileHandle);

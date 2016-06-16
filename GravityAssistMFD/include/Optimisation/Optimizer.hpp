@@ -60,6 +60,7 @@ public:
 		
 		if (current_hash != new_hash) {
 			ResetSolutions();
+			m_n_pareto = 0;
 			char cacheFile[40];
 			sprintf_s(cacheFile, "cache/%ld", (unsigned int)new_hash);
 			LoadPlan(cacheFile);
