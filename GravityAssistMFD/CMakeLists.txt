@@ -57,6 +57,8 @@ SET(${PROJECT_NAME}_SHARED_LIBS
    "${LIBRARY_LOCATION}/lib/libpagmo.dll"
    "${LIBRARY_LOCATION}/lib/liborbiterkep-lib.dll"
    "${LIBRARY_LOCATION}/lib/liborbiterkep-proto.dll"
+   "${LIBRARY_LOCATION}/bin/libprotobuf.dll"
+   "${LIBRARY_LOCATION}/bin/libprotoc.dll"
    "C:/MinGW/bin/libgcc_s_dw2-1.dll"
    "C:/MinGW/bin/libstdc++-6.dll"
 )
