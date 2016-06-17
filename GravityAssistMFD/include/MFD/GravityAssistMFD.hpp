@@ -4,24 +4,6 @@
 #include <orbitersdk.h>
 #include <EnjoLib/IDrawsHUD.hpp>
 
-class Optimization;
-
-class GravityAssistModule {
-
-public:
-	GravityAssistModule(HINSTANCE hDLL, Optimization * optimizer);
-
-	/// Destructor
-	~GravityAssistModule();
-
-	Optimization &optimizer() { return *m_optimizer; }
-
-protected:
-	MGAFinder *m_mgaFinder;
-	Optimization *m_optimizer;
-	HINSTANCE hDLL;
-
-};
 
 class GravityAssistMFD : public MFD2, public EnjoLib::IDrawsHUD {
 public:
@@ -39,6 +21,7 @@ public:
 	virtual const char * GetModuleName() const;
 private:
 	void DrawSolution(const HUDPAINTSPEC *hps, oapi::Sketchpad * skp);
+	void DrawParetoFronts(int offsetY, oapi::Sketchpad * skp);
 	int DrawMultilineString(int right, int top, std::string toDisplay, oapi::Sketchpad * skp);
 
 	Optimization *m_optimizer;

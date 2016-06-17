@@ -250,7 +250,7 @@ void RunOptimization_thread(std::shared_ptr<OptimThreadParam> param) {
 	int len = orbiterkep__parameters__get_packed_size(param->param);
 	orbiterkep__parameters__pack(param->param, (uint8_t *)buf);
 
-	char sol_buf[2000];
+	char sol_buf[16000];
 	int sol_len = 0;
 
 	param->opt->set_computing(true);
@@ -274,9 +274,6 @@ void RunOptimization_pareto_thread(std::shared_ptr<OptimThreadParam> param) {
 	int i = 0;
 	int len = orbiterkep__parameters__get_packed_size(param->param);
 	orbiterkep__parameters__pack(param->param, (uint8_t *)buf);
-
-	char sol_buf[2000];
-	int sol_len = 0;
 
 	param->opt->set_computing(true);
 	int c = 0;
@@ -485,7 +482,7 @@ int readIntFromFile(FILEHANDLE scn, char * key, int & result, bool scenario) {
 		if (!_stricmp(b, key)) {
 			return -1;
 		}
-		if (0 == sscanf(b + strlen(key) + 1, "%ld", &result)) {
+		if (0 == sscanf_s(b + strlen(key) + 1, "%ld", &result)) {
 			return -1;
 		}
 	}	
@@ -557,11 +554,10 @@ void Optimization::LoadStateFrom(FILE * scn)
 	double x;
 	double y;
 	int n = 0;
-	char b[1000];
-	if (2 == fscanf(scn, "Pareto %lf;%lf", &x, &y)) {
+	if (2 == fscanf_s(scn, "Pareto %lf;%lf", &x, &y)) {
 		m_pareto[0][0] = x; m_pareto[0][1] = y;
 		n += 1;
-		while (2 == fscanf(scn, ";%lf;%lf", &x, &y)) {
+		while (2 == fscanf_s(scn, ";%lf;%lf", &x, &y)) {
 			m_pareto[n][0] = x; m_pareto[n][1] = y;
 			n += 1;
 		}
@@ -578,7 +574,7 @@ void Optimization::SaveStateTo(FILE * scn) {
 
 	writeBase64ToFile(scn, "Parameters", (unsigned char *)buf, size);
 
-	sprintf((char *)buf, "NSolutions %ld\n", n_solutions);
+	sprintf_s((char *)buf, 1023, "NSolutions %ld\n", n_solutions);
 	fputs((char *)buf, scn);
 	for (int i = 0; i < n_solutions; ++i) {
 		char key[50];
@@ -593,10 +589,10 @@ void Optimization::SaveStateTo(FILE * scn) {
 		fputs("Pareto ", scn);
 		char buf[200];
 		for (int i = 0; i < m_n_pareto - 1; ++i) {
-			sprintf(buf, "%lf;%lf;", m_pareto[i][0], m_pareto[i][1]);
+			sprintf_s(buf, 1023, "%lf;%lf;", m_pareto[i][0], m_pareto[i][1]);
 			fputs(buf, scn);
 		}
-		sprintf(buf, "%lf;%lf\n", m_pareto[m_n_pareto - 1][0], m_pareto[m_n_pareto - 1][1]);
+		sprintf_s(buf, 1023, "%lf;%lf\n", m_pareto[m_n_pareto - 1][0], m_pareto[m_n_pareto - 1][1]);
 		fputs(buf, scn);
 	}
 }
@@ -638,7 +634,7 @@ int Optimization::SaveCurrentPlan() {
 void Optimization::LoadPlan(char * file) {
 	char filename[MAX_PATH];
 	sprintf_s(filename, "Config/MFD/GravityAssistMFD/MGAPlans/%s.mga", file);
-	FILE * fileHandle = fopen(filename, "r");	
+	FILE * fileHandle; fopen_s(&fileHandle, filename, "r");
 	if (fileHandle == 0) return;
 	LoadStateFrom(fileHandle);
 
@@ -649,7 +645,7 @@ void Optimization::LoadPlan(char * file) {
 void Optimization::SavePlan(char * file) {
 	char filename[MAX_PATH];
 	sprintf_s(filename, "Config/MFD/GravityAssistMFD/MGAPlans/%s.mga", file);
-	FILE * fileHandle = fopen(filename, "w");
+	FILE * fileHandle; fopen_s(&fileHandle, filename, "w");
 
 	SaveStateTo(fileHandle);
 

@@ -64,8 +64,8 @@ SET(${PROJECT_NAME}_SHARED_LIBS
 )
 
 SET(${PROJECT_NAME}_LIBS
-   "${LIBRARY_LOCATION}/lib/libkeplerian_toolbox.a"
-   "${LIBRARY_LOCATION}/lib/libpagmo.a"
+   "${LIBRARY_LOCATION}/lib/libkeplerian_toolbox.lib"
+   "${LIBRARY_LOCATION}/lib/libpagmo.lib"
    "${LIBRARY_LOCATION}/lib/liborbiterkep-lib.dll.a"
    "${LIBRARY_LOCATION}/lib/orbiterkep-proto-c.lib"
    "${LIBRARY_LOCATION}/lib/orbiterkep-proto.lib"
@@ -79,8 +79,6 @@ file(GLOB ${PROJECT_NAME}_BOOST_LIBS
 )
 
 file(GLOB ${PROJECT_NAME}_ORBITER_LIBS
-   "${${PROJECT_NAME}_ORBITER_LIB_DIR}/*.a"
-   "${${PROJECT_NAME}_ORBITER_LIB_DIR}/**/*.a"
    "${${PROJECT_NAME}_ORBITER_LIB_DIR}/DlgCtrl.lib"
    "${${PROJECT_NAME}_ORBITER_LIB_DIR}/orbiter.lib"
    "${${PROJECT_NAME}_ORBITER_LIB_DIR}/ModuleMessagingExt.lib"
@@ -100,6 +98,7 @@ INCLUDE_DIRECTORIES(${LIBRARY_LOCATION}/include)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 INCLUDE_DIRECTORIES(${${PROJECT_NAME}_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${${PROJECT_NAME}_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${${PROJECT_NAME}_BIN_DIR})
 
 LINK_DIRECTORIES(${${PROJECT_NAME}_LIB_DIR})
