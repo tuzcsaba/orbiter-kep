@@ -75,21 +75,25 @@ void optimiser::optimize(const Parameters &param, TransXSolution * solution, std
 
       std::cout << "Executing MGA trials" << std::endl;
     } else if (param.problem() == "MGA-1DSM") {
-       single = new pagmo::problem::mga_1dsm_transx(planets,
+       std::vector<bool> dsms;
+       for (auto val : param.allow_dsm()) {
+        dsms.push_back(val);
+       }
+       single = new pagmo::problem::mga_1dsm_transx(planets, dsms,
           param.dep_altitude(), param.arr_altitude(), param.circularize(),
           kep_toolbox::epoch(param.t0().lb(), MJD), kep_toolbox::epoch(param.t0().ub(), MJD),
           param.tof().lb(), param.tof().ub(),
           param.vinf().lb(), param.vinf().ub(),
           param.add_dep_vinf(), param.add_arr_vinf(),
-          false, true);
+          false);
 
-      multi = new pagmo::problem::mga_1dsm_transx(planets,
+      multi = new pagmo::problem::mga_1dsm_transx(planets, dsms,
           param.dep_altitude(), param.arr_altitude(), param.circularize(),
           kep_toolbox::epoch(param.t0().lb(), MJD), kep_toolbox::epoch(param.t0().ub(), MJD),
           param.tof().lb(), param.tof().ub(),
           param.vinf().lb(), param.vinf().ub(),
           param.add_dep_vinf(), param.add_arr_vinf(),
-           true, true);
+           true);
 
 
     }

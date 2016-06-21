@@ -16,7 +16,7 @@ namespace pagmo { namespace problem {
 
 transx_problem::transx_problem(const std::vector<kep_toolbox::planet::planet_ptr> seq,
     const double dep_altitude, const double arr_altitude, const bool circularize,
-    const int dim, const int obj_dim) : base(dim, 0, obj_dim, 0, 0, 0.0), m_n_legs(seq.size() - 1), m_arr_altitude(arr_altitude), m_dep_altitude(dep_altitude), m_circularize(circularize) 
+    const int dim, const int obj_dim) : base(dim, 0, obj_dim, 0, 0, 0.0), m_n_legs(seq.size() - 1), m_arr_altitude(arr_altitude), m_dep_altitude(dep_altitude), m_circularize(circularize)
 {
   std::vector<double> mus(seq.size());
   for (std::vector<kep_toolbox::planet::planet_ptr>::size_type i = 0; i < seq.size(); ++i) {
@@ -40,7 +40,7 @@ transx_problem::transx_problem(const transx_problem &p) : base(p.get_dimension()
   }
 
   set_bounds(p.get_lb(),p.get_ub());
-} 
+}
 
 base_ptr transx_problem::clone() const {
   return base_ptr(new transx_problem(*this));
@@ -59,7 +59,7 @@ void transx_problem::transx_escape(TransXEscape *escape, kep_toolbox::planet::pl
 
   escape->set_planet(ref->get_name());
   escape->set_mjd(eject_T);
-  
+
   escape->set_prograde(dVTransX[0]);
   escape->set_outward(dVTransX[1]);
   escape->set_plane(dVTransX[2]);
@@ -69,7 +69,7 @@ void transx_problem::transx_escape(TransXEscape *escape, kep_toolbox::planet::pl
   escape->set_burn(burn_cost(ref, deltaV, false, true));
 }
 
-void transx_problem::transx_dsm(TransXDSM * dsm, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T) const {
+void transx_problem::transx_dsm(TransXDSM * dsm, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T, int leg) const {
   kep_toolbox::array3D dVTransX = velocity_to_transx(V_ref, R_ref, deltaV);
   double dv = kep_toolbox::norm(deltaV);
 
@@ -82,6 +82,8 @@ void transx_problem::transx_dsm(TransXDSM * dsm, kep_toolbox::array3D V_ref, kep
   dsm->set_vinf(kep_toolbox::norm(v));
 
   dsm->set_burn(dv);
+
+  dsm->set_leg(leg);
 }
 
 void transx_problem::transx_flyby(TransXFlyBy *flyby, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D Vin, kep_toolbox::array3D Vout, double enc_T) const {
@@ -95,7 +97,7 @@ void transx_problem::transx_flyby(TransXFlyBy *flyby, kep_toolbox::planet::plane
 
   flyby->set_approach_vel( sqrt(kep_toolbox::dot(Vin, Vin)) );
   flyby->set_departure_vel( sqrt(kep_toolbox::dot(Vout, Vout)) );
-  
+
   flyby->set_outward_angle( 180 * atan2(vy, vx) / M_PI );
   flyby->set_inclination( 180 * atan2(vz, sqrt(vx * vx + vy * vy)) / M_PI );
 
@@ -119,13 +121,13 @@ void transx_problem::transx_arrival(TransXArrival *arrival, kep_toolbox::planet:
 }
 
 kep_toolbox::array3D transx_problem::velocity_to_transx(kep_toolbox::array3D v_ref, kep_toolbox::array3D v_rad, kep_toolbox::array3D v) const {
-  
+
   kep_toolbox::array3D fward;
   kep_toolbox::array3D plane;
   kep_toolbox::array3D oward;
 
   kep_toolbox::vers(fward, v_ref);
-  kep_toolbox::cross(plane, v_ref, v_rad); 
+  kep_toolbox::cross(plane, v_ref, v_rad);
   kep_toolbox::vers(plane, plane);
   kep_toolbox::cross(oward, plane, fward);
 

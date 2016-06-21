@@ -24,6 +24,7 @@ message Parameters {
   repeated string planets = 1;
   repeated string single_objective_algos = 2;
   repeated string multi_objective_algos = 3;
+  repeated bool allow_dsm = 20;
 
   ParamBounds t0 = 4;
   ParamBounds tof = 5;

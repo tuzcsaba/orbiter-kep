@@ -30,7 +30,9 @@ std::ostream& __cdecl operator<<(std::ostream& ss, const TransXSolution &sol)
   auto flybyes = sol.flybyes();
   while (i < dsms.size() || j < flybyes.size()) {
     if (i < dsms.size()) {
-      ss << dsms.Get(i++);
+      if (dsms.Get(i).leg() == j) {
+        ss << dsms.Get(i++);
+      }
     }
     if (j < flybyes.size()) {
       ss << flybyes.Get(j++);

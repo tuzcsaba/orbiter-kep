@@ -36,8 +36,10 @@ int __cdecl sprintf_transx_solution(char * buf, const Orbiterkep__TransXSolution
     Orbiterkep__TransXFlyBy ** flybyes = sol->flybyes;
     while (i < sol->n_dsms || j < sol->n_flybyes) {
         if (i < sol->n_dsms) {
-            total_written += sprintf_transx_dsm(buf + total_written, sol->dsms[i]);
-            i += 1;
+            if (sol->dsms[i]->leg == j) {
+                total_written += sprintf_transx_dsm(buf + total_written, sol->dsms[i]);
+                i += 1;
+            }
         }
         if (j < sol->n_flybyes) {
             total_written += sprintf_transx_flyby(buf + total_written, sol->flybyes[j]);

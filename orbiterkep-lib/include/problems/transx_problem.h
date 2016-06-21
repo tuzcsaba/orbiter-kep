@@ -47,9 +47,9 @@ class __PAGMO_VISIBLE transx_problem : public base
 
   protected:
     void transx_time_info(TransXTimes *times, std::vector<kep_toolbox::planet::planet_ptr> planets, std::vector<kep_toolbox::epoch> time_list) const;
-    void transx_escape(TransXEscape *escape, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, 
+    void transx_escape(TransXEscape *escape, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref,
         kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, double eject_T) const;
-    void transx_dsm(TransXDSM * dsm, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T) const;
+    void transx_dsm(TransXDSM * dsm, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D deltaV, kep_toolbox::array3D v, double dsm_T, int leg) const;
     void transx_flyby(TransXFlyBy *flyBy, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_ref, kep_toolbox::array3D R_ref, kep_toolbox::array3D Vin, kep_toolbox::array3D Vout, double enc_T) const;
     void transx_arrival(TransXArrival *arrival, kep_toolbox::planet::planet_ptr ref, kep_toolbox::array3D V_exc, double enc_T) const;
 
@@ -67,9 +67,15 @@ class __PAGMO_VISIBLE transx_problem : public base
       retval.push_back(kep_toolbox::planet::jpl_lp("earth").clone());
       return retval;
     }
+
+    static const std::vector<bool> construct_default_omit_dsm() {
+        std::vector<bool> retval;
+        return retval;
+    }
+
     static const std::vector<boost::array<double, 2> > construct_default_tof() {
       std::vector<boost::array<double, 2> > retval;
-      boost::array<double,2> dumb = {{ 50,900 }};  
+      boost::array<double,2> dumb = {{ 50,900 }};
 			retval.push_back(dumb);
 			retval.push_back(dumb);
 			return retval;
@@ -86,7 +92,7 @@ class __PAGMO_VISIBLE transx_problem : public base
       ar & m_max_deltaV;
     }
 
-  private: 
+  private:
     std::vector<kep_toolbox::planet::planet_ptr> m_seq;
     const size_t m_n_legs;
     double m_common_mu;

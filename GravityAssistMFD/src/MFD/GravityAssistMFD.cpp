@@ -51,18 +51,18 @@ GravityAssistMFD::~GravityAssistMFD()
 
 
 bool GravityAssistMFD::ShouldDrawHUD() const {
-	return m_optimizer->has_solution();
+	return m_optimizer->plan() && m_optimizer->plan()->has_solution();
 }
 
 bool GravityAssistMFD::Update(oapi::Sketchpad * skp) {
 
 	Title(skp, "GravityAssist MFD");
-
-	if (!m_optimizer->has_solution() && *(m_optimizer->n_pareto()) == 0) return true;
+	bool hasSolution = m_optimizer->plan() && (m_optimizer->plan()->has_solution() || m_optimizer->plan()->get_n_pareto() > 0);
+	if (!hasSolution) return true;
 
 	int offsetY = 0;
 	int h = 0;
-	if (m_optimizer->has_solution()) {
+	if (m_optimizer->plan()->has_solution()) {
 		skp->SetFont(mfd_font);
 
 		h = LOWORD(skp->GetCharSize());
@@ -71,7 +71,7 @@ bool GravityAssistMFD::Update(oapi::Sketchpad * skp) {
 		offsetY -= h;
 	}
 
-	if (*(m_optimizer->n_pareto()) > 0) {
+	if (*(m_optimizer->plan()->get_n_pareto()) > 0) {
 		DrawParetoFronts(offsetY, skp);
 	}
 	return true;
@@ -82,6 +82,8 @@ void GravityAssistMFD::DrawParetoFronts(int offsetY, oapi::Sketchpad * skp)
 	int bottom_margin = 25;
 	skp->SetFont(mfd_graph_font);
 	int h = LOWORD(skp->GetCharSize());
+
+	/** Draw frame */
 	skp->Line(15, offsetY + 10, 15, H - bottom_margin);
 	skp->Line(10, offsetY + 10 + 5, 15, offsetY + 10);
 	skp->Line(20, offsetY + 10 + 5, 15, offsetY + 10);
@@ -90,23 +92,28 @@ void GravityAssistMFD::DrawParetoFronts(int offsetY, oapi::Sketchpad * skp)
 	skp->Line(W - 20, H - bottom_margin - 5, W - 15, H - bottom_margin);
 	skp->Line(W - 20, H - bottom_margin + 5, W - 15, H - bottom_margin);
 
-	int n = *(m_optimizer->n_pareto());
-	double ** p = m_optimizer->pareto_buffer();
+	auto plan = m_optimizer->plan();
+	int n = *(plan->get_n_pareto());
 	double minT = DBL_MAX;
 	double maxT = 0;
 	double minDV = DBL_MAX;
 	double maxDV = 0;
+	double x, y;
 	for (int i = 0; i < n; ++i) {
-		if (p[i][0] < minDV) minDV = p[i][0];
-		if (p[i][0] > maxDV) maxDV = p[i][0];
-		if (p[i][1] < minT) minT = p[i][1];
-		if (p[i][1] > maxT) maxT = p[i][1];
+		plan->get_pareto(i, x, y);
+		if (x < minDV) minDV = x;
+		if (x > maxDV) maxDV = x;
+		if (y < minT) minT = y;
+		if (y > maxT) maxT = y;
 	}
+
+	/** Draw points */
 	double scaleT = (H - bottom_margin - offsetY - 20) / (maxT - minT);
 	double scaleDV = (W - 35) / (maxDV - minDV);
 	for (int i = 0; i < n; ++i) {
-		double x = (p[i][0] - minDV) * scaleDV;
-		double y = (p[i][1] - minT) * scaleT;
+		plan->get_pareto(i, x, y);
+		x = (x - minDV) * scaleDV;
+		y = (y - minT) * scaleT;
 		int screenX = (int)floor(15 + x);
 		int screenY = (int)floor(H - bottom_margin - y);
 		skp->Pixel(screenX, screenY, 0xFFFFFF);
@@ -138,9 +145,10 @@ void GravityAssistMFD::DrawParetoFronts(int offsetY, oapi::Sketchpad * skp)
 }
 
 void GravityAssistMFD::DrawHUD(int mode, const HUDPAINTSPEC *hps, oapi::Sketchpad * skp) {
-	if (!m_optimizer->has_solution()) return;
+	auto plan = m_optimizer->plan();
+	if (!plan || !plan->has_solution()) return;
 
-	auto solution = m_optimizer->get_best_solution();
+	auto solution = plan->get_best_solution();
 	int W = hps->W;
 	int H = hps->H;
 	int CX = hps->CX;
@@ -153,7 +161,7 @@ void GravityAssistMFD::DrawHUD(int mode, const HUDPAINTSPEC *hps, oapi::Sketchpa
 	int offsetY = DrawMultilineString(left, 150, toDisplay, skp);
 
 	int h = LOWORD(skp->GetCharSize());
-	double fuel_cost = m_optimizer->get_best_solution().fuel_cost;
+	double fuel_cost = plan->get_best_solution().fuel_cost;
 	char str[256];
 	sprintf_s(str, "Total DeltaV: %lf", fuel_cost);
 	skp->Text(left, offsetY, str, strlen(str));
@@ -240,9 +248,9 @@ DLLCLBK void ExitModule(HINSTANCE hDLL)
 }
 
 DLLCLBK void opcSaveState(FILEHANDLE scn) {
-	g_optimizer->SaveScenario(scn);
+	g_optimizer->disk_store().SaveScenario(scn, g_optimizer->plan());
 }
 
 DLLCLBK void opcLoadState(FILEHANDLE scn) {
-	g_optimizer->LoadScenario(scn);
+	g_optimizer->update_parameters(g_optimizer->disk_store().LoadScenario(scn), false);
 }

@@ -3,7 +3,7 @@ syntax = "proto3";
 package orbiterkep;
 
 message TransXTimes {
-    
+
   repeated string planets = 1;
   repeated double times = 2;
 
@@ -17,11 +17,11 @@ message TransXTimes {
     double prograde = 4;
     double outward  = 5;
     double plane    = 6;
-    
+
     string planet   = 20;
   }
- 
- 
+
+
   message TransXDSM {
 
     double mjd = 1;
@@ -31,6 +31,8 @@ message TransXTimes {
     double prograde = 4;
     double outward  = 5;
     double plane    = 6;
+
+    int32 leg = 7;
   }
 
 message TransXFlyBy {
@@ -63,10 +65,10 @@ message TransXFlyBy {
     string planet = 20;
 
   }
- 
+
 
 message TransXSolution {
-  repeated double x = 1; 
+  repeated double x = 1;
   string problem = 2;
   double fuel_cost = 3;
   TransXTimes times = 4;
@@ -75,7 +77,7 @@ message TransXSolution {
 
   repeated TransXDSM dsms = 6;
 
-  
+
   repeated TransXFlyBy flybyes = 7;
   TransXArrival arrival = 8;
 

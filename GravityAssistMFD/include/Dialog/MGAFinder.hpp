@@ -37,14 +37,15 @@ public:
 protected:
 
 	/** Planet list */
-	void MGAFinder::PlanetList_AddItem(char * item);
-	void MGAFinder::PlanetList_RemoveItem(char * item);
-	void MGAFinder::PlanetList_RemoveItemAtIndex(int idx);
-	void MGAFinder::PlanetList_InsertItemAtIndex(char * item, int idx);
+	void PlanetList_AddItem(char * item);
+	void PlanetList_RemoveItem(char * item);
+	void PlanetList_RemoveItemAtIndex(int idx);
+	void PlanetList_InsertItemAtIndex(char * item, int idx);
+	void PlanetList_ExchangeItemsAtIndex(int idx1, int idx2);
 
 private:
-	void ParamToUI(const Orbiterkep__Parameters &param);
-	void SolutionToUI(const Orbiterkep__TransXSolution &solution);
+	void ParamToUI(const MGAPlan &plan);
+	void SolutionToUI(const MGAPlan &plan);
 	void UIToParam();
 
 	Optimization  * m_optimizer;

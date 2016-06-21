@@ -48,7 +48,10 @@ void MGAFinder::InitDialog(HWND _hDlg)
 	FillCBodyList(hDlg);
 	FillProblemList(hDlg);
 
-	MGAFinder::ParamToUI(g_optimizer->param());
+	auto plan = g_optimizer->plan();
+	if (plan) {
+		MGAFinder::ParamToUI(*plan);
+	}
 
 	g_optimizer->Update(_hDlg);
 }
@@ -66,6 +69,20 @@ void MGAFinder::CloseDialog()
 		hDlg = NULL;
 	}
 }
+
+const int N_KNOWN_PLANETS = 10;
+const char * KNOWN_PLANETS[] = {
+	"mercury",
+	"venus",
+	"earth",
+	"mars",
+	"jupiter",
+	"saturn",
+	"uranus",
+	"neptune",
+	"pluto",
+	"DSM"
+};
 
 void MGAFinder::UIToParam() {
 	char buf[256];
@@ -132,13 +149,49 @@ void MGAFinder::UIToParam() {
 	GetDlgItemText(hDlg, IDC_PROBLEM, problem_buf, 20);
 	newParam->problem = problem_buf;
 
-	int nPlanets = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCOUNT, 0, 0);
+	int nPlanets = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCOUNT, 0, 0) + 2;
 	newParam->planets = (char **)malloc(sizeof(char *) * nPlanets);
+	GetDlgItemText(hDlg, IDC_PLANET_DEP, buf, 255);
+	newParam->planets[0] = (char *)malloc(sizeof(char) * (strlen(buf) + 1));
+	strcpy(newParam->planets[0], buf);
+
+	int omit_dsm_cnt = nPlanets - 1;
+	protobuf_c_boolean * dsms = (protobuf_c_boolean *)malloc(sizeof(protobuf_c_boolean *) * omit_dsm_cnt);
+	int j = 0;
+	int k = 1;
+	bool expect_dsm = true;
+	bool DSM_spec = false;
+	int cnt = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCOUNT, 0, 0);
+	for (int i = 1; i < cnt + 1; ++i) {
+		SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETTEXT, i - 1, (LPARAM)buf);
+		if (!strcmp(buf, "DSM")) {
+			expect_dsm = false;
+			DSM_spec = true;
+			dsms[j++] = 1;
+			nPlanets -= 1;
+		} else {
+			newParam->planets[k] = (char *)malloc(sizeof(char) * (strlen(buf) + 1));
+			strcpy(newParam->planets[k], buf);
+			k += 1;
+			if (!expect_dsm) {
+				expect_dsm = true;
+			} else {
+				dsms[j++] = 0;
+			}
+		}
+	}
+	GetDlgItemText(hDlg, IDC_PLANET_ARR, buf, 255);
+	newParam->planets[k] = (char *)malloc(sizeof(char) * (strlen(buf) + 1));
+	strcpy(newParam->planets[k], buf);
+
 	newParam->n_planets = nPlanets;
-	for (int i = 0; i < nPlanets; ++i) {
-		SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETTEXT, i, (LPARAM)buf);
-		newParam->planets[i] = (char *)malloc(sizeof(char) * (strlen(buf) + 1));
-		strcpy(newParam->planets[i], buf);
+	if (DSM_spec) {
+		newParam->n_allow_dsm = j;
+		newParam->allow_dsm = dsms;
+	} else {
+		newParam->n_allow_dsm = 0;
+		newParam->allow_dsm = NULL;
+		free(dsms);
 	}
 
 	char ** single_obj_algos = (char **)malloc(sizeof(char *));
@@ -174,11 +227,14 @@ void MGAFinder::UIToParam() {
 	newParam->has_use_spice = 1;
 	newParam->use_spice = 0;
 
-	g_optimizer->update_parameters(newParam, false);
+	MGAPlan * plan = new MGAPlan(newParam);
+
+	g_optimizer->update_parameters(plan, false);
 }
 
-void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
+void MGAFinder::ParamToUI(const MGAPlan &plan)
 {
+	auto param = plan.param();
 	char buf[256];
 	// Launch date
 	sprintf_s(buf, "%0.6lf", param.t0->lb);
@@ -217,16 +273,48 @@ void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
 
 	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_RESETCONTENT, 0, 0);
 	if (param.n_planets > 0) {
-		for (unsigned int i = 0; i < param.n_planets; ++i) {
-			char * planet_name = param.planets[i];
-			SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_INSERTSTRING, i, (LPARAM)planet_name);
+		char * planet_name = param.planets[0];
+		SetDlgItemText(hDlg, IDC_PLANET_DEP, planet_name);
+		int j = 0;
+		unsigned int i = 0;
+		int c = 0;
+		for (i = 1; i < param.n_planets - 1; ++i) {
+			if (param.n_allow_dsm > 0) {
+				if (j < param.n_allow_dsm) {
+					if (param.allow_dsm[j]) {
+						planet_name = (char *)malloc(sizeof(char *) * 4);
+						strcpy(planet_name, "DSM");
+						SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_INSERTSTRING, i - 1 + c, (LPARAM)planet_name);
+						free(planet_name);
+						++c;
+					}
+					++j;
+				}
+			}
+			planet_name = param.planets[i];
+			SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_INSERTSTRING, i - 1 + c, (LPARAM)planet_name);
 		}
+		if (param.n_allow_dsm > 0) {
+			if (j < param.n_allow_dsm) {
+				if (param.allow_dsm[j]) {
+					planet_name = (char *)malloc(sizeof(char *) * 4);
+					strcpy(planet_name, "DSM");
+					SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_INSERTSTRING, i - 1 + c, (LPARAM)planet_name);
+					free(planet_name);
+					++c;
+				}
+				++j;
+			}
+		}
+
+		planet_name = param.planets[param.n_planets - 1];
+		SetDlgItemText(hDlg, IDC_PLANET_ARR, planet_name);
 	}
 
 	SendDlgItemMessage(hDlg, IDC_PROBLEM, CB_SELECTSTRING, -1, (LPARAM)param.problem);
 
-	if (g_optimizer->has_solution()) {
-		SetDlgItemText(hDlg, IDC_SOLUTION, g_optimizer->get_solution_str().c_str());
+	if (plan.has_solution()) {
+		SetDlgItemText(hDlg, IDC_SOLUTION, plan.get_solution_str(plan.get_best_solution()).c_str());
 	}
 
 	if (g_optimizer->computing()) {
@@ -244,21 +332,13 @@ void MGAFinder::ParamToUI(const Orbiterkep__Parameters &param)
 
 void MGAFinder::FillCBodyList(HWND hDlg)
 {
-	int hList = IDC_PLANET_SELECT;
+	int hLists[] = { IDC_PLANET_SELECT, IDC_PLANET_DEP, IDC_PLANET_ARR};
 
-	char cbuf[256];
-	SendDlgItemMessage(hDlg, hList, CB_RESETCONTENT, 0, 0);
-	auto mercury = oapiGetGbodyByName("Mercury");
-	double mercury_size = oapiGetSize(mercury);
-	for (DWORD n = 0; n < oapiGetGbodyCount(); ++n) {
-		auto body = oapiGetGbodyByIndex(n);
-		int type = oapiGetObjectType(body);
-		if (type == OBJTP_PLANET) {
-			oapiGetObjectName(body, cbuf, 256);
-			auto celBody = oapiGetCelbodyInterface(body);
-			double objSize = oapiGetSize(body);
-			if (objSize < mercury_size) { continue; }
-			SendDlgItemMessage(hDlg, hList, CB_ADDSTRING, 0, (LPARAM)cbuf);
+	for (int hList : hLists) {
+		SendDlgItemMessage(hDlg, hList, CB_RESETCONTENT, 0, 0);
+		DWORD max_n = (hList == IDC_PLANET_SELECT) ? N_KNOWN_PLANETS : (N_KNOWN_PLANETS - 1);
+		for (DWORD n = 0; n < max_n; ++n) {
+			SendDlgItemMessage(hDlg, hList, CB_ADDSTRING, 0, (LPARAM)KNOWN_PLANETS[n]);
 		}
 	}
 }
@@ -273,8 +353,8 @@ void MGAFinder::FillProblemList(HWND hDlg)
 }
 
 
-void MGAFinder::SolutionToUI(const Orbiterkep__TransXSolution &sol) {
-	SetDlgItemText(hDlg, IDC_SOLUTION, g_optimizer->get_solution_str().c_str());
+void MGAFinder::SolutionToUI(const MGAPlan &plan) {
+	SetDlgItemText(hDlg, IDC_SOLUTION, plan.get_solution_str(plan.get_best_solution()).c_str());
 }
 
 void MGAFinder::PlanetList_AddItem(char * item) {
@@ -296,6 +376,22 @@ void MGAFinder::PlanetList_InsertItemAtIndex(char * item, int idx) {
 	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_INSERTSTRING, idx, (LPARAM)item);
 }
 
+void MGAFinder::PlanetList_ExchangeItemsAtIndex(int idx1, int idx2) {
+	if (idx1 == idx2) return;
+
+	char buf1[256];
+	char buf2[256];
+	int x = min(idx1, idx2); int y = max(idx1, idx2);
+	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETTEXT, x, (LPARAM)buf1);
+	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETTEXT, y, (LPARAM)buf2);	
+	PlanetList_RemoveItemAtIndex(x);
+	PlanetList_RemoveItemAtIndex(y - 1);
+	PlanetList_InsertItemAtIndex(buf2, x);
+	PlanetList_InsertItemAtIndex(buf1, y);
+
+	SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_SETCURSEL, idx2, 0);
+}
+
 int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
@@ -308,7 +404,7 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CloseDialog();
 			return TRUE;
 		case IDC_RESET_SOL:
-			g_optimizer->ResetSolutions();
+			g_optimizer->plan()->ResetSolutions();
 			break;
 		case ID_OPT: {
 			UIToParam();
@@ -328,6 +424,22 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		}
+		case IDC_PLUS: {
+			int idx = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCURSEL, 0, 0);
+			int cnt = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCOUNT, 0, 0);
+			if (idx >= 0 && idx < cnt - 1) {
+				PlanetList_ExchangeItemsAtIndex(idx, idx + 1);
+			}
+		}
+			break;
+		case IDC_MINUS: {
+			int idx = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCURSEL, 0, 0);
+			int cnt = SendDlgItemMessage(hDlg, IDC_LST_PLANETS, LB_GETCOUNT, 0, 0);
+			if (idx >= 1) {
+				PlanetList_ExchangeItemsAtIndex(idx, idx - 1);
+			}
+		}
+			break;
 		case IDC_PLANET_ADD: {
 			char str[200];
 			int sel = SendDlgItemMessage(hDlg, IDC_PLANET_SELECT, CB_GETCURSEL, 0, 0);
@@ -349,7 +461,7 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			UIToParam();
 			char buf[1000] = "test";
 			GetDlgItemText(hDlg, IDC_PLANS, buf, 999);
-			g_optimizer->SavePlan(buf);
+			g_optimizer->disk_store().SavePlan(buf, g_optimizer->plan());
 			char msg[200];
 			sprintf_s(msg, "The plan '%s' was saved to disk", buf);
 			int msgBoxID = MessageBox(hDlg, msg, "Plan saved", MB_OK);
@@ -359,11 +471,14 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			char buf[1000] = "test";
 			GetDlgItemText(hDlg, IDC_PLANS, buf, 999);
-			g_optimizer->LoadPlan(buf);
+			auto plan = g_optimizer->disk_store().LoadPlan(buf);
+			g_optimizer->update_parameters(plan, false);
 			char msg[200];
 			sprintf_s(msg, "The plan '%s' was loaded from disk", buf);
 			int msgBoxID = MessageBox(hDlg, msg, "Plan loaded", MB_OK);
-			ParamToUI(g_optimizer->param());
+			if (plan) {
+				ParamToUI(*plan);
+			}
 		}
 		break;
 		case IDHELP:
@@ -375,10 +490,13 @@ int MGAFinder::MsgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		break;
 	case WM_OPTIMIZATION_READY:
-		SolutionToUI(g_optimizer->get_best_solution());
-		ParamToUI(g_optimizer->param());
+		auto plan = g_optimizer->plan();
+		if (plan) {
+			SolutionToUI(*plan);
+			ParamToUI(*plan);
 
-		g_optimizer->SaveCurrentPlan();
+			g_optimizer->disk_store().SavePlan(plan);
+		}
 		break;
 	}
 	return oapiDefDialogProc(hDlg, uMsg, wParam, lParam);

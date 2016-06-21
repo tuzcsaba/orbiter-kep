@@ -33,8 +33,8 @@ int main(int argc, char **argv) {
     std::cerr << std::fixed;
 
     Orbiterkep__Parameters param = ORBITERKEP__PARAMETERS__INIT;
-	char * planets[] = { "earth", "venus"};
-	param.n_planets = 2;
+	char * planets[] = { "earth", "venus", "mercury"};
+	param.n_planets = 3;
 	param.planets = planets;
 	char * single_algos[] = { "jde" };
 	param.n_single_objective_algos = 1;
@@ -43,10 +43,14 @@ int main(int argc, char **argv) {
 	param.n_multi_objective_algos = 1;
 	param.multi_objective_algos = multi_algos;
 
-	param.problem = "MGA";
+	param.problem = "MGA-1DSM";
 
 	param.has_n_trials = 1;
 	param.n_trials = 1;
+
+	protobuf_c_boolean allow_dsm[] = {1};
+	param.n_allow_dsm = 1;
+	param.allow_dsm = allow_dsm;
 
 	Orbiterkep__ParamBounds t0 = ORBITERKEP__PARAM_BOUNDS__INIT;
 	t0.has_lb = 1; t0.has_ub = 1;
@@ -105,19 +109,19 @@ int main(int argc, char **argv) {
 	void * sol_buf = malloc(2000);
 	double pareto_buf[10000][2];
 	int n = 10000;
-	orbiterkep_optimize_multi((const uint8_t *)buf, len, (double **)pareto_buf, &n);
-	// int sol_len = orbiterkep_optimize((const uint8_t *)buf, len, (uint8_t *)sol_buf);
-	// Orbiterkep__TransXSolution * solution = orbiterkep__trans_xsolution__unpack(NULL, sol_len, (uint8_t *)sol_buf);
-	//
-	// sol_len = sprintf_transx_solution(output, solution);
-	// orbiterkep__trans_xsolution__free_unpacked(solution, NULL);
+	// orbiterkep_optimize_multi((const uint8_t *)buf, len, (double **)pareto_buf, &n);
+	int sol_len = orbiterkep_optimize((const uint8_t *)buf, len, (uint8_t *)sol_buf);
+	Orbiterkep__TransXSolution * solution = orbiterkep__trans_xsolution__unpack(NULL, sol_len, (uint8_t *)sol_buf);
+
+	char output[16000];
+	sol_len = sprintf_transx_solution(output, solution);
+	orbiterkep__trans_xsolution__free_unpacked(solution, NULL);
 
 	free(sol_buf);
-	char output[16000];
 
-	//std::string result(output, sol_len);
+	std::string result(output, sol_len);
 
-    // std::cout << result << std::endl;
+    std::cout << result << std::endl;
 
   return 0;
 }
